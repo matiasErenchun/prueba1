@@ -5,10 +5,10 @@
  */
 package ejemplosfx;
 
-import java.awt.Insets;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -28,6 +28,7 @@ public class EjemplosFX extends Application {
         
         Button btnPrueba = new Button();
         btnPrueba.setText("Hola");//contenido del boton 
+        btnPrueba.setMaxWidth(Double.MAX_VALUE);
         btnPrueba.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -36,13 +37,20 @@ public class EjemplosFX extends Application {
 
         });
         
-       HBox hbox = new HBox();
+       HBox hbox = new HBox(40);
+       hbox.setPadding(new Insets(10));
        Button button1 = new Button("Add");
        Button button2 = new Button("Remove");
+       HBox.setMargin(button1, new Insets(0,0,0,5));
+       HBox.setMargin(button2, new Insets(0,0,0,5));
+       HBox.setMargin(btnPrueba, new Insets(0,0,0,5));
        HBox.setHgrow(button1, Priority.ALWAYS);
        HBox.setHgrow(button2, Priority.ALWAYS);
+       HBox.setHgrow(btnPrueba, Priority.ALWAYS);
+       HBox.setMargin(button1, javafx.geometry.Insets.EMPTY);
        button1.setMaxWidth(Double.MAX_VALUE);
        button2.setMaxWidth(Double.MAX_VALUE);
+       
        hbox.getChildren().addAll(button1, button2,btnPrueba);
         
         StackPane root = new StackPane();
