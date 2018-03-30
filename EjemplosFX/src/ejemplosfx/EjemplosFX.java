@@ -11,12 +11,15 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Box;
 import javafx.stage.Stage;
 
 /**
@@ -175,6 +178,15 @@ public class EjemplosFX extends Application {
        
        contenedorSimbolos.getChildren().addAll(simbolos1,simbolos2,simbolos3,simbolos4);
        
+       //*******fin numeros***************
+       
+       //*******inicio subScene***********
+       Box box = new Box(100,100,100);
+       box.setStyle(STYLESHEET_MODENA);
+       Pane pane = new Pane(box);
+       SubScene pantallaDibujo = new SubScene(pane,600,600);
+       
+       //*******fin SubScene**************
        contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
        HBox.setHgrow(contenedorNumeros, Priority.ALWAYS);// se define la prioridad de llenado de espacio que tiene el nodo  dentro de su contenedor.
        HBox.setHgrow(contenedorSimbolos, Priority.ALWAYS);
@@ -184,6 +196,7 @@ public class EjemplosFX extends Application {
        VBox.setVgrow(numerosFila4, Priority.ALWAYS);
        BorderPane BpanePrueba = new BorderPane();
        BpanePrueba.setBottom(contenerdorPrincipal);
+       BpanePrueba.setCenter(pantallaDibujo);
       
         
         StackPane root = new StackPane();
