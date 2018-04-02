@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
@@ -181,10 +180,9 @@ public class EjemplosFX extends Application {
        //*******fin numeros***************
        
        //*******inicio subScene***********
-       Box box = new Box(100,100,100);
-       box.setStyle(STYLESHEET_MODENA);
+       Box box = new Box(10,10,10);
        Pane pane = new Pane(box);
-       SubScene pantallaDibujo = new SubScene(pane,600,600);
+       SubScene pantallaDibujo = new SubScene(pane,300,300);
        
        //*******fin SubScene**************
        contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
