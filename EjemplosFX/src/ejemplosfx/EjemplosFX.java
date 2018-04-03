@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -180,9 +181,24 @@ public class EjemplosFX extends Application {
        //*******fin numeros***************
        
        //*******inicio subScene***********
-       Box box = new Box(10,10,10);
-       Pane pane = new Pane(box);
-       SubScene pantallaDibujo = new SubScene(pane,300,300);
+       Box box = new Box(100,100,100);
+       BorderPane pane = new BorderPane();
+       box.setManaged(false);
+       pane.setCenter(box);
+      
+       
+       
+       //-------------------------------------//
+       
+       Slider sliderSubScene = new Slider();
+       sliderSubScene.setMax(1000);// se define el largo maximo del  slider
+       sliderSubScene.valueProperty().bindBidirectional(box.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
+       pane.setBottom(sliderSubScene);
+       
+       
+       
+       //SubScene pantallaDibujo = new SubScene(aux1,300,300);//creamos la SubScene dando su contenido  luego su ancho y altura 
+       //en este caso su contenido es un border pane.
        
        //*******fin SubScene**************
        contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
@@ -194,7 +210,8 @@ public class EjemplosFX extends Application {
        VBox.setVgrow(numerosFila4, Priority.ALWAYS);
        BorderPane BpanePrueba = new BorderPane();
        BpanePrueba.setBottom(contenerdorPrincipal);
-       BpanePrueba.setCenter(pantallaDibujo);
+       //BpanePrueba.setCenter(pantallaDibujo);
+       BpanePrueba.setCenter(pane);
       
         
         StackPane root = new StackPane();
