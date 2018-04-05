@@ -102,6 +102,9 @@ public class EjemplosFX extends Application {
        Button button00 = new Button("    ");
        Button button0 = new Button(" 0 ");// en este caso el contenido se entrega en el contructor
        Button buttonNn = new Button("    ");
+       button0.setDisable(true);
+       button00.setDisable(true);
+       buttonNn.setDisable(true);
        HBox.setHgrow(button00, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
        HBox.setHgrow(button0, Priority.ALWAYS);
        HBox.setHgrow(buttonNn, Priority.ALWAYS);
@@ -170,6 +173,7 @@ public class EjemplosFX extends Application {
        HBox simbolos4 = new HBox();
        numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
        Button buttonNn2 = new Button("  ");
+       buttonNn2.setDisable(true);
        //Button buttonDiv = new Button(" / ");// en este caso el contenido se entrega en el contructor
        
        HBox.setHgrow(buttonNn2, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
