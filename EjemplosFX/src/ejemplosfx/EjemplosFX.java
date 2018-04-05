@@ -9,15 +9,13 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Path;
@@ -192,12 +190,14 @@ public class EjemplosFX extends Application {
        box.setManaged(true);
        //pane.setCenter(box);
        Path center = new Path();
-       pane.setCenter(center);
+       center.setManaged(false);
+       Group centro=new Group(center);
+       pane.setCenter(centro);
        button0.setOnAction((ActionEvent event) ->
         { 
-            double n =button0.getHeight();
+            double n =0;
             Numero0 numero0=new Numero0(n, espacioNumero,espacioSuperior);
-            pane.getChildren().add(numero0.start(center));
+            centro.getChildren().add(numero0.start(center));
             //contador para el salto de linea en la pantalla
             espacioNumero+=100;
             contador+=100;
@@ -211,11 +211,11 @@ public class EjemplosFX extends Application {
        button4.setOnAction((ActionEvent event) ->
            
            {
-               double n =button4.getHeight();
+               double n =0;
                 Numero4 numero4=new Numero4(n, espacioNumero,espacioSuperior);
-                pane.setCenter(numero4.start(center));
+                 centro.getChildren().add(numero4.start(center));
                 //contador para el salto de linea en la pantalla
-                espacioNumero+=100;
+                espacioNumero+=50;
                 contador+=100;
                 if(contador>300)
                 {
@@ -231,7 +231,7 @@ public class EjemplosFX extends Application {
        
        Slider sliderSubScene = new Slider();
        sliderSubScene.setMax(1000);// se define el largo maximo del  slider
-       sliderSubScene.valueProperty().bindBidirectional(center.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
+       sliderSubScene.valueProperty().bindBidirectional(centro.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
        pane.setBottom(sliderSubScene);
        
        
