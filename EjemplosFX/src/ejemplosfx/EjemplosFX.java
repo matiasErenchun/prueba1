@@ -193,7 +193,22 @@ public class EjemplosFX extends Application {
        //pane.setCenter(box);
        Path center = new Path();
        pane.setCenter(center);
-        button4.setOnAction((ActionEvent event) ->
+       button0.setOnAction((ActionEvent event) ->
+        { 
+            double n =button0.getHeight();
+            Numero0 numero0=new Numero0(n, espacioNumero,espacioSuperior);
+            pane.getChildren().add(numero0.start(center));
+            //contador para el salto de linea en la pantalla
+            espacioNumero+=100;
+            contador+=100;
+            if(contador>300){
+                espacioSuperior+=120;
+                contador =0;
+                espacioNumero=0;
+            }
+        });
+       
+       button4.setOnAction((ActionEvent event) ->
            
            {
                double n =button4.getHeight();
