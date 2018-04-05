@@ -20,6 +20,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 
 /**
@@ -27,6 +28,9 @@ import javafx.stage.Stage;
  * @author Matias.Erenchun
  */
 public class EjemplosFX extends Application {
+    double espacioNumero=0;
+    double espacioSuperior=0;
+    int contador=0;
     
     @Override
     public void start(Stage primaryStage) {
@@ -64,6 +68,8 @@ public class EjemplosFX extends Application {
        HBox numerosFila2 = new HBox();
        numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
        Button button4 = new Button(" 4 ");
+       
+      
        Button button5 = new Button(" 5 ");// en este caso el contenido se entrega en el contructor
        Button button6 = new Button(" 6 ");
        HBox.setHgrow(button4, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
@@ -180,19 +186,37 @@ public class EjemplosFX extends Application {
        
        //*******fin numeros***************
        
-       //*******inicio subScene***********
+       //*******inicio Esena de dibujo***********
        Box box = new Box(100,100,100);
        BorderPane pane = new BorderPane();
-       box.setManaged(false);
-       pane.setCenter(box);
-      
+       box.setManaged(true);
+       //pane.setCenter(box);
+       Path center = new Path();
+       pane.setCenter(center);
+        button4.setOnAction((ActionEvent event) ->
+           
+           {
+               double n =button4.getHeight();
+                Numero4 numero4=new Numero4(n, espacioNumero,espacioSuperior);
+                pane.setCenter(numero4.start(center));
+                //contador para el salto de linea en la pantalla
+                espacioNumero+=100;
+                contador+=100;
+                if(contador>300)
+                {
+                    espacioSuperior+=120;
+                    contador =0;
+                    espacioNumero=0;
+                }
+               
+            });
        
        
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
        sliderSubScene.setMax(1000);// se define el largo maximo del  slider
-       sliderSubScene.valueProperty().bindBidirectional(box.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
+       sliderSubScene.valueProperty().bindBidirectional(center.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
        pane.setBottom(sliderSubScene);
        
        
@@ -200,7 +224,7 @@ public class EjemplosFX extends Application {
        //SubScene pantallaDibujo = new SubScene(aux1,300,300);//creamos la SubScene dando su contenido  luego su ancho y altura 
        //en este caso su contenido es un border pane.
        
-       //*******fin SubScene**************
+       //*******fin Esena de dibujo**************
        contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
        HBox.setHgrow(contenedorNumeros, Priority.ALWAYS);// se define la prioridad de llenado de espacio que tiene el nodo  dentro de su contenedor.
        HBox.setHgrow(contenedorSimbolos, Priority.ALWAYS);
@@ -214,13 +238,17 @@ public class EjemplosFX extends Application {
        BpanePrueba.setCenter(pane);
       
         
-        StackPane root = new StackPane();
+        //StackPane root = new StackPane();
         
         primaryStage.setTitle("wena men ");//titulo de la ventana 
         
-        Scene scene = new Scene (root,300,300);//constructor de la ventana 
+        Scene scene = new Scene (BpanePrueba,300,400);//constructor de la ventana
         
-        root.getChildren().add(BpanePrueba);//agregamos el boton a al root
+        BpanePrueba.setMinSize(300, 400);
+        //root.setPrefSize(400, 300);
+        /**root.minHeight(300);
+        root.minWidth(400);*/
+        //root.getChildren().add(BpanePrueba);//agregamos el boton a al root
         primaryStage.setScene(scene);//agregamos scene a la pantalla
         primaryStage.show();//mostramos la pantalla
     }
