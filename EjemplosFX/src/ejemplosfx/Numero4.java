@@ -78,7 +78,7 @@ public class Numero4 {
                  c.setLayoutX(m_nX);
                  c.setLayoutY(m_nY);
                  l.setX(event.getSceneX());
-                 l.setY(event.getSceneY()-marco);
+                 l.setY(event.getSceneY());
 
                  // get the latest mouse coordinate.
                  m_nMouseX = event.getSceneX();
