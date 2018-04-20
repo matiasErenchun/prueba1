@@ -9,10 +9,13 @@ package pantallapruebas;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -38,14 +41,16 @@ public class PantallaPruebas extends Application {
                 System.out.println("Hello World!");
             }
         });
-        int a=-50;
-        Path miPath = new Path();
-        this.dibujar8(a, 0, miPath);
-        a+=50;
+        
+       int a=180;
+       Path miPath = new Path();
+       this.dibujar8(a, 0, miPath);
+       a+=50;
        this.dibujar3(a, 0, miPath);
        a+=50;
        this.dibujar6(a, 0, miPath);
        a+=60;
+       
        this.dibujar2(a, 0, miPath);
        a+=60;
        this.dibujar5(a, 0, miPath);
@@ -385,5 +390,5 @@ public class PantallaPruebas extends Application {
         return miPath;
     }
     
-    //falta hacer el 7 y el 8 :D
+    
 }
