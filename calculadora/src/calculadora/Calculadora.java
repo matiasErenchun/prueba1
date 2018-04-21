@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 
 /**
@@ -30,9 +31,11 @@ public class Calculadora extends Application {
                 System.out.println("Hello World!");
             }
         });
-        
+        Path miPath = new Path();
+        Numbers numero = new Numbers();
+        numero.dibujar2(0, 0, miPath);
         StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        root.getChildren().add(miPath);
         
         Scene scene = new Scene(root, 300, 250);
         

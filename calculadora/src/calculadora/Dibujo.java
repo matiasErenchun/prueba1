@@ -14,19 +14,34 @@ import javafx.scene.shape.PathElement;
  */
 public abstract class Dibujo 
 {
+    public float factorResize;
     public Double topPoint;
     public Double dawnPoint;
     public Double startPoint;
     public Double endPoint;
     private ArrayList<ControlPoint> listControlPoint;
     private ArrayList<PathElement> listCurves;
+    public String element;
 
     public Dibujo() 
     {
+        this.factorResize= (float) 1.0 ;
         this.listControlPoint = new ArrayList<>();
         this.listCurves = new ArrayList<>();
     }
 
+    public float getFactorResize() 
+    {
+        return this.factorResize;
+    }
+
+    public void setFactorResize(float factorResize) 
+    {
+        this.factorResize = factorResize;
+    }
+
+    
+    
     public Double getTopPoint() 
     {
         return this.topPoint;
@@ -65,6 +80,16 @@ public abstract class Dibujo
     public void setEndPoint(Double endPoint) 
     {
         this.endPoint = endPoint;
+    }
+
+    public String getElement() 
+    {
+        return this.element;
+    }
+
+    public void setElement(String element) 
+    {
+        this.element = element;
     }
     
     public int longListControlPoint()
@@ -105,5 +130,15 @@ public abstract class Dibujo
     public boolean isEmtyPathElementList()
     {
         return this.listCurves.isEmpty();
+    }
+    
+    public boolean addControlPointList(ControlPoint point)
+    {
+        return this.listControlPoint.add(point);
+    }
+    
+    public boolean addPathElementList(PathElement element)
+    {
+        return this.listCurves.add(element);
     }
 }
