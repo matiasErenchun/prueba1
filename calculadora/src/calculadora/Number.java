@@ -227,6 +227,67 @@ public class Number extends Dibujo
         return miPath;
     }
     
+    public Path draw4(double x,double y,Path miPath)
+    {
+        this.setElement("4");
+        MoveTo start4 = new MoveTo();
+        start4.setX((150+x)*this.factorResize);
+        start4.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(start4);
+        
+        LineTo diagonal = new LineTo();
+        diagonal.setX((190+x)*this.factorResize);
+        diagonal.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(diagonal);
+        
+        LineTo vLine1 = new LineTo();
+        vLine1.setX((190+x)*this.factorResize);
+        vLine1.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(vLine1);
+        
+        LineTo vLine2 = new LineTo();
+        vLine2.setX((190+x)*this.factorResize);
+        vLine2.setY((200+y)*this.factorResize);
+        
+        this.addPathElementList(vLine2);
+        
+        LineTo vLine3 = new LineTo();
+        vLine3.setX((190+x)*this.factorResize);
+        vLine3.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(vLine3);
+        
+        LineTo hLine1 = new LineTo();
+        hLine1.setX((150+x)*this.factorResize);
+        hLine1.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(hLine1);
+        
+        LineTo hLine2 = new LineTo();
+        hLine2.setX((190+x)*this.factorResize);
+        hLine2.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(hLine2);
+        
+        LineTo hLine3 = new LineTo();
+        hLine3.setX((200+x)*this.factorResize);
+        hLine3.setY((150+y)*this.factorResize);
+        
+        this.addPathElementList(hLine3);
+        
+        this.setDawnPoint(vLine2.getY());
+        this.setTopPoint(diagonal.getY());
+        this.setStartPoint(start4.getX());
+        this.setEndPoint(hLine3.getX());
+        
+        miPath.getElements().addAll(start4,diagonal,vLine1,vLine2,vLine3,hLine1,hLine2,hLine3);
+        
+        return miPath;
+    }
+    
     public Path draw5(double x,double y,Path miPath)
     {
         this.setElement("5");
