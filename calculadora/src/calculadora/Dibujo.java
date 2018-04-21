@@ -23,9 +23,9 @@ public abstract class Dibujo
     private ArrayList<PathElement> listCurves;
     public String element;
 
-    public Dibujo() 
+    public Dibujo(float f) 
     {
-        this.factorResize= (float) 1;
+        this.factorResize= (float) f;
         this.listControlPoint = new ArrayList<>();
         this.listCurves = new ArrayList<>();
     }

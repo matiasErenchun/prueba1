@@ -11,7 +11,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.LineTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.PathElement;
+import javafx.scene.shape.QuadCurveTo;
 import javafx.stage.Stage;
 
 /**
@@ -31,13 +34,14 @@ public class Calculadora extends Application {
                 System.out.println("Hello World!");
             }
         });
+        float factor =(float) 0.3;
         Path miPath = new Path();
-        Numbers numero = new Numbers();
-        numero.dibujar2(0, 0, miPath);
+        Number numero = new Number(factor);
+        numero.draw2(0, 0, miPath);
         float f=(float) 5;
-        Numbers numero2 = new Numbers();
-        numero2.dibujar2(60, 0, miPath);
-        numero2.setFactorResize(f);
+        Number numero3 = new Number(factor);
+        numero3.draw3(60, 0, miPath);
+        numero3.setFactorResize(f);
         StackPane root = new StackPane();
         root.getChildren().add(miPath);
         
