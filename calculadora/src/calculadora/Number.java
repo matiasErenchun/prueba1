@@ -25,6 +25,63 @@ public class Number extends Dibujo
         
     }
     
+    public Path draw0(double x,double y,Path miPath)
+    {
+        this.setElement("0");
+        MoveTo start0 = new MoveTo();
+        start0.setX((170+x)*this.factorResize);
+        start0.setY((200+y)*this.factorResize);
+        
+        LineTo base = new LineTo();
+        base.setX((180+x)*this.factorResize);
+        base.setX((200+y)*this.factorResize);
+        
+        QuadCurveTo arco1 = new QuadCurveTo();
+        arco1.setX((200+x)*this.factorResize);
+        arco1.setY((180+y)*this.factorResize);
+        arco1.setControlX((200+x)*this.factorResize);
+        arco1.setControlY((200+y)*this.factorResize);
+        
+        LineTo vLine1 = new LineTo();
+        vLine1.setX((200+x)*this.factorResize);
+        vLine1.setY((120+y)*this.factorResize);
+        
+        QuadCurveTo arco2 = new QuadCurveTo();
+        arco2.setX((180+x)*this.factorResize);
+        arco2.setY((100+y)*this.factorResize);
+        arco2.setControlX((200+x)*this.factorResize);
+        arco2.setControlY((100+y)*this.factorResize);
+        
+        LineTo topLine = new LineTo();
+        topLine.setX((170+x)*this.factorResize);
+        topLine.setY((100+y)*this.factorResize);
+        
+        QuadCurveTo arco3 = new QuadCurveTo();
+        arco3.setX((150+x)*this.factorResize);
+        arco3.setY((120+y)*this.factorResize);
+        arco3.setControlX((150+x)*this.factorResize);
+        arco3.setControlY((100+y)*this.factorResize);
+        
+        LineTo vLine2 = new LineTo();
+        vLine2.setX((150+x)*this.factorResize);
+        vLine2.setY((180+y)*this.factorResize);
+        
+        QuadCurveTo arco4 = new QuadCurveTo();
+        arco4.setX((170+x)*this.factorResize);
+        arco4.setY((200+y)*this.factorResize);
+        arco4.setControlX((150+x)*this.factorResize);
+        arco4.setControlY((200+y)*this.factorResize);
+        
+        miPath.getElements().addAll(start0,base,arco1,vLine1,arco2,topLine,arco3,vLine2,arco4);
+        
+        this.setDawnPoint(start0.getY());
+        this.setTopPoint(topLine.getY());
+        this.setStartPoint(vLine2.getX());
+        this.setEndPoint(vLine1.getX());
+        
+        return miPath;
+    }
+    
     public Path draw2(double x,double y,Path miPath)
     {
         this.setElement("2");

@@ -44,7 +44,7 @@ public class Calculadora extends Application {
         numero3.setFactorResize(f);
         StackPane root = new StackPane();
         root.getChildren().add(miPath);
-        
+       
         Scene scene = new Scene(root, 300, 250);
         
         primaryStage.setTitle("Hello World!");
