@@ -25,7 +25,7 @@ public abstract class Dibujo
 
     public Dibujo() 
     {
-        this.factorResize= (float) 1.0 ;
+        this.factorResize= (float) 1;
         this.listControlPoint = new ArrayList<>();
         this.listCurves = new ArrayList<>();
     }

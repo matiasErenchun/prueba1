@@ -34,6 +34,10 @@ public class Calculadora extends Application {
         Path miPath = new Path();
         Numbers numero = new Numbers();
         numero.dibujar2(0, 0, miPath);
+        float f=(float) 5;
+        Numbers numero2 = new Numbers();
+        numero2.dibujar2(60, 0, miPath);
+        numero2.setFactorResize(f);
         StackPane root = new StackPane();
         root.getChildren().add(miPath);
         
