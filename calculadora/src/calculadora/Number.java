@@ -82,6 +82,38 @@ public class Number extends Dibujo
         return miPath;
     }
     
+    public Path draw1(double x,double y,Path miPath)
+    {
+        this.setElement("1");
+        
+        MoveTo start1 = new MoveTo();
+        start1.setX((160+x)*this.factorResize);
+        start1.setY((140+y)*this.factorResize);
+        
+        this.addPathElementList(start1);
+        
+        LineTo diagonal = new LineTo();
+        diagonal.setX((190+x)*this.factorResize);
+        diagonal.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(diagonal);
+        
+        LineTo vertical = new LineTo();
+        vertical.setX((190+x)*this.factorResize);
+        vertical.setY((200+y)*this.factorResize);
+        
+        this.addPathElementList(vertical);
+        
+        this.setDawnPoint(vertical.getY());
+        this.setTopPoint(diagonal.getY());
+        this.setStartPoint(start1.getX());
+        this.setEndPoint(vertical.getX());
+        
+        miPath.getElements().addAll(start1,diagonal,vertical);
+        
+        return miPath;
+    }
+    
     public Path draw2(double x,double y,Path miPath)
     {
         this.setElement("2");
