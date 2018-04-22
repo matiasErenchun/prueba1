@@ -5,11 +5,13 @@
  */
 package calculadora;
 
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.Path;
@@ -22,7 +24,10 @@ import javafx.stage.Stage;
  * @author Matias.Erenchun
  */
 public class Calculadora extends Application {
-    
+    private ArrayList<Point> listPointLevel;
+    public float maxLevel=0;
+    public float minLevel=0;
+    public float levelActual=0;
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
@@ -37,13 +42,19 @@ public class Calculadora extends Application {
         float factor =(float) 0.3;
         Path miPath = new Path();
         Number numero = new Number(factor);
-        numero.draw2(0, 0, miPath);
+        numero.draw2(-100, 0, miPath);
         float f=(float) 5;
         Number numero3 = new Number(factor);
-        numero3.draw3(60, 0, miPath);
+        numero3.draw3(-40, 0, miPath);
         numero3.setFactorResize(f);
+        
+        Symbol a= new Symbol(factor);
+        a.drawDivide(20, 0, miPath);
+        
+        BorderPane pantalla = new BorderPane();
+        pantalla.setCenter(miPath);
         StackPane root = new StackPane();
-        root.getChildren().add(miPath);
+        root.getChildren().add(pantalla);
        
         Scene scene = new Scene(root, 300, 250);
         
