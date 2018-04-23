@@ -16,8 +16,8 @@ import javafx.scene.shape.Path;
 public class Symbol extends Dibujo
 {
     
-    public Symbol(float f) {
-        super(f);
+    public Symbol(float f,float level) {
+        super(f, level);
     }
     
     public Path drawLess(double x,double y,Path miPath)

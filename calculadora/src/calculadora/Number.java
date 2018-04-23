@@ -19,9 +19,9 @@ import javafx.scene.shape.VLineTo;
 public class Number extends Dibujo
 {
 
-    public Number(float f) 
+    public Number(float f,float level) 
     {
-        super(f);
+        super(f,level);
         
     }
     
@@ -32,9 +32,13 @@ public class Number extends Dibujo
         start0.setX((170+x)*this.factorResize);
         start0.setY((200+y)*this.factorResize);
         
+        this.addPathElementList(start0);
+        
         LineTo base = new LineTo();
         base.setX((180+x)*this.factorResize);
-        base.setX((200+y)*this.factorResize);
+        base.setY((200+y)*this.factorResize);
+        
+        this.addPathElementList(base);
         
         QuadCurveTo arco1 = new QuadCurveTo();
         arco1.setX((200+x)*this.factorResize);
@@ -42,9 +46,13 @@ public class Number extends Dibujo
         arco1.setControlX((200+x)*this.factorResize);
         arco1.setControlY((200+y)*this.factorResize);
         
+        this.addPathElementList(arco1);
+        
         LineTo vLine1 = new LineTo();
         vLine1.setX((200+x)*this.factorResize);
         vLine1.setY((120+y)*this.factorResize);
+        
+        this.addPathElementList(vLine1);
         
         QuadCurveTo arco2 = new QuadCurveTo();
         arco2.setX((180+x)*this.factorResize);
@@ -52,9 +60,13 @@ public class Number extends Dibujo
         arco2.setControlX((200+x)*this.factorResize);
         arco2.setControlY((100+y)*this.factorResize);
         
+        this.addPathElementList(arco2);
+        
         LineTo topLine = new LineTo();
         topLine.setX((170+x)*this.factorResize);
         topLine.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(topLine);
         
         QuadCurveTo arco3 = new QuadCurveTo();
         arco3.setX((150+x)*this.factorResize);
@@ -62,9 +74,13 @@ public class Number extends Dibujo
         arco3.setControlX((150+x)*this.factorResize);
         arco3.setControlY((100+y)*this.factorResize);
         
+        this.addPathElementList(arco3);
+        
         LineTo vLine2 = new LineTo();
         vLine2.setX((150+x)*this.factorResize);
         vLine2.setY((180+y)*this.factorResize);
+        
+        this.addPathElementList(vLine2);
         
         QuadCurveTo arco4 = new QuadCurveTo();
         arco4.setX((170+x)*this.factorResize);
@@ -72,7 +88,10 @@ public class Number extends Dibujo
         arco4.setControlX((150+x)*this.factorResize);
         arco4.setControlY((200+y)*this.factorResize);
         
+        this.addPathElementList(arco4);
+        
         miPath.getElements().addAll(start0,base,arco1,vLine1,arco2,topLine,arco3,vLine2,arco4);
+        
         
         this.setDawnPoint(start0.getY());
         this.setTopPoint(topLine.getY());
