@@ -32,7 +32,7 @@ public class Calculadora extends Application {
     public float factor =(float) 0.5;
     public Path miPath = new Path();
     public double x=-110;
-    public double y=0+(200*levelActual);
+    public double y=200;
     public double dif = 65;
     @Override
     public void start(Stage primaryStage) {
@@ -49,7 +49,7 @@ public class Calculadora extends Application {
                     maxLevel = levelActual;
                     
                 }
-                y=0+((200*levelActual)+(10*levelActual));
+                y=0+((235*levelActual));
             }
         });
         
@@ -68,7 +68,7 @@ public class Calculadora extends Application {
                     minLevel = levelActual;
                     
                 }
-                y=0+((200*levelActual)+(10*levelActual));
+                y=0+((235*levelActual));
             }
         });
         
@@ -79,16 +79,27 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Number numero0 = new Number(factor, levelActual);
-                if(levelActual>0 || levelActual<0 )
+                if(levelActual>0 && levelActual<maxLevel || levelActual<0 && levelActual>minLevel)
                 {
                     Symbol div = new Symbol(factor,levelActual);
+                    div.drawDivide(x, y-(235*factor), miPath);
                     div.drawDivide(x, y, miPath);
-                    numero0.draw0(x, y-10, miPath);
+                    numero0.draw0(x, y-(15*factor), miPath);
                     x+=dif;
                 }
                 else
                 {
-                    numero0.draw0(x, y, miPath);
+                    if(levelActual>0 && levelActual==maxLevel || levelActual<0 && levelActual==minLevel)
+                    {
+                        Symbol div = new Symbol(factor,levelActual);
+                        div.drawDivide(x, y, miPath);
+                        numero0.draw0(x, y-(15*factor), miPath);
+                    }
+                    else
+                    {
+                        numero0.draw0(x, y, miPath);
+                    }
+                    
                     x+=dif;
                 }
             }
