@@ -6,6 +6,7 @@
 package calculadora;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +26,7 @@ import javafx.stage.Stage;
  * @author Matias.Erenchun
  */
 public class Calculadora extends Application {
-    private ArrayList<Point> listPointLevel;
+    public HashMap levelPoints = new HashMap();
     public float maxLevel=0;
     public float minLevel=0;
     public float levelActual=0;
@@ -42,14 +43,16 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) {
                 levelActual+= 0.5;
+                y=0+((235*levelActual));
                 System.out.println("levelActual");
                 System.out.println(levelActual);
                 if(levelActual>maxLevel)
                 {
+                    LevelPoint levelPoint = new LevelPoint(levelActual,x,y);
                     maxLevel = levelActual;
-                    
+                    levelPoints.putIfAbsent(levelActual, levelPoint);
                 }
-                y=0+((235*levelActual));
+                
             }
         });
         
@@ -63,12 +66,15 @@ public class Calculadora extends Application {
                 levelActual-= 0.5;
                 System.out.println("levelActual");
                 System.out.println(levelActual);
+                y=0+((235*levelActual));
                 if(levelActual<minLevel)
                 {
                     minLevel = levelActual;
+                    LevelPoint levelPoint = new LevelPoint(levelActual,x,y);
+                    levelPoints.putIfAbsent(levelActual, levelPoint);
                     
                 }
-                y=0+((235*levelActual));
+                
             }
         });
         
@@ -78,13 +84,17 @@ public class Calculadora extends Application {
             
             @Override
             public void handle(ActionEvent event) {
+                LevelPoint contenedor=(LevelPoint) levelPoints.get(levelActual);
+                double xx = contenedor.getEndPoint().getCoordenadaX();
+                double yy = contenedor.getCoordenadaY();
                 Number numero0 = new Number(factor, levelActual);
+                
                 if(levelActual>0 && levelActual<maxLevel || levelActual<0 && levelActual>minLevel)
                 {
                     Symbol div = new Symbol(factor,levelActual);
-                    div.drawDivide(x, y-(235*factor), miPath);
-                    div.drawDivide(x, y, miPath);
-                    numero0.draw0(x, y-(15*factor), miPath);
+                    div.drawDivide(xx, yy-(235*factor), miPath);
+                    div.drawDivide(xx, yy, miPath);
+                    numero0.draw0(xx, yy-(15*factor), miPath);
                     x+=dif;
                 }
                 else
@@ -102,6 +112,11 @@ public class Calculadora extends Application {
                     
                     x+=dif;
                 }
+                
+                contenedor.getEndPoint().setCoordenadaX(xx+dif);
+                levelPoints.put(levelActual, contenedor);
+                
+                
             }
         });
         
