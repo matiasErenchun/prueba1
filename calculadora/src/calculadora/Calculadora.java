@@ -26,54 +26,74 @@ import javafx.stage.Stage;
  * @author Matias.Erenchun
  */
 public class Calculadora extends Application {
-    public HashMap levelPoints = new HashMap();
+    public MapLevel miMapLevel;
     public float maxLevel=0;
     public float minLevel=0;
     public float levelActual=0;
-    public float factor =(float) 0.5;
+    public float factor =(float) 0.3;
     public Path miPath = new Path();
     public double x=-110;
     public double y=200;
     public double dif = 65;
+    public boolean divid = false;
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
         btn.setText("dawn level");
+        btn.setDisable(true);
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                levelActual+= 0.5;
-                y=0+((235*levelActual));
-                System.out.println("levelActual");
-                System.out.println(levelActual);
-                if(levelActual>maxLevel)
+            public void handle(ActionEvent event) 
+            {
+                levelActual-=0.5;
+                if(levelActual<minLevel)
                 {
-                    LevelPoint levelPoint = new LevelPoint(levelActual,x,y);
-                    maxLevel = levelActual;
-                    levelPoints.putIfAbsent(levelActual, levelPoint);
+                    minLevel=levelActual;
+                    LevelPoint contenedor = miMapLevel.getLevelPoint((float) (levelActual+0.5));
+                    double miY=contenedor.getCoordenadaY();
+                    double miX = miMapLevel.getLevelPoint(0).getCoordenadaX();
+                    LevelPoint contenedor2 = new LevelPoint(levelActual,miX,miY+60);
+                    Symbol div=new Symbol(factor,levelActual);
+                    div.drawDivide(miX, miY+60, miPath);
+                    miMapLevel.AddLevel(levelActual, contenedor2);
+                    LevelPoint contenedor3 = new LevelPoint(levelActual,miX,miY+120);
+                    miMapLevel.AddLevel((float) (levelActual-0.5), contenedor3);
+                    minLevel =(float) (levelActual-0.5);
+                    
+                    
                 }
+                
                 
             }
         });
         
         Button btn2 = new Button();
         btn2.setText("up level");
-        
+        btn2.setDisable(true);
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
-            public void handle(ActionEvent event) {
-                levelActual-= 0.5;
-                System.out.println("levelActual");
-                System.out.println(levelActual);
-                y=0+((235*levelActual));
-                if(levelActual<minLevel)
+            public void handle(ActionEvent event) 
+            {
+                levelActual+=0.5;
+                if(levelActual>maxLevel)
                 {
-                    minLevel = levelActual;
-                    LevelPoint levelPoint = new LevelPoint(levelActual,x,y);
-                    levelPoints.putIfAbsent(levelActual, levelPoint);
+                    maxLevel=levelActual;
+                    LevelPoint contenedor = miMapLevel.getLevelPoint((float) (levelActual-0.5));//se obtine el punto de nivel del nivel inferior/anterior
+                    double miY = contenedor.getCoordenadaY();
+                    double miX = miMapLevel.getLevelPoint(0).getCoordenadaX();
+                    
+                    LevelPoint contenedor5 = new LevelPoint(levelActual,miX,miY-60);
+                    Symbol div=new Symbol(factor,levelActual);
+                    div.drawDivide(miX, miY-60, miPath);
+                    miMapLevel.AddLevel(levelActual, contenedor5);
+                    LevelPoint contenedor4 = new LevelPoint(levelActual,miX,miY-120);
+                    miMapLevel.AddLevel((float) (levelActual+0.5), contenedor4);
+                    maxLevel =(float) (levelActual+0.5);
+                    
                     
                 }
+                
                 
             }
         });
@@ -83,38 +103,80 @@ public class Calculadora extends Application {
         btn3.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
-            public void handle(ActionEvent event) {
-                LevelPoint contenedor=(LevelPoint) levelPoints.get(levelActual);
-                double xx = contenedor.getEndPoint().getCoordenadaX();
-                double yy = contenedor.getCoordenadaY();
-                Number numero0 = new Number(factor, levelActual);
-                
-                if(levelActual>0 && levelActual<maxLevel || levelActual<0 && levelActual>minLevel)
+            public void handle(ActionEvent event) 
+            {
+                if(divid)
                 {
-                    Symbol div = new Symbol(factor,levelActual);
-                    div.drawDivide(xx, yy-(235*factor), miPath);
-                    div.drawDivide(xx, yy, miPath);
-                    numero0.draw0(xx, yy-(15*factor), miPath);
-                    x+=dif;
+                    if(miMapLevel.getLevelPoint(levelActual).isStatusLevel())
+                    {
+                        double miX=miMapLevel.getLevelPoint(levelActual).getEndPoint().getCoordenadaX();
+                        double miY=miMapLevel.getLevelPoint(levelActual).getCoordenadaY();
+                        Number numero= new Number(factor,levelActual);
+                        numero.draw0(miX, miY, miPath);
+                        Point miEnd =new Point(levelActual,miX+60,miY);
+                        LevelPoint  contenedor = miMapLevel.getLevelPoint(levelActual);
+                        contenedor.setEndPoint(miEnd);
+                        miMapLevel.AddLevel(levelActual, contenedor);
+                    }
                 }
                 else
                 {
-                    if(levelActual>0 && levelActual==maxLevel || levelActual<0 && levelActual==minLevel)
-                    {
-                        Symbol div = new Symbol(factor,levelActual);
-                        div.drawDivide(x, y, miPath);
-                        numero0.draw0(x, y-(15*factor), miPath);
-                    }
-                    else
-                    {
-                        numero0.draw0(x, y, miPath);
-                    }
-                    
-                    x+=dif;
+                    Number numero= new Number(factor,levelActual);
+                    numero.draw0(x, y, miPath);
+                    x+=60;
                 }
                 
-                contenedor.getEndPoint().setCoordenadaX(xx+dif);
-                levelPoints.put(levelActual, contenedor);
+            }
+        });
+        Button btn4 = new Button();
+        btn4.setText("/");
+        btn4.setOnAction(new EventHandler<ActionEvent>() 
+        {
+            
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                divid=true;
+                btn.setDisable(false);
+                btn2.setDisable(false);
+                miMapLevel = new MapLevel();
+                LevelPoint thisLevelPoint = new LevelPoint(levelActual,x+40,y);
+                miMapLevel.AddLevel(levelActual, thisLevelPoint);
+                
+                double thisEx = miMapLevel.getLevelPoint(0).getCoordenadaX();
+                LevelPoint LevelPointUp = new LevelPoint(levelActual,thisEx,y-60);
+                LevelPoint LevelPointDawn = new LevelPoint(levelActual,thisEx,y+60);
+                
+                
+                miMapLevel.AddLevel((float) (0.5), LevelPointUp);
+                miMapLevel.AddLevel((float) (-0.5), LevelPointDawn);
+                maxLevel=(float) 0.5;
+                minLevel=(float) -0.5;
+                
+                
+                Symbol div = new Symbol(factor,levelActual);
+                div.drawDivide(thisEx, y, miPath);
+                x=x+70;
+                btn4.setDisable(true);
+            }
+        });
+        Button btn5 = new Button();
+        btn5.setText("close");
+        btn5.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                
+                LevelPoint contenedor = miMapLevel.getLevelPoint(levelActual);
+                contenedor.setStatusLevel(false);
+                miMapLevel.AddLevel(levelActual, contenedor);
+                
+                if(levelActual==0 && divid)
+                {
+                    divid=false;
+                    btn4.setDisable(false);
+                }
                 
                 
             }
@@ -122,22 +184,23 @@ public class Calculadora extends Application {
         
         
         
+        
         Number numero = new Number(factor,levelActual);
-        numero.draw2(-100, 0, miPath);
+        //numero.draw2(-100, 0, miPath);
         float f=(float) 5;
         Number numero3 = new Number(factor,levelActual);
-        numero3.draw3(-40, 0, miPath);
+        //numero3.draw3(-40, 0, miPath);
         numero3.setFactorResize(f);
         
         Symbol a= new Symbol(factor,levelActual);
-        a.drawDivide(20, 0, miPath);
+        //a.drawDivide(20, 0, miPath);
         
         
         
         BorderPane pantalla = new BorderPane();
         pantalla.setCenter(miPath);
         HBox miBott = new HBox();
-        miBott.getChildren().addAll(btn,btn2,btn3);
+        miBott.getChildren().addAll(btn,btn2,btn3,btn4,btn5);
         pantalla.setBottom(miBott);
         StackPane root = new StackPane();
         root.getChildren().add(pantalla);

@@ -29,64 +29,64 @@ public class Number extends Dibujo
     {
         this.setElement("0");
         MoveTo start0 = new MoveTo();
-        start0.setX((170+x)*this.factorResize);
-        start0.setY((200+y)*this.factorResize);
+        start0.setX((20+x)*this.factorResize);
+        start0.setY((100+y)*this.factorResize);
         
         this.addPathElementList(start0);
         
         LineTo base = new LineTo();
-        base.setX((180+x)*this.factorResize);
-        base.setY((200+y)*this.factorResize);
+        base.setX((30+x)*this.factorResize);
+        base.setY((100+y)*this.factorResize);
         
         this.addPathElementList(base);
         
         QuadCurveTo arco1 = new QuadCurveTo();
-        arco1.setX((200+x)*this.factorResize);
-        arco1.setY((180+y)*this.factorResize);
-        arco1.setControlX((200+x)*this.factorResize);
-        arco1.setControlY((200+y)*this.factorResize);
+        arco1.setX((50+x)*this.factorResize);
+        arco1.setY((80+y)*this.factorResize);
+        arco1.setControlX((50+x)*this.factorResize);
+        arco1.setControlY((100+y)*this.factorResize);
         
         this.addPathElementList(arco1);
         
         LineTo vLine1 = new LineTo();
-        vLine1.setX((200+x)*this.factorResize);
-        vLine1.setY((120+y)*this.factorResize);
+        vLine1.setX((50+x)*this.factorResize);
+        vLine1.setY((20+y)*this.factorResize);
         
         this.addPathElementList(vLine1);
         
         QuadCurveTo arco2 = new QuadCurveTo();
-        arco2.setX((180+x)*this.factorResize);
-        arco2.setY((100+y)*this.factorResize);
-        arco2.setControlX((200+x)*this.factorResize);
-        arco2.setControlY((100+y)*this.factorResize);
+        arco2.setX((30+x)*this.factorResize);
+        arco2.setY((0+y)*this.factorResize);
+        arco2.setControlX((50+x)*this.factorResize);
+        arco2.setControlY((0+y)*this.factorResize);
         
         this.addPathElementList(arco2);
         
         LineTo topLine = new LineTo();
-        topLine.setX((170+x)*this.factorResize);
-        topLine.setY((100+y)*this.factorResize);
+        topLine.setX((20+x)*this.factorResize);
+        topLine.setY((0+y)*this.factorResize);
         
         this.addPathElementList(topLine);
         
         QuadCurveTo arco3 = new QuadCurveTo();
-        arco3.setX((150+x)*this.factorResize);
-        arco3.setY((120+y)*this.factorResize);
-        arco3.setControlX((150+x)*this.factorResize);
-        arco3.setControlY((100+y)*this.factorResize);
+        arco3.setX((0+x)*this.factorResize);
+        arco3.setY((20+y)*this.factorResize);
+        arco3.setControlX((0+x)*this.factorResize);
+        arco3.setControlY((0+y)*this.factorResize);
         
         this.addPathElementList(arco3);
         
         LineTo vLine2 = new LineTo();
-        vLine2.setX((150+x)*this.factorResize);
-        vLine2.setY((180+y)*this.factorResize);
+        vLine2.setX((0+x)*this.factorResize);
+        vLine2.setY((80+y)*this.factorResize);
         
         this.addPathElementList(vLine2);
         
         QuadCurveTo arco4 = new QuadCurveTo();
-        arco4.setX((170+x)*this.factorResize);
-        arco4.setY((200+y)*this.factorResize);
-        arco4.setControlX((150+x)*this.factorResize);
-        arco4.setControlY((200+y)*this.factorResize);
+        arco4.setX((20+x)*this.factorResize);
+        arco4.setY((100+y)*this.factorResize);
+        arco4.setControlX((0+x)*this.factorResize);
+        arco4.setControlY((100+y)*this.factorResize);
         
         this.addPathElementList(arco4);
         

@@ -156,7 +156,7 @@ public class Symbol extends Dibujo
         return miPath;
     }
     
-    public Path drawDivide(double x,double y,Path miPath)
+    public Path drawDividePrincipal(double x,double y,Path miPath)
     {
         this.setElement("/");
         
@@ -171,6 +171,33 @@ public class Symbol extends Dibujo
         LineTo line1 = new LineTo();
         line1.setX((200+x)*this.factorResize);
         line1.setY((200+y)*this.factorResize);
+        
+        this.addPathElementList(line1);
+        
+        this.setDawnPoint(startDiv.getY());
+        this.setTopPoint(startDiv.getY());
+        this.setStartPoint(startDiv.getX());
+        this.setEndPoint(line1.getX());
+        
+        miPath.getElements().addAll(startDiv,line1);
+        
+        return miPath;
+    }
+    public Path drawDivide(double x,double y,Path miPath)
+    {
+        this.setElement("/");
+        
+        x+=10;
+        
+        MoveTo startDiv = new MoveTo();
+        startDiv.setX((-30+x)*this.factorResize);
+        startDiv.setY((50+y)*this.factorResize);
+        
+        this.addPathElementList(startDiv);
+        
+        LineTo line1 = new LineTo();
+        line1.setX((50+x)*this.factorResize);
+        line1.setY((50+y)*this.factorResize);
         
         this.addPathElementList(line1);
         

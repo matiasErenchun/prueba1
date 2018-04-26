@@ -46,7 +46,7 @@ public class LevelPoint extends Point
     {
         this.endPoint = endPoint;
     }
-
+    
     public boolean isStatusLevel() 
     {
         return this.statusLevel;
@@ -56,6 +56,16 @@ public class LevelPoint extends Point
     {
         this.statusLevel = statusLevel;
     }
-    
+    public boolean levelIsInt()
+    {
+        if(this.nivel%1!=0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
     
 }

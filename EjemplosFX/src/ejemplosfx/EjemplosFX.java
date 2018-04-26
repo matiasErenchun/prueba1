@@ -36,15 +36,16 @@ public class EjemplosFX extends Application {
        HBox contenerdorPrincipal = new HBox();
        
        //*******inicio numeros***************
-       VBox contenedorNumeros = new VBox();
-       HBox numerosFila1 = new HBox();//creamos el Hbox
-       numerosFila1.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       HBox contenedorNumeros = new HBox();
+       VBox numerosColumna1 = new VBox();//creamos el Hbox
+       numerosColumna1.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
        Button button7 = new Button(" 7 ");
-       Button button8 = new Button(" 8 ");// en este caso el contenido se entrega en el contructor
-       Button button9 = new Button();
-       button9.setText(" 9 ");//contenido del boton 
-       button9.setMaxWidth(Double.MAX_VALUE);
-       button9.setOnAction(new EventHandler<ActionEvent>() {
+       Button button4 = new Button(" 4 ");// en este caso el contenido se entrega en el contructor
+       Button button1 = new Button();
+       Button buttonSubir = new Button("subir");
+       button1.setText(" 1 ");//contenido del boton 
+       button1.setMaxWidth(Double.MAX_VALUE);
+       button1.setOnAction(new EventHandler<ActionEvent>() {
            @Override
            public void handle(ActionEvent event) {
                System.out.println("hola mis 9 weros ");// accion que se ejecutara al presionar el boton 
@@ -53,67 +54,57 @@ public class EjemplosFX extends Application {
        });
        //HBox.setMargin(button1, new Insets(0,0,0,0));//margen entre objetos en este caso se dejo 5 a la  derecha 
        HBox.setHgrow(button7, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
-       HBox.setHgrow(button8, Priority.ALWAYS);
-       HBox.setHgrow(button9, Priority.ALWAYS);
+       HBox.setHgrow(button4, Priority.ALWAYS);
+       HBox.setHgrow(button1, Priority.ALWAYS);
+       HBox.setHgrow(buttonSubir, Priority.ALWAYS);
        HBox.setMargin(button7, javafx.geometry.Insets.EMPTY);
        button7.setMaxWidth(Double.MAX_VALUE);
-       button8.setMaxWidth(Double.MAX_VALUE);
-       numerosFila1.getChildren().addAll(button7, button8,button9);
-       
-       
-       //------------------------------//
-       
-       HBox numerosFila2 = new HBox();
-       numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button button4 = new Button(" 4 ");
-       
-      
-       Button button5 = new Button(" 5 ");// en este caso el contenido se entrega en el contructor
-       Button button6 = new Button(" 6 ");
-       HBox.setHgrow(button4, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
-       HBox.setHgrow(button5, Priority.ALWAYS);
-       HBox.setHgrow(button6, Priority.ALWAYS);
        button4.setMaxWidth(Double.MAX_VALUE);
-       button5.setMaxWidth(Double.MAX_VALUE);
-       button6.setMaxWidth(Double.MAX_VALUE);
-       numerosFila2.getChildren().addAll(button4, button5,button6);
+       buttonSubir.setMaxWidth(Double.MAX_VALUE);
+       numerosColumna1.getChildren().addAll(button7, button4,button1,buttonSubir);
+       
        
        //------------------------------//
        
-       HBox numerosFila3 = new HBox();
-       numerosFila1.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button button1 = new Button(" 1 ");
-       Button button2 = new Button(" 2 ");// en este caso el contenido se entrega en el contructor
-       Button button3 = new Button(" 3 ");
-       HBox.setHgrow(button1, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
+       VBox numerosColumna2 = new VBox();
+       numerosColumna2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       Button button8 = new Button(" 8 ");
+       Button button5 = new Button(" 5 ");// en este caso el contenido se entrega en el contructor
+       Button button2 = new Button(" 2 ");
+       Button button0 = new Button(" 0 ");
+       HBox.setHgrow(button8, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
+       HBox.setHgrow(button5, Priority.ALWAYS);
        HBox.setHgrow(button2, Priority.ALWAYS);
-       HBox.setHgrow(button3, Priority.ALWAYS);
-       button1.setMaxWidth(Double.MAX_VALUE);
-       button2.setMaxWidth(Double.MAX_VALUE);
-       button3.setMaxWidth(Double.MAX_VALUE);
-       numerosFila3.getChildren().addAll(button1, button2,button3);
-       
-       //------------------------------//
-       
-       HBox numerosFila4 = new HBox();
-       numerosFila1.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button button00 = new Button("    ");
-       Button button0 = new Button(" 0 ");// en este caso el contenido se entrega en el contructor
-       Button buttonNn = new Button("    ");
-       button0.setDisable(true);
-       button00.setDisable(true);
-       buttonNn.setDisable(true);
-       HBox.setHgrow(button00, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
        HBox.setHgrow(button0, Priority.ALWAYS);
-       HBox.setHgrow(buttonNn, Priority.ALWAYS);
-       button00.setMaxWidth(Double.MAX_VALUE);
+       button8.setMaxWidth(Double.MAX_VALUE);
+       button5.setMaxWidth(Double.MAX_VALUE);
+       button2.setMaxWidth(Double.MAX_VALUE);
        button0.setMaxWidth(Double.MAX_VALUE);
-       buttonNn.setMaxWidth(Double.MAX_VALUE);
-       numerosFila4.getChildren().addAll(button00, button0,buttonNn);
+       numerosColumna2.getChildren().addAll(button8, button5,button2,button0);
        
        //------------------------------//
        
-       contenedorNumeros.getChildren().addAll(numerosFila1,numerosFila2,numerosFila3,numerosFila4);
+       VBox numerosColumna3 = new VBox();
+       numerosColumna3.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       Button button9 = new Button(" 9 ");
+       Button button6 = new Button(" 6 ");// en este caso el contenido se entrega en el contructor
+       Button button3 = new Button(" 3 ");
+       Button buttonEliminar = new Button(" Eliminar");
+       HBox.setHgrow(button9, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
+       HBox.setHgrow(button6, Priority.ALWAYS);
+       HBox.setHgrow(button3, Priority.ALWAYS);
+       HBox.setHgrow(buttonEliminar, Priority.ALWAYS);
+       button9.setMaxWidth(Double.MAX_VALUE);
+       button6.setMaxWidth(Double.MAX_VALUE);
+       button3.setMaxWidth(Double.MAX_VALUE);
+       buttonEliminar.setMaxWidth(Double.MAX_VALUE);
+       numerosColumna3.getChildren().addAll(button9, button6,button3,buttonEliminar);
+       
+       //------------------------------//
+       
+       //------------------------------//
+       
+       contenedorNumeros.getChildren().addAll(numerosColumna1,numerosColumna2,numerosColumna3);
        
        //*******fin numeros***************
        
@@ -122,55 +113,52 @@ public class EjemplosFX extends Application {
        VBox contenedorSimbolos = new VBox();
        
        //------------------------------//
+       //contenedor de los simbolos
+         HBox cajaDeSimbolos = new HBox();
+        
+       //------------------------------//
        
-       HBox simbolos1 = new HBox();
-       numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       VBox simbolos1 = new VBox();
+       simbolos1.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
        Button buttonpar1 = new Button(" ( ");
-       Button buttonpar2 = new Button(" ) ");// en este caso el contenido se entrega en el contructor
-       
+       Button buttonMas = new Button(" + ");// en este caso el contenido se entrega en el contructor
+       Button buttonPor = new Button(" * ");
        HBox.setHgrow(buttonpar1, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
-       HBox.setHgrow(buttonpar2, Priority.ALWAYS);
+       HBox.setHgrow(buttonMas, Priority.ALWAYS);
+       HBox.setHgrow(buttonPor, Priority.ALWAYS);
        buttonpar1.setMaxWidth(Double.MAX_VALUE);
-       buttonpar2.setMaxWidth(Double.MAX_VALUE);
+       buttonMas.setMaxWidth(Double.MAX_VALUE);
+       buttonPor.setMaxWidth(Double.MAX_VALUE);
       
-       simbolos1.getChildren().addAll(buttonpar1, buttonpar2);
+       simbolos1.getChildren().addAll(buttonpar1, buttonMas,buttonPor);
        
        //-------------------------------------//
        
-        HBox simbolos2 = new HBox();
-       numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button buttonMas= new Button(" + ");
+       VBox simbolos2 = new VBox();
+       simbolos2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       Button buttonPar2= new Button(" ) ");
        Button buttonMenos = new Button(" - ");// en este caso el contenido se entrega en el contructor
-       
-       HBox.setHgrow(buttonMas, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
+       Button buttonDiv = new Button(" / ");// en este caso el contenido se entrega en el contructor
+       HBox.setHgrow(buttonPar2, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
        HBox.setHgrow(buttonMenos, Priority.ALWAYS);
-       
-       buttonMas.setMaxWidth(Double.MAX_VALUE);
+       HBox.setHgrow(buttonDiv, Priority.ALWAYS);
+       buttonPar2.setMaxWidth(Double.MAX_VALUE);
        buttonMenos.setMaxWidth(Double.MAX_VALUE);
+       buttonDiv.setMaxWidth(Double.MAX_VALUE);
       
-       simbolos2.getChildren().addAll(buttonMas, buttonMenos);
+       simbolos2.getChildren().addAll(buttonPar2, buttonMenos,buttonDiv);
        
         //------------------------------//
        
-       HBox simbolos3 = new HBox();
-       numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button buttonPor = new Button(" * ");
-       Button buttonDiv = new Button(" / ");// en este caso el contenido se entrega en el contructor
-       
-       HBox.setHgrow(buttonPor, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
-       HBox.setHgrow(buttonDiv, Priority.ALWAYS);
-       buttonPor.setMaxWidth(Double.MAX_VALUE);
-       buttonDiv.setMaxWidth(Double.MAX_VALUE);
+        cajaDeSimbolos.getChildren().addAll(simbolos1,simbolos2);
       
-       simbolos3.getChildren().addAll(buttonPor, buttonDiv);
-       
        //-------------------------------------//
        
         //------------------------------//
        
        HBox simbolos4 = new HBox();
-       numerosFila2.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button buttonNn2 = new Button("  ");
+       simbolos4.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
+       Button buttonNn2 = new Button(" puntos de control :ver/no ver ");
        buttonNn2.setDisable(true);
        //Button buttonDiv = new Button(" / ");// en este caso el contenido se entrega en el contructor
        
@@ -184,7 +172,7 @@ public class EjemplosFX extends Application {
        //-------------------------------------//
        
        
-       contenedorSimbolos.getChildren().addAll(simbolos1,simbolos2,simbolos3,simbolos4);
+       contenedorSimbolos.getChildren().addAll(cajaDeSimbolos,simbolos4);
        
        //*******fin numeros***************
        
@@ -247,10 +235,12 @@ public class EjemplosFX extends Application {
        contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
        HBox.setHgrow(contenedorNumeros, Priority.ALWAYS);// se define la prioridad de llenado de espacio que tiene el nodo  dentro de su contenedor.
        HBox.setHgrow(contenedorSimbolos, Priority.ALWAYS);
-       VBox.setVgrow(numerosFila1, Priority.ALWAYS);
-       VBox.setVgrow(numerosFila2, Priority.ALWAYS);
-       VBox.setVgrow(numerosFila3, Priority.ALWAYS);
-       VBox.setVgrow(numerosFila4, Priority.ALWAYS);
+       HBox.setHgrow(numerosColumna1, Priority.ALWAYS);
+       HBox.setHgrow(numerosColumna2, Priority.ALWAYS);
+       HBox.setHgrow(numerosColumna3, Priority.ALWAYS);
+       HBox.setHgrow(simbolos1, Priority.ALWAYS);
+       HBox.setHgrow(simbolos2, Priority.ALWAYS);
+       
        BorderPane BpanePrueba = new BorderPane();
        BpanePrueba.setBottom(contenerdorPrincipal);
        //BpanePrueba.setCenter(pantallaDibujo);
