@@ -105,9 +105,25 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) 
             {
+                
                 if(divid)
                 {
-                    if(miMapLevel.getLevelPoint(levelActual).isStatusLevel())
+                    boolean b =true;
+                    boolean p = miMapLevel.getLevelPoint(levelActual).levelIsInt(levelActual);
+                    float h = levelActual%1;
+                    System.out.println("h");
+                    System.out.println(h);
+                    System.out.println("p");
+                    System.out.println(p);
+                    System.out.println(levelActual);
+                    if(p &&levelActual!=0)
+                    {
+                        float level1 = (float) (levelActual+0.5);
+                        float level2= (float) (levelActual-0.5);
+                        b=miMapLevel.levelsClose(level1, level2);
+                            
+                    }
+                    if(miMapLevel.getLevelPoint(levelActual).isStatusLevel()&&b)
                     {
                         double miX=miMapLevel.getLevelPoint(levelActual).getEndPoint().getCoordenadaX();
                         double miY=miMapLevel.getLevelPoint(levelActual).getCoordenadaY();
@@ -176,6 +192,12 @@ public class Calculadora extends Application {
                 {
                     divid=false;
                     btn4.setDisable(false);
+                    double a = miMapLevel.getLevelPoint(0).getCoordenadaX();
+                    a=+60;
+                    System.out.println("a");
+                    System.out.println(a);
+                    
+                    x+=a;
                 }
                 
                 

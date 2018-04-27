@@ -33,4 +33,15 @@ public class MapLevel
     {
         return (LevelPoint) this.mapLevel.get(level);
     }
+    
+    //retorna false si alguno de los dos niveles ingresados no esta cerrado
+    public boolean levelsClose(float level1,float level2)
+    {
+        if(false==this.getLevelPoint(level2).isStatusLevel()&&false==this.getLevelPoint(level1).isStatusLevel())
+        {
+            return true;
+       
+        }
+         return false;
+    }
 }

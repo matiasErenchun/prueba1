@@ -56,10 +56,11 @@ public class LevelPoint extends Point
     {
         this.statusLevel = statusLevel;
     }
-    public boolean levelIsInt()
+    public boolean levelIsInt(float level)
     {
-        if(this.nivel%1!=0)
+        if((level%1.0)!=0)
         {
+            System.out.println("tu mama");
             return false;
         }
         else
