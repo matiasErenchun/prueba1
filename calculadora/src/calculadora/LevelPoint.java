@@ -12,14 +12,14 @@ package calculadora;
 public class LevelPoint extends Point
 {
     public Point startPoint;
-    public Point endPoint;
+    public double endPoint;
     public boolean statusLevel;
     public LevelPoint(float nivel, double coordenadaX, double CoordenadaY)
     {
         super(nivel, coordenadaX, CoordenadaY);
         this.statusLevel=true;
         this.startPoint = new Point( nivel,  coordenadaX, CoordenadaY);
-        this.endPoint = new Point( nivel,  coordenadaX, CoordenadaY);
+        this.endPoint =coordenadaX;
     }
     
     public boolean compareStartAndEnd()
@@ -37,12 +37,12 @@ public class LevelPoint extends Point
         this.startPoint = startPoint;
     }
 
-    public Point getEndPoint() 
+    public double getEndPoint() 
     {
         return this.endPoint;
     }
 
-    public void setEndPoint(Point endPoint) 
+    public void setEndPoint(double endPoint) 
     {
         this.endPoint = endPoint;
     }

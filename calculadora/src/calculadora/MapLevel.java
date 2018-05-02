@@ -44,4 +44,11 @@ public class MapLevel
         }
          return false;
     }
+    
+    public void moveEndPointX(float level)
+    {
+        double temporalX=this.getLevelPoint(level).getCoordenadaX();
+        temporalX+=100;
+        this.getLevelPoint(level).setEndPoint(temporalX);
+    }
 }

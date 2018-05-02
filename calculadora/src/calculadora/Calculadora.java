@@ -109,29 +109,32 @@ public class Calculadora extends Application {
                 if(divid)
                 {
                     boolean b =true;
-                    boolean p = miMapLevel.getLevelPoint(levelActual).levelIsInt(levelActual);
-                    float h = levelActual%1;
-                    System.out.println("h");
-                    System.out.println(h);
-                    System.out.println("p");
-                    System.out.println(p);
-                    System.out.println(levelActual);
-                    if(p &&levelActual!=0)
+                    boolean p = miMapLevel.getLevelPoint(levelActual).levelIsInt(levelActual);//revisa si el nivel actual es un entero( estos son donde estan las  lineas de division).
+                    
+                    
+                    if(p )
                     {
                         float level1 = (float) (levelActual+0.5);
                         float level2= (float) (levelActual-0.5);
-                        b=miMapLevel.levelsClose(level1, level2);
+                        b=miMapLevel.levelsClose(level1, level2);//revisa si el novel inferior a este esta cerrado lo mismo para el superior.
                             
                     }
                     if(miMapLevel.getLevelPoint(levelActual).isStatusLevel()&&b)
                     {
-                        double miX=miMapLevel.getLevelPoint(levelActual).getEndPoint().getCoordenadaX();
+                        double miX=miMapLevel.getLevelPoint(levelActual).getEndPoint();
                         double miY=miMapLevel.getLevelPoint(levelActual).getCoordenadaY();
+                        if(miMapLevel.levelExist((float) (levelActual+0.5)))
+                        {
+                            miMapLevel.moveEndPointX((float) (levelActual+0.5));
+                        }
+                        if(miMapLevel.levelExist((float) (levelActual-0.5)))
+                        {
+                            miMapLevel.moveEndPointX((float) (levelActual-0.5));
+                        }
                         Number numero= new Number(factor,levelActual);
                         numero.draw0(miX, miY, miPath);
-                        Point miEnd =new Point(levelActual,miX+60,miY);
                         LevelPoint  contenedor = miMapLevel.getLevelPoint(levelActual);
-                        contenedor.setEndPoint(miEnd);
+                        contenedor.setEndPoint(miX+60);
                         miMapLevel.AddLevel(levelActual, contenedor);
                     }
                 }
@@ -192,7 +195,7 @@ public class Calculadora extends Application {
                 {
                     divid=false;
                     btn4.setDisable(false);
-                    double a = miMapLevel.getLevelPoint(0).getCoordenadaX();
+                    double a = miMapLevel.getLevelPoint(0).getEndPoint();
                     a=+60;
                     System.out.println("a");
                     System.out.println(a);
