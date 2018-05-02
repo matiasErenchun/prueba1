@@ -8,6 +8,7 @@ package calculadora;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
 
 /**
  *
@@ -183,6 +184,7 @@ public class Symbol extends Dibujo
         
         return miPath;
     }
+    
     public Path drawDivide(double x,double y,Path miPath)
     {
         this.setElement("/");
@@ -207,6 +209,62 @@ public class Symbol extends Dibujo
         this.setEndPoint(line1.getX());
         
         miPath.getElements().addAll(startDiv,line1);
+        
+        return miPath;
+    }
+    
+    public Path drawE(double x,double y,Path miPath)
+    {
+        MoveTo startE = new MoveTo();
+        startE.setX((0+x)*this.factorResize);
+        startE.setY((65+y)*this.factorResize);
+        
+        this.addPathElementList(startE);
+        
+        LineTo midE = new LineTo();
+        midE.setX((50+x)*this.factorResize);
+        midE.setY((65+y)*this.factorResize);
+        
+        this.addPathElementList(midE);
+        
+        QuadCurveTo arco1 = new QuadCurveTo();
+        arco1.setControlX((50+x)*this.factorResize);
+        arco1.setControlY((40+y)*this.factorResize);
+        arco1.setX((25+x)*this.factorResize);
+        arco1.setY((40+y)*this.factorResize);
+        
+        this.addPathElementList(arco1);
+        
+        QuadCurveTo arco2 = new QuadCurveTo();
+        arco2.setControlX((0+x)*this.factorResize);
+        arco2.setControlY((40+y)*this.factorResize);
+        arco2.setX((0+x)*this.factorResize);
+        arco2.setY((65+y)*this.factorResize);
+        
+        this.addPathElementList(arco2);
+        
+        QuadCurveTo arco3 = new QuadCurveTo();
+        arco3.setControlX((0+x)*this.factorResize);
+        arco3.setControlY((100+y)*this.factorResize);
+        arco3.setX((25+x)*this.factorResize);
+        arco3.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(arco3);
+        
+        QuadCurveTo arco4 = new QuadCurveTo();
+        arco4.setControlX((50+x)*this.factorResize);
+        arco4.setControlY((100+y)*this.factorResize);
+        arco4.setX((50+x)*this.factorResize);
+        arco4.setY((80+y)*this.factorResize);
+        
+        this.addPathElementList(arco4);
+        
+        this.setDawnPoint(arco3.getY());
+        this.setTopPoint(arco1.getY());
+        this.setStartPoint(startE.getX());
+        this.setEndPoint(midE.getX());
+        
+        miPath.getElements().addAll(startE,midE,arco1,arco2,arco3,arco4);
         
         return miPath;
     }

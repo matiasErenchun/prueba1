@@ -218,7 +218,7 @@ public class Calculadora extends Application {
         numero3.setFactorResize(f);
         
         Symbol a= new Symbol(factor,levelActual);
-        //a.drawDivide(20, 0, miPath);
+        a.drawE(x, y, miPath);
         
         
         
