@@ -268,4 +268,107 @@ public class Symbol extends Dibujo
         
         return miPath;
     }
+    
+     public Path drawA(double x,double y,Path miPath)
+     {
+        MoveTo startA = new MoveTo();
+        startA.setX((0+x)*this.factorResize);
+        startA.setY((50+y)*this.factorResize);
+        
+        this.addPathElementList(startA);
+         
+        QuadCurveTo arco1 = new QuadCurveTo();
+        arco1.setControlX((0+x)*this.factorResize);
+        arco1.setControlY((40+y)*this.factorResize);
+        arco1.setX((10+x)*this.factorResize);
+        arco1.setY((40+y)*this.factorResize);
+        
+        this.addPathElementList(arco1);
+        
+        LineTo top = new LineTo();
+        top.setX((30+x)*this.factorResize);
+        top.setY((40+y)*this.factorResize);
+        
+        this.addPathElementList(top);
+        
+        QuadCurveTo arco2 = new QuadCurveTo();
+        arco2.setControlX((40+x)*this.factorResize);
+        arco2.setControlY((40+y)*this.factorResize);
+        arco2.setX((40+x)*this.factorResize);
+        arco2.setY((50+y)*this.factorResize);
+        
+        this.addPathElementList(arco2);
+        
+        LineTo verti1 = new LineTo();
+        verti1.setX((40+x)*this.factorResize);
+        verti1.setY((60+y)*this.factorResize);
+        
+        this.addPathElementList(verti1);
+        
+        LineTo verti2 = new LineTo();
+        verti2.setX((40+x)*this.factorResize);
+        verti2.setY((85+y)*this.factorResize);
+        
+        this.addPathElementList(verti2);
+        
+        QuadCurveTo hori1 = new QuadCurveTo();
+        hori1.setControlX((40+x)*this.factorResize);
+        hori1.setControlY((95+y)*this.factorResize);
+        hori1.setX((30+x)*this.factorResize);
+        hori1.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(hori1);
+        
+        LineTo base = new LineTo();
+        base.setX((10+x)*this.factorResize);
+        base.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(base);
+        
+        QuadCurveTo arco3 = new QuadCurveTo();
+        arco3.setControlX((0+x)*this.factorResize);
+        arco3.setControlY((100+y)*this.factorResize);
+        arco3.setX((0+x)*this.factorResize);
+        arco3.setY((80+y)*this.factorResize);
+        
+        this.addPathElementList(arco3);
+        
+        QuadCurveTo arco4 = new QuadCurveTo();
+        arco4.setControlX((0+x)*this.factorResize);
+        arco4.setControlY((65+y)*this.factorResize);
+        arco4.setX((20+x)*this.factorResize);
+        arco4.setY((60+y)*this.factorResize);
+        
+        this.addPathElementList(arco4);
+        
+        
+        LineTo mid = new LineTo();
+        mid.setX((40+x)*this.factorResize);
+        mid.setY((60+y)*this.factorResize);
+        
+        this.addPathElementList(mid);
+        
+        LineTo verti3 = new LineTo();
+        verti3.setX((40+x)*this.factorResize);
+        verti3.setY((85+y)*this.factorResize);
+        
+        this.addPathElementList(mid);
+        
+        QuadCurveTo arco5 = new QuadCurveTo();
+        arco5.setControlX((40+x)*this.factorResize);
+        arco5.setControlY((95+y)*this.factorResize);
+        arco5.setX((50+x)*this.factorResize);
+        arco5.setY((100+y)*this.factorResize);
+        
+        this.addPathElementList(arco5);
+        
+        this.setDawnPoint(base.getY());
+        this.setTopPoint(arco1.getY());
+        this.setStartPoint(startA.getX());
+        this.setEndPoint(arco5.getX());
+        
+        miPath.getElements().addAll(startA,arco1,top,arco2,verti1,verti2,hori1,base,arco3,arco4,mid,verti3,arco5);
+       
+         return miPath;
+     }
 }

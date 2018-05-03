@@ -30,7 +30,7 @@ public class Calculadora extends Application {
     public float maxLevel=0;
     public float minLevel=0;
     public float levelActual=0;
-    public float factor =(float) 0.3;
+    public float factor =(float) 0.7;
     public Path miPath = new Path();
     public double x=-110;
     public double y=200;
@@ -219,6 +219,9 @@ public class Calculadora extends Application {
         
         Symbol a= new Symbol(factor,levelActual);
         a.drawE(x, y, miPath);
+        
+        Symbol b= new Symbol(factor,levelActual);
+        b.drawA(x+60, y, miPath);
         
         
         
