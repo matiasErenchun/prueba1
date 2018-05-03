@@ -223,6 +223,9 @@ public class Calculadora extends Application {
         Symbol b= new Symbol(factor,levelActual);
         b.drawA(x+60, y, miPath);
         
+        Symbol c= new Symbol(factor,levelActual);
+        c.drawC(x+120, y, miPath);
+        
         
         
         BorderPane pantalla = new BorderPane();
