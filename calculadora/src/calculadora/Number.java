@@ -5,6 +5,7 @@
  */
 package calculadora;
 
+import javafx.scene.Group;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -25,7 +26,7 @@ public class Number extends Dibujo
         
     }
     
-    public Path draw0(double x,double y,Path miPath)
+    public Group draw0(double x,double y)
     {
         this.setElement("0");
         MoveTo start0 = new MoveTo();
@@ -89,16 +90,17 @@ public class Number extends Dibujo
         arco4.setControlY((100+y)*this.factorResize);
         
         this.addPathElementList(arco4);
-        
-        miPath.getElements().addAll(start0,base,arco1,vLine1,arco2,topLine,arco3,vLine2,arco4);
-        
+        Path MinuevoPath = new Path();
+        MinuevoPath.getElements().addAll(start0,base,arco1,vLine1,arco2,topLine,arco3,vLine2,arco4);
+        Group miNuevoGroup = new Group();
+        miNuevoGroup.getChildren().add(MinuevoPath);
         
         this.setDawnPoint(start0.getY());
         this.setTopPoint(topLine.getY());
         this.setStartPoint(vLine2.getX());
         this.setEndPoint(vLine1.getX());
         
-        return miPath;
+        return miNuevoGroup;
     }
     
     public Path draw1(double x,double y,Path miPath)

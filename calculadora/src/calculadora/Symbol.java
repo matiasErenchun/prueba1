@@ -5,6 +5,7 @@
  */
 package calculadora;
 
+import javafx.scene.Group;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -157,21 +158,21 @@ public class Symbol extends Dibujo
         return miPath;
     }
     
-    public Path drawDividePrincipal(double x,double y,Path miPath)
+    public Group drawDividePrincipal(double xIni,double yIni, double xFin)
     {
         this.setElement("/");
         
-        x+=10;
+        
         
         MoveTo startDiv = new MoveTo();
-        startDiv.setX((140+x)*this.factorResize);
-        startDiv.setY((200+y)*this.factorResize);
+        startDiv.setX((0+xIni)*this.factorResize);
+        startDiv.setY((50+yIni)*this.factorResize);
         
         this.addPathElementList(startDiv);
         
         LineTo line1 = new LineTo();
-        line1.setX((200+x)*this.factorResize);
-        line1.setY((200+y)*this.factorResize);
+        line1.setX((xFin)*this.factorResize);
+        line1.setY((50+yIni)*this.factorResize);
         
         this.addPathElementList(line1);
         
@@ -179,10 +180,13 @@ public class Symbol extends Dibujo
         this.setTopPoint(startDiv.getY());
         this.setStartPoint(startDiv.getX());
         this.setEndPoint(line1.getX());
-        
+        Group miGroup = new Group();
+        Path miPath = new Path();
         miPath.getElements().addAll(startDiv,line1);
         
-        return miPath;
+        miGroup.getChildren().add(miPath);
+        
+        return miGroup;
     }
     
     public Path drawDivide(double x,double y,Path miPath)

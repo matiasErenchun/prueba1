@@ -9,64 +9,54 @@ package calculadora;
  *
  * @author Matias.Erenchun
  */
-public class LevelPoint extends Point
+public class LevelPoint 
 {
-    public Point startPoint;
-    public double endPoint;
+    public double startX;
+    public double endX;
+    public double startY;
     public boolean statusLevel;
-    public LevelPoint(float nivel, double coordenadaX, double CoordenadaY)
+    
+    public LevelPoint( double coordenadaX, double CoordenadaY)
     {
-        super(nivel, coordenadaX, CoordenadaY);
+        this.startX=coordenadaX;
+        this.endX=coordenadaX;
+        this.startY = CoordenadaY;
         this.statusLevel=true;
-        this.startPoint = new Point( nivel,  coordenadaX, CoordenadaY);
-        this.endPoint =coordenadaX;
-    }
-    
-    public boolean compareStartAndEnd()
-    {
-        return this.startPoint.equals(this.endPoint);
     }
 
-    public Point getStartPoint() 
-    {
-        return this.startPoint;
+    public double getStartX() {
+        return startX;
     }
 
-    public void setStartPoint(Point startPoint) 
-    {
-        this.startPoint = startPoint;
+    public void setStartX(double startX) {
+        this.startX = startX;
     }
 
-    public double getEndPoint() 
-    {
-        return this.endPoint;
+    public double getEndX() {
+        return endX;
     }
 
-    public void setEndPoint(double endPoint) 
-    {
-        this.endPoint = endPoint;
-    }
-    
-    public boolean isStatusLevel() 
-    {
-        return this.statusLevel;
+    public void setEndX(double endX) {
+        this.endX = endX;
     }
 
-    public void setStatusLevel(boolean statusLevel) 
-    {
+    public double getStartY() {
+        return startY;
+    }
+
+    public void setStartY(double startY) {
+        this.startY = startY;
+    }
+
+    public boolean getStatusLevel() {
+        return statusLevel;
+    }
+
+    public void setStatusLevel(boolean statusLevel) {
         this.statusLevel = statusLevel;
     }
-    public boolean levelIsInt(float level)
-    {
-        if((level%1.0)!=0)
-        {
-            System.out.println("tu mama");
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+    
+    
+   
     
 }

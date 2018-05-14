@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -27,74 +28,62 @@ import javafx.stage.Stage;
  */
 public class Calculadora extends Application {
     public MapLevel miMapLevel;
-    public float maxLevel=0;
-    public float minLevel=0;
-    public float levelActual=0;
+    
+    public int maxLevel=0;
+    public int minLevel=0;
+    public int levelActual=0;
     public float factor =(float) 0.7;
     public Path miPath = new Path();
+    public Group miGrupo= new Group(miPath);
     public double x=-110;
     public double y=200;
-    public double dif = 65;
+    //public double dif = 65;
     public boolean divid = false;
+    public double space=60;
     @Override
     public void start(Stage primaryStage) {
+       
+        miMapLevel = new MapLevel();
         Button btn = new Button();
-        btn.setText("dawn level");
+        btn.setText("up level");
         btn.setDisable(true);
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) 
             {
-                levelActual-=0.5;
-                if(levelActual<minLevel)
+                levelActual-=1;
+                if(levelActual<maxLevel)
                 {
-                    minLevel=levelActual;
-                    LevelPoint contenedor = miMapLevel.getLevelPoint((float) (levelActual+0.5));
-                    double miY=contenedor.getCoordenadaY();
-                    double miX = miMapLevel.getLevelPoint(0).getCoordenadaX();
-                    LevelPoint contenedor2 = new LevelPoint(levelActual,miX,miY+60);
-                    Symbol div=new Symbol(factor,levelActual);
-                    div.drawDivide(miX, miY+60, miPath);
-                    miMapLevel.AddLevel(levelActual, contenedor2);
-                    LevelPoint contenedor3 = new LevelPoint(levelActual,miX,miY+120);
-                    miMapLevel.AddLevel((float) (levelActual-0.5), contenedor3);
-                    minLevel =(float) (levelActual-0.5);
-                    
-                    
+                    System.out.println("levelActual "+levelActual);
+                    System.out.println("hola");
+                    levelActual+=1;
+                    //pantalla de error de que  no se puede subir mas 
                 }
-                
-                
+               System.out.println("levelActual "+levelActual);
+               System.out.println("max "+maxLevel);
+               System.out.println("min "+minLevel);
             }
         });
         
         Button btn2 = new Button();
-        btn2.setText("up level");
+        btn2.setText("dawn level");
         btn2.setDisable(true);
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) 
             {
-                levelActual+=0.5;
-                if(levelActual>maxLevel)
+                levelActual+=1;
+                if(levelActual>minLevel)
                 {
-                    maxLevel=levelActual;
-                    LevelPoint contenedor = miMapLevel.getLevelPoint((float) (levelActual-0.5));//se obtine el punto de nivel del nivel inferior/anterior
-                    double miY = contenedor.getCoordenadaY();
-                    double miX = miMapLevel.getLevelPoint(0).getCoordenadaX();
-                    
-                    LevelPoint contenedor5 = new LevelPoint(levelActual,miX,miY-60);
-                    Symbol div=new Symbol(factor,levelActual);
-                    div.drawDivide(miX, miY-60, miPath);
-                    miMapLevel.AddLevel(levelActual, contenedor5);
-                    LevelPoint contenedor4 = new LevelPoint(levelActual,miX,miY-120);
-                    miMapLevel.AddLevel((float) (levelActual+0.5), contenedor4);
-                    maxLevel =(float) (levelActual+0.5);
-                    
-                    
+                    System.out.println("levelActual "+levelActual);
+                    System.out.println("hola");
+                    levelActual-=1;
+                    //pantalla de error de que  no se puede subir mas 
                 }
-                
-                
+               System.out.println("levelActual "+levelActual);
+               System.out.println("max "+maxLevel);
+               System.out.println("min "+minLevel);
             }
         });
         
@@ -105,46 +94,45 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) 
             {
+                double miXx=x;
+                double miYy=y;
                 
-                if(divid)
+                
+                if(levelActual==0&&  divid==false)
                 {
-                    boolean b =true;
-                    boolean p = miMapLevel.getLevelPoint(levelActual).levelIsInt(levelActual);//revisa si el nivel actual es un entero( estos son donde estan las  lineas de division).
                     
-                    
-                    if(p )
-                    {
-                        float level1 = (float) (levelActual+0.5);
-                        float level2= (float) (levelActual-0.5);
-                        b=miMapLevel.levelsClose(level1, level2);//revisa si el novel inferior a este esta cerrado lo mismo para el superior.
-                            
-                    }
-                    if(miMapLevel.getLevelPoint(levelActual).isStatusLevel()&&b)
-                    {
-                        double miX=miMapLevel.getLevelPoint(levelActual).getEndPoint();
-                        double miY=miMapLevel.getLevelPoint(levelActual).getCoordenadaY();
-                        if(miMapLevel.levelExist((float) (levelActual+0.5)))
-                        {
-                            miMapLevel.moveEndPointX((float) (levelActual+0.5));
-                        }
-                        if(miMapLevel.levelExist((float) (levelActual-0.5)))
-                        {
-                            miMapLevel.moveEndPointX((float) (levelActual-0.5));
-                        }
-                        Number numero= new Number(factor,levelActual);
-                        numero.draw0(miX, miY, miPath);
-                        LevelPoint  contenedor = miMapLevel.getLevelPoint(levelActual);
-                        contenedor.setEndPoint(miX+60);
-                        miMapLevel.AddLevel(levelActual, contenedor);
-                    }
+                    Number miNumero = new Number(factor,levelActual);
+                    miGrupo.getChildren().add(miNumero.draw0(miXx, miYy));
+                    miXx=miXx+space;
                 }
                 else
                 {
-                    Number numero= new Number(factor,levelActual);
-                    numero.draw0(x, y, miPath);
-                    x+=60;
+                    if(miMapLevel.getLevelPoint(levelActual).getStatusLevel())
+                    {
+                        System.out.println("levelActual"+levelActual);
+                        miXx=miMapLevel.getLevelPoint(levelActual).getEndX();
+                        miYy=miMapLevel.getLevelPoint(levelActual).getStartY();
+                        Number miNumero = new Number(factor,levelActual);
+                        miGrupo.getChildren().add(miNumero.draw0(miXx, miYy));
+                        miXx=miXx+space;
+                    }
+                    else
+                    {
+                        System.out.println("nivel cerrado");
+                    }
                 }
                 
+               
+                
+                if(levelActual!=0)
+                {
+                    miMapLevel.getLevelPoint(levelActual).setEndX(miXx);
+                }
+                else
+                {
+                    x=miXx;
+                }
+                System.out.println("levelActual "+levelActual);
             }
         });
         Button btn4 = new Button();
@@ -155,30 +143,68 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) 
             {
-                divid=true;
-                btn.setDisable(false);
-                btn2.setDisable(false);
-                miMapLevel = new MapLevel();
-                LevelPoint thisLevelPoint = new LevelPoint(levelActual,x+40,y);
-                miMapLevel.AddLevel(levelActual, thisLevelPoint);
-                
-                double thisEx = miMapLevel.getLevelPoint(0).getCoordenadaX();
-                LevelPoint LevelPointUp = new LevelPoint(levelActual,thisEx,y-60);
-                LevelPoint LevelPointDawn = new LevelPoint(levelActual,thisEx,y+60);
-                
-                
-                miMapLevel.AddLevel((float) (0.5), LevelPointUp);
-                miMapLevel.AddLevel((float) (-0.5), LevelPointDawn);
-                maxLevel=(float) 0.5;
-                minLevel=(float) -0.5;
-                
-                
-                Symbol div = new Symbol(factor,levelActual);
-                div.drawDivide(thisEx, y, miPath);
-                x=x+70;
-                btn4.setDisable(true);
+                if(levelActual==0)
+                {
+                    divid=true;
+                    btn.setDisable(false);//luego de presionar el boton de division  abilita los botones de up y dawn
+                    btn2.setDisable(false);
+                    
+                    LevelPoint level0= new LevelPoint(x,y);//crea el level 0 
+                    miMapLevel.AddLevel(levelActual, level0);//agrega el level 0 al hashmap
+                    LevelPoint nivelUp = new LevelPoint(x,y+60);//crea el level 1
+                    LevelPoint nivelDawn = new LevelPoint(x,y-60);//crea el level -1
+                    miMapLevel.AddLevel(levelActual+1, nivelUp);//agrega el level al hasmap
+                    miMapLevel.AddLevel(levelActual-1, nivelDawn);
+                    maxLevel=levelActual-1;// cambia el level maximo por el level superior mas alto  actual.
+                    minLevel=levelActual+1;
+                }
+                if(levelActual>0 && miMapLevel.levelExist(levelActual+1)!=true)// si estamos en un level > al 0 (son los niveles inferiores a la barra de division )y el level superior no existe
+                {
+                    //se crean los dos niveles superiores de la nueva division  y el nivel actual queda como el inferiror de esa division.
+                    double yActual = miMapLevel.getLevelPoint(levelActual).getStartY();//capturamos el y del nivel actual
+                    LevelPoint nivel1Up = new LevelPoint(x,yActual+60);//creamos los dos niveles siguentes y el actual pasa a ser el inferior d ela divicion  nueva y a la vez el  superior de la division antigua 
+                    LevelPoint nivel2Up = new LevelPoint(x,yActual+120);
+                    miMapLevel.AddLevel(levelActual+1, nivel1Up);// agregamos los niveles
+                    miMapLevel.AddLevel(levelActual+2, nivel2Up);
+                    Symbol div = new Symbol(factor, levelActual);
+                    double startNewDivide=miMapLevel.getLevelPoint(levelActual+1).getStartX();// capturamos el x inicial de la divicion
+                    double yContenedor = miMapLevel.getLevelPoint(levelActual+1).getStartY();// capturamos el y de la division
+                    miGrupo.getChildren().add(div.drawDividePrincipal(startNewDivide, yContenedor,startNewDivide+50));//ojo por ahora es ese despues se hara otro al cerra la divicion se dibujara una linea  con el largo de todos los elementos  sobre ella .
+                    minLevel=levelActual+2;
+                    
+                    
+                }
+                else
+                {
+                    if(levelActual<0 && miMapLevel.levelExist(levelActual-1)!=true)
+                    {
+                        // crea los dos niveles inferiores a la division
+                        double yActual = miMapLevel.getLevelPoint(levelActual).getStartY();
+                        LevelPoint nivel1Up = new LevelPoint(x,yActual-60);
+                        LevelPoint nivel2Up = new LevelPoint(x,yActual-120);
+                        miMapLevel.AddLevel(levelActual-1, nivel1Up);
+                        miMapLevel.AddLevel(levelActual-2, nivel2Up);
+                        Symbol div = new Symbol(factor, levelActual);
+                        double startNewDivide=miMapLevel.getLevelPoint(levelActual-1).getStartX();
+                        double yContenedor = miMapLevel.getLevelPoint(levelActual-1).getStartY();
+                        miGrupo.getChildren().add(div.drawDividePrincipal(startNewDivide, yContenedor,startNewDivide+50));//ojo por ahora es ese despues se hara otro.
+                        miMapLevel.getLevelPoint(levelActual).setEndX(startNewDivide+50);
+                        maxLevel=levelActual-2;
+                    }
+                    else
+                    {
+                        //esta parte es para dibujar divisiones simples dentro de un nivel
+                        Symbol div = new Symbol(factor, levelActual);
+                        double xContenedor = miMapLevel.getLevelPoint(levelActual).getEndX();
+                        double yContenedor = miMapLevel.getLevelPoint(levelActual).getStartY();
+                        miGrupo.getChildren().add(div.drawDividePrincipal(xContenedor, yContenedor,xContenedor+50));//ojo por ahora es ese despues se hara otro.
+                        miMapLevel.getLevelPoint(levelActual).setEndX(xContenedor+50);
+                    }
+                    
+                }
             }
         });
+        
         Button btn5 = new Button();
         btn5.setText("close");
         btn5.setOnAction(new EventHandler<ActionEvent>() {
@@ -186,23 +212,16 @@ public class Calculadora extends Application {
             @Override
             public void handle(ActionEvent event) 
             {
-                
-                LevelPoint contenedor = miMapLevel.getLevelPoint(levelActual);
-                contenedor.setStatusLevel(false);
-                miMapLevel.AddLevel(levelActual, contenedor);
-                
-                if(levelActual==0 && divid)
-                {
-                    divid=false;
-                    btn4.setDisable(false);
-                    double a = miMapLevel.getLevelPoint(0).getEndPoint();
-                    a=+60;
-                    System.out.println("a");
-                    System.out.println(a);
-                    
-                    x+=a;
-                }
-                
+                 boolean isClosed =miMapLevel.ClosedLevel(levelActual);
+                 if(isClosed)
+                 {
+                     miMapLevel.setEndXOfUpAndDawn(levelActual);
+                     if(levelActual==0)
+                     {
+                         divid=false;
+                         x=miMapLevel.getLevelPoint(levelActual).getEndX();
+                     }
+                 }
                 
             }
         });
@@ -216,20 +235,9 @@ public class Calculadora extends Application {
         Number numero3 = new Number(factor,levelActual);
         //numero3.draw3(-40, 0, miPath);
         numero3.setFactorResize(f);
-        
-        Symbol a= new Symbol(factor,levelActual);
-        a.drawE(x, y, miPath);
-        
-        Symbol b= new Symbol(factor,levelActual);
-        b.drawA(x+60, y, miPath);
-        
-        Symbol c= new Symbol(factor,levelActual);
-        c.drawC(x+120, y, miPath);
-        
-        
-        
+
         BorderPane pantalla = new BorderPane();
-        pantalla.setCenter(miPath);
+        pantalla.setCenter(miGrupo);
         HBox miBott = new HBox();
         miBott.getChildren().addAll(btn,btn2,btn3,btn4,btn5);
         pantalla.setBottom(miBott);
