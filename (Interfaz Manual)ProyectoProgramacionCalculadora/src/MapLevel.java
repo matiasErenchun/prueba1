@@ -65,22 +65,15 @@ public class MapLevel
     
     public boolean closeLevel(int level,boolean divide)
     {
-        System.out.println("hola inicio");
-        boolean isClosed=false;
-        System.out.println(this.levelIsEven(level)+"es division");
         
+        boolean isClosed=false;
+       
         if(this.levelIsEven(level) && divide==true && level!=0)// niveles pares en general
         {
-            System.out.println("divicion generica");
             if(this.getLevel(level).xStartIsDifferentXEnd())
             {
-                System.out.println("hola35");
-                System.out.println(this.getLevel(level)+"level");
-                System.out.println(this.getLevel(level+1)+"level+1");
-                System.out.println(this.getLevel(level-1)+"level-1");
-                if(this.LevelIsClosed(level+1)&& this.LevelIsClosed(level-1))
+                if(this.iCanDrawInEven(level))
                 {
-                     System.out.println("if si estan cerrados ");
                     this.getLevel(level).setLevelStatus(false);
                     isClosed=true;
                 }
@@ -88,10 +81,8 @@ public class MapLevel
         }
         else
         {
-             System.out.println("si no es division ");
             if(level<0)
             { 
-                System.out.println("si es mayor a 0");
                 isClosed=this.closeUpDivideUp(level);
             }
             else
@@ -167,6 +158,36 @@ public class MapLevel
         {
             this.getLevel(levelToSet).setEndX(xEnd);
         }
+    }
+    
+    public boolean iCanDrawInEven(int level)
+    {
+        boolean iCanDraw=false;
+        if(this.LevelIsClosed(level+1)&& this.LevelIsClosed(level-1) && !this.LevelIsClosed(level))
+        {
+            iCanDraw=true;
+        }
+        return iCanDraw;
+    }
+    
+    public boolean validateLevelToWrite(int level,boolean divide)
+    {
+        boolean isValid = false;
+        if(this.levelIsEven(level)&& divide==true)
+        {
+            if(this.iCanDrawInEven(level))
+            {
+                isValid=true;
+            }
+        }
+        else
+        {
+            if(true!=this.LevelIsClosed(level))
+            {
+                isValid=true;
+            }
+        }
+        return isValid;
     }
 
 

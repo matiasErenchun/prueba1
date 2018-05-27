@@ -228,26 +228,6 @@ public class Pantalla{
        Button btnClose = new Button();
         btnClose.setText("close");
         btnClose.setDisable(true);
-        btnClose.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) 
-            {
-                if(currentlevel==0)
-                {
-                    
-                }
-                else
-                {
-                    boolean status=miMap.closeLevel(currentlevel, divideStatus);
-                    boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
-                    System.out.println(currentlevel);
-                    System.out.println(statusLevel);
-                    System.out.println(status);
-                }
-                
-            }
-        });
         
         Button btnUp = new Button();
         btnUp.setText("up level");
@@ -480,6 +460,35 @@ public class Pantalla{
             */
             
         });
+       btnClose.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                if(currentlevel==0)
+                {
+                    espacioNumero=miMap.getLevel(currentlevel).getEndX();
+                    espacioSuperior=miMap.getLevel(currentlevel).getyLevel();
+                    miMap.startMap(espacioNumero, espacioSuperior);
+                    startThisLevels();
+                    divideStatus=false;
+                    btnDawn.setDisable(true);
+                    btnUp.setDisable(true);
+                    btnClose.setDisable(true);
+                    
+                }
+                else
+                {
+                    boolean status=miMap.closeLevel(currentlevel, divideStatus);
+                    boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
+                    System.out.println(currentlevel);
+                    System.out.println(statusLevel);
+                    System.out.println(status);
+                }
+                
+            }
+        });
+        
        
        /*
        buttonPor.setOnAction((ActionEvent event) ->
@@ -539,7 +548,7 @@ public class Pantalla{
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            if(this.miMap.LevelIsClosed(currentlevel)==false)
+            if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
             {
                 double n =0;
                 double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
@@ -550,7 +559,7 @@ public class Pantalla{
                 this.centro.getChildren().add(numero0.numero0());
                 this.contador(false,currentlevel);
                 this.enPantalla.add(numero0);
-            //this.tryDivide();
+                //this.tryDivide();
             }
         });
        /*
@@ -1115,6 +1124,7 @@ public class Pantalla{
         this.contador(false, levelToPaint);
         
     }
+    
     
     
 }
