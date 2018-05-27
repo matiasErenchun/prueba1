@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -38,12 +39,16 @@ public class Pantalla{
     private List<NumerosYSimbolos> enPantalla; //Lista de todos los elementos dibujados en Pantalla.
     private Group centro;
     private Group grupoPantalla;
-    private int divideStatus = 0; //Variable que sirve para saber en qué estado está una división.
+    private boolean divideStatus =false; //Variable que sirve para saber en qué estado está una división.
     //divideStatus = 1; Significa que se ha iniciado una nueva división y se está dibujando en la parte de arriba de esta.
     //divideStatus = 2; Significa que se está dibujando en la parte inferior de uan división.
     //divideStatus = 0; Significa que no hay división activa.
     private int divisiones = 0; //Contador de Divisiones. Utilizado para tener control sobre el crecimiento de la línea de división.
     private List<String> decimal;
+    private MapLevel miMap;
+    private int currentlevel;
+    private int minimumLevel;
+    private int miximumLevel;
     //contenedor de los simbolos
     HBox cajaDeSimbolos = new HBox();
     VBox simbolos = new VBox();
@@ -54,7 +59,7 @@ public class Pantalla{
     Stage primaryStage=new Stage();
     VBox contenedorSimbolos = new VBox();
     Button bases=new Button("Base");
-
+    
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
         this.decimal = new ArrayList<>();
@@ -62,7 +67,9 @@ public class Pantalla{
     }
 
     public void inicio(){
-        
+        this.miMap = new MapLevel();
+        this.miMap.startMap(this.espacioNumero, this.espacioSuperior);
+        this.startThisLevels();
         
         VBox numerosColumna1 = new VBox();//creamos el Hbox
         VBox numerosColumna2 = new VBox();
@@ -217,8 +224,67 @@ public class Pantalla{
        //HBox.setHgrow(buttonDiv, Priority.ALWAYS);
        button.setMaxWidth(Double.MAX_VALUE);
        //buttonDiv.setMaxWidth(Double.MAX_VALUE);
+       
+       Button btnClose = new Button();
+        btnClose.setText("close");
+        btnClose.setDisable(true);
+        btnClose.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                if(currentlevel==0)
+                {
+                    
+                }
+                else
+                {
+                    boolean status=miMap.closeLevel(currentlevel, divideStatus);
+                    boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
+                    System.out.println(currentlevel);
+                    System.out.println(statusLevel);
+                    System.out.println(status);
+                }
+                
+            }
+        });
+        
+        Button btnUp = new Button();
+        btnUp.setText("up level");
+        btnUp.setDisable(true);
+        btnUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                currentlevel-=1;
+                if(currentlevel<miximumLevel)
+                {
+                    currentlevel+=1;
+                }
+                System.out.println(miximumLevel+"miximumLevel");
+                System.out.println(currentlevel+"current");
+            }
+        });
+        
+        Button btnDawn = new Button();
+        btnDawn.setText("dawn level");
+        btnDawn.setDisable(true);
+        btnDawn.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) 
+            {
+                currentlevel+=1;
+                if(currentlevel>minimumLevel)
+                {
+                    currentlevel-=1;
+                }
+                System.out.println(currentlevel+"current");
+                System.out.println(minimumLevel+"minimumLevel");
+            }
+        });
       
-       simbolos4.getChildren().addAll(button);
+       simbolos4.getChildren().addAll(btnDawn,btnClose,btnUp,button);
        
        //-------------------------------------//
        
@@ -329,6 +395,53 @@ public class Pantalla{
        //Botones y sus funcionalidades.
        buttonDiv.setOnAction((ActionEvent event) ->
         {
+            if(this.miMap.LevelIsClosed(currentlevel)==false)
+            {
+                if(currentlevel==0)
+                {
+                    this.divideStatus=true;
+                    btnDawn.setDisable(false);
+                    btnUp.setDisable(false);
+                    btnClose.setDisable(false);
+                    this.espacioNumero=this.miMap.getLevel(0).getEndX();
+                    this.paintDivide(0, currentlevel,this.puntosVisibles);
+                    this.miMap.createLevel(this.espacioNumero, this.currentlevel-1);
+                    this.miMap.createLevel(this.espacioNumero, this.currentlevel+1);
+                    this.setMinimumLevel(1);
+                    this.setMiximumLevel(-1);
+                
+                
+                }
+                else
+                {
+                    if(this.currentlevel>0 && this.currentlevel==this.minimumLevel)
+                    {
+                    
+                        this.miMap.createLevel(this.espacioNumero, this.currentlevel+1);
+                        this.miMap.createLevel(this.espacioNumero, this.currentlevel+2);
+                        this.setMinimumLevel(this.currentlevel+2);
+                        this.paintDivide(0, currentlevel+1,this.puntosVisibles);
+                    
+                    }
+                    else
+                    {
+                        if(this.currentlevel==this.miximumLevel)
+                        {
+                            this.miMap.createLevel(this.espacioNumero, this.currentlevel-1);
+                            this.miMap.createLevel(this.espacioNumero, this.currentlevel-2);
+                            this.setMiximumLevel(this.currentlevel-2);
+                            this.paintDivide(0, currentlevel-1,this.puntosVisibles);
+                        }
+                    
+                    }
+                }
+            }
+            else
+            {
+                //error nivel cerrado
+            }
+            
+            /*
             espacioNumero+=90;
             rePaintDivide();
             double n =0;
@@ -343,11 +456,11 @@ public class Pantalla{
             else if (divideStatus==2) { //En caso que esté en la parte de abajo de una división.
                 if (divisiones==0) { //Si no hay más divisiones, vuelve a escribir de forma normal.
                     divideStatus=0;
-                    contador(false);
+                    contador(false,levelActual);
                 }
                 else { //Si hay más divisiones, vuelve a la parte superior de la última división.
                     divideStatus=1;
-                    contador(false);
+                    contador(false,levelActual);
                 }
                 //Busca la última división escrita, lo establcece como división cerrada.
                 for (int x = enPantalla.size()-1; x>=0; x--) {
@@ -364,11 +477,11 @@ public class Pantalla{
                 
             }
             
-
+            */
             
         });
        
-       
+       /*
        buttonPor.setOnAction((ActionEvent event) ->
         { 
             double n =0;
@@ -422,17 +535,25 @@ public class Pantalla{
             enPantalla.add(resta);
             tryDivide();
         });
+       */
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos numero0 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero0.numero0());
-            contador(false);
-            enPantalla.add(numero0);
-            tryDivide();
+            if(this.miMap.LevelIsClosed(currentlevel)==false)
+            {
+                double n =0;
+                double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
+                double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
+                    
+                NumerosYSimbolos numero0 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+           
+                this.centro.getChildren().add(numero0.numero0());
+                this.contador(false,currentlevel);
+                this.enPantalla.add(numero0);
+            //this.tryDivide();
+            }
         });
-       
+       /*
        button1.setOnAction((ActionEvent event) ->
         { 
             double n =0;
@@ -620,7 +741,7 @@ public class Pantalla{
                 
                
         });
-       
+       */
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
        buttonNn2.setOnAction((ActionEvent event) ->
@@ -660,7 +781,7 @@ public class Pantalla{
         });
         
        
-       //Este botón, en caso de estar arriba de una división, hace que se dibujen números o símbolos abajo de esta.
+       /*Este botón, en caso de estar arriba de una división, hace que se dibujen números o símbolos abajo de esta.
        buttonBajar.setOnAction((ActionEvent event) ->
         {
             if (divideStatus==1) {
@@ -675,7 +796,7 @@ public class Pantalla{
             double n =0;
             NumerosYSimbolos numero0 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
             centro.getChildren().add(numero0.numero0());
-            contador(false);
+            contador(false,currentlevel);
             enPantalla.add(numero0);
             tryDivide();
         });
@@ -685,18 +806,18 @@ public class Pantalla{
             double n =0;
             NumerosYSimbolos numero1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
             centro.getChildren().add(numero1.numero1());
-            contador(false);
+            contador(false,currentlevel);
             enPantalla.add(numero1);
             tryDivide();
             
         });
-       
+       */
        buttonEliminarBin.setOnAction((ActionEvent event) ->
         {
             reinicia();
             buttonDiv.setText("/");
         });
-       
+       /*
        buttonBajarBin.setOnAction((ActionEvent event) ->
         {
             if (divideStatus==1) {
@@ -705,7 +826,7 @@ public class Pantalla{
                 buttonDiv.setText("Cierra División");
             }
         });
-       
+       */
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
@@ -762,13 +883,20 @@ public class Pantalla{
         primaryStage.setScene(scene);//agregamos scene a la pantalla
         primaryStage.show();//mostramos la pantalla
     }
-    
+    //ahora hace lo de abajo pero para  el nivel en que se encuentra 
     //Método que aumenta en X para dejar espacio a los números.
-    private void contador(boolean saltaTres){
+    private void contador(boolean saltaTres,int level)
+    {
+        double contenedor = this.miMap.getLevel(level).getEndX();
         if (saltaTres==false)
-            espacioNumero+=90;
+        {
+            contenedor+=90;
+        }
         else
-            espacioNumero+=270;
+        {
+            contenedor+=270;
+        }
+        this.miMap.getLevel(level).setEndX(contenedor);
         
         //contador+=200;
         /*if(contador>14000){
@@ -801,7 +929,7 @@ public class Pantalla{
                 centro.getChildren().remove(x+1);
                 //Se crea una nueva división que abarque más elementos.
                 NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
-                centro.getChildren().add(division.division(amountOfSymbols, divisionesActual));
+                //centro.getChildren().add(division.division(amountOfSymbols, divisionesActual));
                 enPantalla.add(division);
             }
             x--;
@@ -809,6 +937,7 @@ public class Pantalla{
     }
     
     //Este método verifica si acutalmente hay una división activa o no, para entonces dar paso a rePaintDivide o no.
+   /* 
     private void tryDivide(){
         if (divideStatus==0)
             return;
@@ -817,7 +946,7 @@ public class Pantalla{
         if (divideStatus==2)
             rePaintDivide();
     }
-
+*/
     
     //** aqui va todo lo de los cambios de tamaño **//
     private void SetSize(String toString) {
@@ -933,10 +1062,60 @@ public class Pantalla{
             centro.getChildren().removeAll(centro.getChildren());
             centro.getChildren().add(elemento);
             enPantalla.removeAll(enPantalla);
-            divideStatus=0;
+            divideStatus=false;
             divisiones=0;
             espacioNumero=0;
             espacioSuperior=0;
+            this.miMap.startMap(espacioNumero, espacioSuperior);
+            this.startThisLevels();
     }
+    
+    //reinicia los valores de level min max y actual.
+    private void startThisLevels()
+    {
+        this.setLevelActual(0);
+        this.setMinimumLevel(0);
+        this.setMiximumLevel(0);
+    }
+                
+
+
+    public int getLevelActual() {
+        return this.currentlevel;
+    }
+
+    public void setLevelActual(int levelActual) {
+        this.currentlevel = levelActual;
+    }
+
+    public int getMinimumLevel() {
+        return this.minimumLevel;
+    }
+
+    public void setMinimumLevel(int minimumLevel) {
+        this.minimumLevel = minimumLevel;
+    }
+
+    public int getMiximumLevel() {
+        return this.miximumLevel;
+    }
+
+    public void setMiximumLevel(int miximumLevel) 
+    {
+        this.miximumLevel = miximumLevel;
+    }
+    
+    public void paintDivide(double marco ,int levelToPaint, boolean puntos)
+    {
+        double miX=this.miMap.getLevel(levelToPaint).getEndX();
+        double miY=this.miMap.getLevel(levelToPaint).getyLevel();
+        NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos);
+        this.centro.getChildren().add(symbol.division(miX+90));
+        this.enPantalla.add(symbol);
+        this.contador(false, levelToPaint);
+        
+    }
+    
+    
 }
     

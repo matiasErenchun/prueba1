@@ -56,7 +56,17 @@ public class LevelPoint
         this.statusLevel = statusLevel;
     }
     
-    
+    public boolean xStartIsDifferentXEnd()
+    {
+        boolean isDifferent=false;
+        if(this.endX!=this.startX)
+        {
+            isDifferent=true;
+        }
+        
+        return isDifferent;
+        
+    }
    
     
 }

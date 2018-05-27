@@ -22,6 +22,8 @@ import javafx.scene.shape.VLineTo;
  */
 public class NumerosYSimbolos extends PuntosDeControl{
 
+    
+    
     private double espacio;
     private final double superior;
     private double size; //Tamaño personalizado de los elementos para que todos calcen y tengan mismo tamaño.
@@ -47,6 +49,57 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public void configura(){
         pathActual.setStrokeWidth(4);
         circle.setVisible(puntosVisibles);
+    }
+    
+    
+    public Group numero0() {
+        type = "number";
+        ID = "0";
+        size=1.28;
+        xPoint = (200+espacio);
+        yPoint = (150+superior);
+
+        Arc arcZero = new Arc(xPoint, yPoint,25*size,40*size,90,90);
+        Arc arc1Zero = new Arc(xPoint, yPoint,25*size,40*size,180,90);
+        Arc arc2Zero = new Arc(xPoint, yPoint,25*size,40*size,270,90);
+        Arc arc3Zero = new Arc(xPoint, yPoint,25*size,40*size,360,90);
+        
+        configuraArco(arcZero);
+        configuraArco(arc1Zero);
+        configuraArco(arc2Zero);
+        configuraArco(arc3Zero);
+        
+        createCircle(arcZero.getCenterX(), arcZero.getCenterY()-40*size);
+        createCircle(arc1Zero.getCenterX()+25*size, arc1Zero.getCenterY());
+        createCircle(arc2Zero.getCenterX(), arc2Zero.getCenterY()+40*size);
+        createCircle(arc3Zero.getCenterX()-25*size, arc3Zero.getCenterY());
+        
+        root.getChildren().addAll(arcZero, arc1Zero, arc2Zero, arc3Zero, circle);
+        configura();
+        return root;
+    }
+    
+    public Group division(double endPoint) {
+        ID = "/";
+        size=1.2;
+        this.amountOfSymbolsDivide=amountOfSymbolsDivide;
+        xPoint = (155+espacio);
+        yPoint = (superior);
+        this.numDivision = numDivision; //Número de la división. (Orden)
+
+        MoveTo startDivide = new MoveTo(xPoint, yPoint+150);
+        //Por cada número que aumente en amountOfSymbolsDivide, la linea de división aumenta en 90.
+        LineTo line2Divide = new LineTo(xPoint+90, yPoint+150);
+
+        pathActual.setStrokeWidth(4*size);   
+        pathActual.getElements().addAll(startDivide, line2Divide);
+        
+        iniciateCircleMoveTo(startDivide);
+        iniciateCircleLineTo(line2Divide);
+        
+        root.getChildren().addAll(pathActual, circle);        
+        configura();      
+        return root;
     }
     
     public Group multiplicacion() {
@@ -88,29 +141,6 @@ public class NumerosYSimbolos extends PuntosDeControl{
         configura();
         
         //Se regresa el grupo a la pizarra, donde serán agregadas.
-        return root;
-    }
-    
-    public Group division(double amountOfSymbolsDivide, int numDivision) {
-        ID = "/";
-        size=1.2;
-        this.amountOfSymbolsDivide=amountOfSymbolsDivide;
-        xPoint = (200+espacio);
-        yPoint = (80+superior);
-        this.numDivision = numDivision; //Número de la división. (Orden)
-
-        MoveTo startDivide = new MoveTo(xPoint, yPoint);
-        //Por cada número que aumente en amountOfSymbolsDivide, la linea de división aumenta en 90.
-        LineTo line2Divide = new LineTo(xPoint+90*(amountOfSymbolsDivide-1), yPoint);
-
-        pathActual.setStrokeWidth(4*size);   
-        pathActual.getElements().addAll(startDivide, startDivide, line2Divide);
-        
-        iniciateCircleMoveTo(startDivide);
-        iniciateCircleLineTo(line2Divide);
-        
-        root.getChildren().addAll(pathActual, circle);        
-        configura();      
         return root;
     }
     
@@ -206,32 +236,7 @@ public class NumerosYSimbolos extends PuntosDeControl{
         return root;
     }
     
-    public Group numero0() {
-        type = "number";
-        ID = "0";
-        size=1.28;
-        xPoint = (190+espacio);
-        yPoint = (150+superior);
-
-        Arc arcZero = new Arc(xPoint, yPoint,25*size,40*size,90,90);
-        Arc arc1Zero = new Arc(xPoint, yPoint,25*size,40*size,180,90);
-        Arc arc2Zero = new Arc(xPoint, yPoint,25*size,40*size,270,90);
-        Arc arc3Zero = new Arc(xPoint, yPoint,25*size,40*size,360,90);
-        
-        configuraArco(arcZero);
-        configuraArco(arc1Zero);
-        configuraArco(arc2Zero);
-        configuraArco(arc3Zero);
-        
-        createCircle(arcZero.getCenterX(), arcZero.getCenterY()-40*size);
-        createCircle(arc1Zero.getCenterX()+25*size, arc1Zero.getCenterY());
-        createCircle(arc2Zero.getCenterX(), arc2Zero.getCenterY()+40*size);
-        createCircle(arc3Zero.getCenterX()-25*size, arc3Zero.getCenterY());
-        
-        root.getChildren().addAll(arcZero, arc1Zero, arc2Zero, arc3Zero, circle);
-        configura();
-        return root;
-    }
+    
     
     public Group numero1(){
         type = "number";

@@ -120,4 +120,9 @@ public class MapLevel
         }
     }
     
+    public void closeLevel(int level)
+    {
+        if(this.)
+    }
+    
 }
