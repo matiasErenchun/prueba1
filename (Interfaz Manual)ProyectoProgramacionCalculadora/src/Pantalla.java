@@ -11,6 +11,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
@@ -58,7 +62,20 @@ public class Pantalla{
     HBox contenerdorPrincipal = new HBox();         
     Stage primaryStage=new Stage();
     VBox contenedorSimbolos = new VBox();
-    Button bases=new Button("Base");
+    Label texto= new Label("");
+    ScrollPane textBox=new ScrollPane();
+    int tipoCalculadora=0;//0=basica 1=cientifica
+    int baseCalculadora=0;//0=decimal 1=binaria
+    MenuItem cincuenta;
+    MenuItem cien;
+    MenuItem docientos;
+    MenuItem basica;
+    MenuItem tipoDecimal;
+    MenuItem tipoBinario;
+    MenuItem mostrar;
+    MenuItem ocultar;
+    
+    
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -241,8 +258,8 @@ public class Pantalla{
                 {
                     currentlevel+=1;
                 }
-                System.out.println(miximumLevel+"miximumLevel");
-                System.out.println(currentlevel+"current");
+//                System.out.println(miximumLevel+"miximumLevel");
+//                System.out.println(currentlevel+"current");
             }
         });
         
@@ -259,8 +276,8 @@ public class Pantalla{
                 {
                     currentlevel-=1;
                 }
-                System.out.println(currentlevel+"current");
-                System.out.println(minimumLevel+"minimumLevel");
+//                System.out.println(currentlevel+"current");
+//                System.out.println(minimumLevel+"minimumLevel");
             }
         });
       
@@ -319,60 +336,46 @@ public class Pantalla{
        pane.setCenter(mainPane);
        BorderPane.setAlignment(mainPane, Pos.CENTER);
        
-       //** comboboxes **//
+       //** menu de opciones **//
        
-       HBox boxes=new HBox();
+        MenuBar barraSuperior= new MenuBar();
+            Menu menu1 = new Menu("Zoom");
+
+                cincuenta = new MenuItem("50%");
+                cien = new MenuItem("100%");
+                docientos = new MenuItem("200%");
+            menu1.getItems().addAll(cincuenta,cien,docientos);
+            cien.setDisable(true);
+            cincuenta.setOnAction(e->SetSize(cincuenta.getText()));
+            cien.setOnAction(e->SetSize(cien.getText()));
+            docientos.setOnAction(e->SetSize(docientos.getText()));
             
-            ComboBox selectSize=new ComboBox();
-                selectSize.getItems().addAll(
-                    "50%",
-                    "100%",
-                    "200%"
-                );
-            selectSize.getSelectionModel().select("100%");
-        
-            ComboBox typeKeyboard =new ComboBox();
-                typeKeyboard.getItems().addAll(
-                    "Basica",
-                    "Cientifica"
-                );
-            typeKeyboard.getSelectionModel().selectFirst();
             
-            ComboBox base =new ComboBox();
-                base.getItems().addAll(
-                    "Decimal",
-                    "Binario"
-                );
-            base.getSelectionModel().selectFirst();
-            base.setVisible(false);
-        
-        Button zoom=new Button("Zoom");
-        Button tipo=new Button("Tipo");
-        bases.setVisible(false);
-        
-        zoom.setDisable(true);
-        zoom.setOpacity(1);
-        tipo.setDisable(true);
-        tipo.setOpacity(1);
-        bases.setDisable(true);
-        bases.setOpacity(1);
-        
+            Menu menu2 = new Menu("Tipo de calculadora");
+
+                basica = new MenuItem("Basica");
+                Menu cientifica = new Menu("cientifica");
+                    tipoDecimal = new MenuItem("Tipo Decimal");
+                    tipoBinario = new MenuItem("Tipo Binario");
+                cientifica.getItems().addAll(tipoDecimal,tipoBinario);
+            menu2.getItems().addAll(basica,cientifica);
             
-        boxes.getChildren().addAll(zoom,selectSize,tipo,typeKeyboard,bases,base);
+            basica.setDisable(true);
+                    
+            basica.setOnAction(e -> SetTypeKeyboard(basica.getText()));
+            tipoDecimal.setOnAction(e->SetBase(tipoDecimal.getText(),cientifica.getText()));
+            tipoBinario.setOnAction(e->SetBase(tipoBinario.getText(),cientifica.getText()));
+            
+            Menu menu3 = new Menu("Puntos de Control");
+                mostrar= new MenuItem("Mostrar Puntos de Control");
+                ocultar= new MenuItem("Esconder Puntos de Control");
+            menu3.getItems().addAll(mostrar,ocultar);
+            ocultar.setDisable(true);
+            
+        barraSuperior.getMenus().addAll(menu1,menu2,menu3);
         
-        Button buttonNn2 = new Button(" Mostrar Puntos de Control ");
-        HBox.setHgrow(buttonNn2, Priority.ALWAYS);
-        buttonNn2.setMaxWidth(Double.MAX_VALUE);
-        boxes.getChildren().add(buttonNn2);
-        
-       pane.setTop(boxes);
+       pane.setTop(barraSuperior);
        
-       selectSize.setOnAction(e -> SetSize(selectSize.getValue().toString()));
-       typeKeyboard.setOnAction(e -> SetTypeKeyboard(typeKeyboard.getValue().toString(),base));
-       base.setOnAction(e -> SetBase(base.getValue().toString()));
-       
-       //SetBase(base.getValue().toString(); Antes
-       //Botones y sus funcionalidades.
        buttonDiv.setOnAction((ActionEvent event) ->
         {
             if(this.miMap.LevelIsClosed(currentlevel)==false)
@@ -420,45 +423,6 @@ public class Pantalla{
             {
                 //error nivel cerrado
             }
-            
-            /*
-            espacioNumero+=90;
-            rePaintDivide();
-            double n =0;
-            if (divideStatus==0 || divideStatus==1){ //En caso que no haya división o que se esté en la parte superior de una, se añade una nueva división.
-                NumerosYSimbolos division = new NumerosYSimbolos(n, espacioNumero-40,espacioSuperior, puntosVisibles);
-                divisiones+=1;
-                centro.getChildren().add(division.division(1, divisiones));
-                enPantalla.add(division);
-                divideStatus=1;
-                espacioSuperior-=140;
-            }
-            else if (divideStatus==2) { //En caso que esté en la parte de abajo de una división.
-                if (divisiones==0) { //Si no hay más divisiones, vuelve a escribir de forma normal.
-                    divideStatus=0;
-                    contador(false,levelActual);
-                }
-                else { //Si hay más divisiones, vuelve a la parte superior de la última división.
-                    divideStatus=1;
-                    contador(false,levelActual);
-                }
-                //Busca la última división escrita, lo establcece como división cerrada.
-                for (int x = enPantalla.size()-1; x>=0; x--) {
-                    if (enPantalla.get(x).getID() == "/") {
-                        enPantalla.get(x).getNumDivision();
-                        if (enPantalla.get(x).getNumDivision()==divisiones) {
-                            enPantalla.get(x).setID("%");
-                        }
-                    }
-                }
-                rePaintDivide();
-                divisiones-=1;
-                buttonDiv.setText("/");
-                
-            }
-            
-            */
-            
         });
        btnClose.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -481,361 +445,170 @@ public class Pantalla{
                 {
                     boolean status=miMap.closeLevel(currentlevel, divideStatus);
                     boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
-                    System.out.println(currentlevel);
-                    System.out.println(statusLevel);
-                    System.out.println(status);
+//                    System.out.println(currentlevel);
+//                    System.out.println(statusLevel);
+//                    System.out.println(status);
                 }
                 
             }
         });
         
        
-       /*
+       
        buttonPor.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos multiplicacion = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(multiplicacion.multiplicacion());
-            contador(false);
-            enPantalla.add(multiplicacion);
-            tryDivide();
+            dibujar("*");
         });
        
        buttonPar1.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos parentesis1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(parentesis1.parentesis1());
-            contador(false);
-            enPantalla.add(parentesis1);
-            tryDivide();
-            
-            
+            dibujar("(");
         });
        
        buttonPar2.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos parentesis2 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(parentesis2.parentesis2());
-            contador(false);
-            enPantalla.add(parentesis2);
-            tryDivide();
-            
+            dibujar(")");
         });
 
        buttonMas.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos suma = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(suma.suma());
-            contador(false);
-            enPantalla.add(suma);
-            tryDivide();
-            
+            dibujar("+");
         });
        
        buttonMenos.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos resta = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(resta.resta());
-            contador(false);
-            enPantalla.add(resta);
-            tryDivide();
+            dibujar("-");
         });
-       */
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
-            {
-                double n =0;
-                double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
-                double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
-                    
-                NumerosYSimbolos numero0 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
-           
-                this.centro.getChildren().add(numero0.numero0());
-                this.contador(false,currentlevel);
-                this.enPantalla.add(numero0);
-                //this.tryDivide();
-            }
+            dibujar("0");
         });
-       /*
+       
        button1.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero1.numero1());
-            contador(false);
-            enPantalla.add(numero1);
-            tryDivide();
-            
+            dibujar("1");
         });
        
        button2.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos numero2 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero2.numero2());
-            contador(false);
-            enPantalla.add(numero2);
-            tryDivide();
-            
+            dibujar("2");
         });
        
        button3.setOnAction((ActionEvent event) ->
        { 
-            double n =0;
-            NumerosYSimbolos numero3 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero3.numero3());
-            contador(false);
-            enPantalla.add(numero3);
-            tryDivide();
-            
+            dibujar("3");
         });
        
        button4.setOnAction((ActionEvent event) ->
        {
-            double n =0;
-            NumerosYSimbolos numero4 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero4.numero4());
-            contador(false);
-            enPantalla.add(numero4);
-            tryDivide();
-                
-               
+            dibujar("4");   
         });
        
        button5.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos numero5 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero5.numero5());
-            contador(false);
-            enPantalla.add(numero5);
-            tryDivide();
-                
-               
+            dibujar("5");   
         });
        
        button6.setOnAction((ActionEvent event) ->
            
         {
-             double n =0;
-             NumerosYSimbolos numero6 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-             centro.getChildren().add(numero6.numero6());
-             contador(false);
-             enPantalla.add(numero6);
-             tryDivide();
-
-
+            dibujar("6");
          });
        
        button7.setOnAction((ActionEvent event) ->
            
         {
-             double n =0;
-             NumerosYSimbolos numero7 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-             centro.getChildren().add(numero7.numero7());
-             contador(false);
-             enPantalla.add(numero7);
-             tryDivide();
-
-
+            dibujar("7");
          });
        
        button8.setOnAction((ActionEvent event) ->
            
         {
-             double n =0;
-             NumerosYSimbolos numero8 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-             centro.getChildren().add(numero8.numero8());
-             contador(false);
-             enPantalla.add(numero8);
-             tryDivide();
-
-
+            dibujar("8");
          });
        
        button9.setOnAction((ActionEvent event) ->
            
         {
-             double n =0;
-             NumerosYSimbolos numero9 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-             centro.getChildren().add(numero9.numero9());
-             contador(false);
-             enPantalla.add(numero9);
-
-             tryDivide();
-
-
+            dibujar("9");
          });
        
          buttonCos.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos cos = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(cos.cos());
-            contador(true);
-            NumerosYSimbolos paren1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(paren1.parentesis1());
-            contador(false);
-            enPantalla.add(cos);
-            enPantalla.add(paren1);
-            tryDivide();
-                
-               
+         dibujarTrigonometrica("cos","(");
         });
-                
+       
        buttonSen.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos sen = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(sen.sen());
-            contador(true);
-            NumerosYSimbolos paren1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(paren1.parentesis1());
-            contador(false);
-            enPantalla.add(sen);
-            enPantalla.add(paren1);
-            tryDivide();
-                
-               
+            dibujarTrigonometrica("sen","(");   
         });
        
        buttonTan.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos tan = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(tan.tan());
-            contador(true);
-            NumerosYSimbolos paren1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(paren1.parentesis1());
-            contador(false);
-            enPantalla.add(tan);
-            enPantalla.add(paren1);
-            tryDivide();
-                
-               
+            dibujarTrigonometrica("tan","(");   
         });
        
        buttonGorrito.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos gorrito = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(gorrito.dibujarElevado());
-            contador(false);
-            enPantalla.add(gorrito);
-            tryDivide();
-                
-               
+            dibujar("^");
         });
        
        buttonFactorial.setOnAction((ActionEvent event) ->
            
         {
-            double n =0;
-            NumerosYSimbolos factorial = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(factorial.dibujarFactorial());
-            contador(false);
-            enPantalla.add(factorial);
-            tryDivide();
-                
-               
+          dibujar("!");
         });
-       */
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
-       buttonNn2.setOnAction((ActionEvent event) ->
+       ocultar.setOnAction((ActionEvent event) ->
         { 
             if (puntosVisibles==true) {
                 puntosVisibles=false;
                 for (int x=0; x<enPantalla.size(); x++) {
                     enPantalla.get(x).visibleCircle(puntosVisibles);
                 }
-                buttonNn2.setText(" Mostrar Puntos de Control ");
+                ocultar.setDisable(true);
+                mostrar.setDisable(false);
             }
-            else {
+        });
+               
+        mostrar.setOnAction((ActionEvent event) ->
+        { 
+            if (puntosVisibles==false) {
                 puntosVisibles=true;
-                for (int x=0; x<enPantalla.size(); x++)
+                for (int x=0; x<enPantalla.size(); x++) {
                     enPantalla.get(x).visibleCircle(puntosVisibles);
-                buttonNn2.setText("Esconder Puntos de Control");
+                }
+                ocultar.setDisable(false);
+                mostrar.setDisable(true);
             }
         });
        
-       //Este botón elimina el último número escrito (Beta, falla con divisiones).
-       /*buttonEliminar.setOnAction((ActionEvent event) ->
-        {
-            if (enPantalla.size()>0) {
-                centro.getChildren().remove(centro.getChildren().size()-1);
-                enPantalla.remove(centro.getChildren().size()-1);
-                espacioNumero-=90;
-            }   
-        });*/
         buttonEliminar.setOnAction((ActionEvent event) ->
         {
             reinicia();
             buttonDiv.setText("/");
-            /*puntosVisibles=true;
-                for (int x=0; x<enPantalla.size(); x++)
-                    enPantalla.get(x).visibleCircle(puntosVisibles);
-                buttonNn2.setText("Esconder Puntos de Control");*/
         });
-        
-       
-       /*Este botón, en caso de estar arriba de una división, hace que se dibujen números o símbolos abajo de esta.
-       buttonBajar.setOnAction((ActionEvent event) ->
-        {
-            if (divideStatus==1) {
-                divideStatus=2;
-                espacioSuperior+=140;
-                buttonDiv.setText("Cierra División");
-            }
-        });
-       
         button0Bin.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos numero0 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero0.numero0());
-            contador(false,currentlevel);
-            enPantalla.add(numero0);
-            tryDivide();
+            dibujar("0");
         });
        
        button1Bin.setOnAction((ActionEvent event) ->
         { 
-            double n =0;
-            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, espacioNumero,espacioSuperior, puntosVisibles);
-            centro.getChildren().add(numero1.numero1());
-            contador(false,currentlevel);
-            enPantalla.add(numero1);
-            tryDivide();
-            
+            dibujar("1");
         });
-       */
        buttonEliminarBin.setOnAction((ActionEvent event) ->
         {
             reinicia();
             buttonDiv.setText("/");
         });
-       /*
-       buttonBajarBin.setOnAction((ActionEvent event) ->
-        {
-            if (divideStatus==1) {
-                divideStatus=2;
-                espacioSuperior+=140;
-                buttonDiv.setText("Cierra División");
-            }
-        });
-       */
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
@@ -872,7 +645,15 @@ public class Pantalla{
        HBox.setHgrow(binario, Priority.ALWAYS);
        
        BorderPane BpanePrueba = new BorderPane();
-       BpanePrueba.setBottom(contenerdorPrincipal);
+       VBox bottom =new VBox();
+       texto=new Label("");
+       texto.setStyle("-fx-font-size:20px;");
+       textBox.setContent(texto);
+       textBox.setMinHeight(50);
+       texto.setMaxWidth(Double.MAX_VALUE);
+       texto.setAlignment(Pos.CENTER_LEFT);
+       bottom.getChildren().addAll(contenerdorPrincipal,textBox);
+       BpanePrueba.setBottom(bottom);
        //BpanePrueba.setCenter(pantallaDibujo);
        BpanePrueba.setCenter(pane);
       
@@ -914,107 +695,98 @@ public class Pantalla{
             espacioNumero=0;
         }*/
     }
-    /*Este método busca la úlima división escrita guiándose por su ID, obtiene sus datos de ubicación y cantidad
-    de simbolos escritos en esta, entonces elimina la actual, para dar paso a una nueva división la cual aumenta en tamaño con la variable
-    aumountOfSymbolsDivide.
-    */
-    private void rePaintDivide(){
-        double espacioDivision;
-        double superiorDivision;
-        double amountOfSymbols;
-        int x = enPantalla.size()-1;
-        int divisionesActual;
-        while (enPantalla.size()>x && x>=0) {
-            //Se verifica que el elemento corresponda a una división abierta.
-            if (enPantalla.get(x).getID()=="/") {
-                //Se obtienen las coordenadas iniciales de la división.
-                espacioDivision= enPantalla.get(x).getxPoint()-200;
-                superiorDivision = enPantalla.get(x).getyPoint()-80;
-                //Se aumenta en 1 la de elementos en la división.
-                amountOfSymbols = enPantalla.get(x).getAmountOfSymbolsDivide()+1;
-                divisionesActual = enPantalla.get(x).getNumDivision();
-                //Se elimina la división actual.
-                enPantalla.remove(x);
-                centro.getChildren().remove(x+1);
-                //Se crea una nueva división que abarque más elementos.
-                NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
-                //centro.getChildren().add(division.division(amountOfSymbols, divisionesActual));
-                enPantalla.add(division);
-            }
-            x--;
-        }
-    }
-    
-    //Este método verifica si acutalmente hay una división activa o no, para entonces dar paso a rePaintDivide o no.
-   /* 
-    private void tryDivide(){
-        if (divideStatus==0)
-            return;
-        if (divideStatus==1)
-            rePaintDivide();
-        if (divideStatus==2)
-            rePaintDivide();
-    }
-*/
-    
     //** aqui va todo lo de los cambios de tamaño **//
     private void SetSize(String toString) {
         switch (toString){
             
             case "100%":
                 setScaleNumbers(0.5);
-                           
+                cien.setDisable(true);
+                cincuenta.setDisable(false);
+                docientos.setDisable(false);    
             break;
             
             case "50%":
                 setScaleNumbers(0.25);
+                cien.setDisable(false);
+                cincuenta.setDisable(true);
+                docientos.setDisable(false);
                 
             break;
                 
             case "200%":
                 setScaleNumbers(1);
-                
+                cien.setDisable(false);
+                cincuenta.setDisable(false);
+                docientos.setDisable(true);
             break;
         }
     }
     
     //** aqui va todo lo de los cambios de base **//
-    private void SetBase(String toString) {
+    private void SetBase(String toString,String Calculadora) {
         
         switch(toString){
             
-            case "Decimal":
-                contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
-                contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
+            case "Tipo Decimal":
+                if (tipoCalculadora==0) {
+                    cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
+                    primaryStage.setTitle("Cancer de Piel 100tifik0");
+                    reinicia();
+                    texto.setText("");
+                    this.decimal = new ArrayList<>();
+                }
+                if(baseCalculadora==1){
+                    contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
+                    contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
+                }
+                
+                basica.setDisable(false);
+                tipoBinario.setDisable(false);
+                tipoDecimal.setDisable(true);
+                tipoCalculadora=1;
+                baseCalculadora=0;
                 break;
                 
-            case "Binario":
+            case "Tipo Binario":
+                if(tipoCalculadora==0){
+                    cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
+                    primaryStage.setTitle("Cancer de Piel 100tifik0");
+                    reinicia();
+                    texto.setText("");
+                    this.decimal = new ArrayList<>();
+                }
                 contenerdorPrincipal.getChildren().removeAll(contenedorNumeros,contenedorSimbolos);
                 contenerdorPrincipal.getChildren().addAll(binario,contenedorSimbolos);
+                toBinary();
+                basica.setDisable(false);
+                tipoBinario.setDisable(true);
+                tipoDecimal.setDisable(false);
+                tipoCalculadora=1;
+                baseCalculadora=1;
                 break;
         }
         
     }
 
     //** aqui va todo lo de los cambios de teclado **//
-    private void SetTypeKeyboard(String toString,ComboBox base) {
+    private void SetTypeKeyboard(String toString) {
         switch(toString){
             case "Basica":
-                base.setVisible(false);
-                base.getSelectionModel().selectFirst();
+                if(baseCalculadora==1){
+                    contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
+                    contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
+                }
                 cajaDeSimbolos.getChildren().removeAll(trigonometria, simbolos);
                 primaryStage.setTitle("Cancer de Piel");
-                bases.setVisible(false);
                 reinicia();
-            break;
-            
-            case "Cientifica":
-                base.setVisible(true);
-                cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
-                primaryStage.setTitle("Cancer de Piel 100tifik0");
-                bases.setVisible(true);
-                reinicia();
-                
+                texto.setText("");
+                this.decimal = new ArrayList<>();
+                basica.setDisable(true);
+                tipoBinario.setDisable(false);
+                tipoDecimal.setDisable(false);
+                tipoCalculadora=0;
+                baseCalculadora=0;
             break;
         }
     }
@@ -1051,14 +823,7 @@ public class Pantalla{
         
         decimal.clear();
         
-        System.out.println(base2);
-        /*char[] numeros = base2.toCharArray();
-        
-        for (int x=0;x<numeros.length;x++){
-            decimal.add(String.valueOf(numeros[x]));
-        }
-        
-        System.out.println(decimal + "hola");*/
+//        System.out.println(base2);
     }
     
     private void setScaleNumbers(double size){
@@ -1077,6 +842,8 @@ public class Pantalla{
             espacioSuperior=0;
             this.miMap.startMap(espacioNumero, espacioSuperior);
             this.startThisLevels();
+            texto.setText("");
+            this.decimal = new ArrayList<>();
     }
     
     //reinicia los valores de level min max y actual.
@@ -1125,7 +892,49 @@ public class Pantalla{
         
     }
     
+    void dibujar (String id){
+        if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
+        {
+            double n =0;
+            double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
+            double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
+
+            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+
+            this.centro.getChildren().add(numero.dibujo(id));
+            this.contador(false,currentlevel);
+            this.enPantalla.add(numero);
+            decimal.add(numero.getID());
+            agregarTexto();
+        }
+    }
+    void dibujarTrigonometrica (String id1,String id2)
+    {
+        if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
+        {
+            double n =0;
+            double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
+            double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
+
+            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+            centro.getChildren().add(numero1.dibujo(id1));
+
+            this.contador(true,currentlevel);
+            
+            enPantalla.add(numero1);
+            decimal.add(numero1.getID());            
+            agregarTexto();
+            dibujar(id2);
+        }
+    }
     
-    
+    void agregarTexto(){
+        String listString="";
+        for (String s : decimal)
+        {
+            listString += s;
+        }
+        texto.setText(listString);
+    }
 }
     
