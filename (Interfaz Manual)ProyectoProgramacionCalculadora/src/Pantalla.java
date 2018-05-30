@@ -10,7 +10,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -104,7 +103,8 @@ public class Pantalla{
        Button buttonBajar = new Button("Bajar");
        button1.setText(" 1 ");//contenido del boton 
        button1.setMaxWidth(Double.MAX_VALUE);
-      
+      buttonBajar.setVisible(false);
+       
        //HBox.setMargin(button1, new Insets(0,0,0,0));//margen entre objetos en este caso se dejo 5 a la  derecha 
        HBox.setHgrow(button7, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
        HBox.setHgrow(button4, Priority.ALWAYS);
@@ -307,6 +307,7 @@ public class Pantalla{
        Button buttonBajarBin = new Button("Bajar");
        buttonBajarBin.setMaxWidth(Double.MAX_VALUE);
        HBox.setHgrow(buttonBajarBin, Priority.ALWAYS);
+       buttonBajarBin.setVisible(false);
        
        Button buttonEliminarBin = new Button(" CE ");
        HBox.setHgrow(buttonEliminarBin, Priority.ALWAYS);
