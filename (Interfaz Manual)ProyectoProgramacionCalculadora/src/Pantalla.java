@@ -787,7 +787,7 @@ public class Pantalla{
     //** aqui va todo lo de los cambios de teclado **//
     private void SetTypeKeyboard(String toString) {
         switch(toString){
-            case "Basica":
+            case "Básica":
                 if(baseCalculadora==1){
                     contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
                     contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
