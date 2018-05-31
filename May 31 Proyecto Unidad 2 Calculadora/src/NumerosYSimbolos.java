@@ -51,7 +51,9 @@ public class NumerosYSimbolos extends PuntosDeControl{
         pathActual.setStrokeWidth(4);
         circle.setVisible(puntosVisibles);
     }
-    
+    /*
+    En este metodo se crean los numeros, simbolos y los terminos trigonometricos (cos, sen, tan) dependiendo del id que se le entreguen.
+    */
     public Group dibujo(String id){
         HLineTo base = new HLineTo();
         QuadCurveTo arco1 = new QuadCurveTo();
@@ -780,140 +782,6 @@ public class NumerosYSimbolos extends PuntosDeControl{
         
         root.getChildren().addAll(pathActual, circle);        
         configura();      
-        return root;
-    }
-    
-    public Group multiplicacion() {
-        //Se establece el ID de una multiplicación.
-        ID = "*";
-        //Se define el tamaño de la figura.
-        size=1.2;
-        //Se define la posición de la figura.
-        xPoint = (200+espacio);
-        yPoint = (150+superior);
-        
-        //Se crean las líneas de la figura.
-        MoveTo centroMulti = new MoveTo(xPoint, yPoint);
-        LineTo line1Multi = new LineTo(xPoint-15*size, yPoint-15*size);
-        LineTo line2Multi = new LineTo(xPoint+15*size, yPoint+15*size);
-        LineTo line3Multi = new LineTo(xPoint, yPoint-20*size);
-        LineTo line4Multi = new LineTo(xPoint, yPoint+20*size);
-        LineTo line5Multi = new LineTo(xPoint+15*size, yPoint-15*size);
-        LineTo line6Multi = new LineTo(xPoint-15*size, yPoint+15*size);
-        LineTo line7Multi = new LineTo(xPoint-20*size, yPoint);
-        LineTo line8Multi = new LineTo(xPoint+20*size, yPoint);
-
-        //Se añaden las líneas de la figura a pathActual.
-        pathActual.getElements().addAll(centroMulti, line1Multi,centroMulti, line2Multi, centroMulti, line3Multi, centroMulti, line4Multi, centroMulti, line5Multi, centroMulti, line6Multi, centroMulti, line7Multi, centroMulti, line8Multi);
-        
-        //Se crean los círculos con la ubicación de las líneas.
-        iniciateCircleMoveTo(centroMulti);
-        iniciateCircleLineTo(line1Multi);
-        iniciateCircleLineTo(line2Multi);
-        iniciateCircleLineTo(line3Multi);
-        iniciateCircleLineTo(line4Multi);
-        iniciateCircleLineTo(line5Multi);
-        iniciateCircleLineTo(line6Multi);
-        iniciateCircleLineTo(line7Multi);
-        iniciateCircleLineTo(line8Multi);
-      
-        //Se crea un nuevo grupo llamado root, el cual contendrá a los puntos de control (círculos) y a la figura.
-        root.getChildren().addAll(pathActual, circle);
-        configura();
-        
-        //Se regresa el grupo a la pizarra, donde serán agregadas.
-        return root;
-    }
-    
-    public Group parentesis1() {
-        ID = "(";
-        size=1.2;
-        double amountOfSymbolsParen1 = (double) (1*size); //Para cambiar tamaño de acuerdo a la cantidad de operaciones en vertical
-        xPoint = (200+espacio);
-        yPoint = (150+superior);
-
-        Arc arc1Paren1 = new Arc(xPoint, yPoint,8*amountOfSymbolsParen1,42*amountOfSymbolsParen1,90,90);
-        Arc arc2Paren1 = new Arc(xPoint, yPoint,8*amountOfSymbolsParen1,42*amountOfSymbolsParen1,180,90);
-
-        configuraArco(arc1Paren1);
-        configuraArco(arc2Paren1);
-        
-        createCircle(arc1Paren1.getCenterX(), arc1Paren1.getCenterY()-42*amountOfSymbolsParen1);
-        createCircle(arc2Paren1.getCenterX()-7.5*amountOfSymbolsParen1, arc2Paren1.getCenterY());
-        createCircle(arc2Paren1.getCenterX(), arc2Paren1.getCenterY()+42*amountOfSymbolsParen1);
-        
-        configura();
-        root.getChildren().addAll(arc1Paren1, arc2Paren1, circle);
-                
-        return root;
-    }
-    
-    public Group parentesis2() {
-        ID = ")";
-        size=1.2;
-        double amountOfSymbolsParen2 = (double) (1*size); //Para cambiar tamaño de acuerdo a la cantidad de operaciones en vertical
-        xPoint = (200+espacio);
-        yPoint = (150+superior);
-
-        Arc arc1Paren2 = new Arc(xPoint, yPoint,8*amountOfSymbolsParen2,42*amountOfSymbolsParen2,270,90);
-        Arc arc2Paren2 = new Arc(xPoint, yPoint,8*amountOfSymbolsParen2,42*amountOfSymbolsParen2,360,90);
-
-        configuraArco(arc1Paren2);
-        configuraArco(arc2Paren2);
-        
-        createCircle(arc1Paren2.getCenterX(), arc1Paren2.getCenterY()-42*amountOfSymbolsParen2);
-        createCircle(arc2Paren2.getCenterX()+7.5*amountOfSymbolsParen2, arc2Paren2.getCenterY());
-        createCircle(arc2Paren2.getCenterX(), arc2Paren2.getCenterY()+42*amountOfSymbolsParen2);
-
-        
-        root.getChildren().addAll(arc1Paren2, arc2Paren2, circle);
-        configura();
-        return root;
-    }
-    
-    public Group resta() {
-        ID = "-";
-        size=1.2;
-        xPoint = (200+espacio);
-        yPoint = (150+superior);
-
-        MoveTo startMinus = new MoveTo(xPoint, yPoint);
-        LineTo line1Minus = new LineTo(xPoint-20*size, yPoint);
-        LineTo line2Minus = new LineTo(xPoint+20*size, yPoint);
-      
-        pathActual.getElements().addAll(startMinus, line1Minus, startMinus, line2Minus);
-
-        iniciateCircleMoveTo(startMinus);
-        iniciateCircleLineTo(line1Minus);
-        iniciateCircleLineTo(line2Minus);
-      
-        root.getChildren().addAll(pathActual, circle);
-        configura();
-        return root;
-    }
-    
-    public Group suma() {
-        ID = "+";
-        size = 1.2;
-        xPoint = (200+espacio);
-        yPoint = (150+superior);
-
-        MoveTo startPlus = new MoveTo(xPoint, yPoint);
-        LineTo line1Plus = new LineTo(xPoint+20*size, yPoint);
-        LineTo line2Plus = new LineTo(xPoint-20*size, yPoint);
-        LineTo line3Plus = new LineTo(xPoint, yPoint+20*size);
-        LineTo line4Plus = new LineTo(xPoint, yPoint-20*size);
-
-        pathActual.getElements().addAll(startPlus, line1Plus, startPlus, line2Plus, startPlus, line3Plus, startPlus, line4Plus);
-       
-        iniciateCircleMoveTo(startPlus);
-        iniciateCircleLineTo(line1Plus);
-        iniciateCircleLineTo(line2Plus);
-        iniciateCircleLineTo(line3Plus);
-        iniciateCircleLineTo(line4Plus);
-
-        root.getChildren().addAll(pathActual, circle);
-        configura();
         return root;
     }
     

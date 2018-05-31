@@ -83,7 +83,9 @@ public class Pantalla{
         this.numDecimal = new ArrayList<>();
         inicio();
     }
-
+    /*
+    Este es el metodo principal en donde se genera la interfaz geafica y muchas de las acciones de los botones
+    */
     public void inicio(){
         sabe="";
         this.miMap = new MapLevel();
@@ -165,10 +167,6 @@ public class Pantalla{
        
        //*******inicio simbolos***********
        
-       
-       //------------------------------//
-       
-        
        
        //------------------------------//
        VBox simbolos1 = new VBox();
@@ -367,8 +365,8 @@ public class Pantalla{
             basica.setDisable(true);
                     
             basica.setOnAction(e -> SetTypeKeyboard(basica.getText()));
-            tipoDecimal.setOnAction(e->SetBase(tipoDecimal.getText(),cientifica.getText()));
-            tipoBinario.setOnAction(e->SetBase(tipoBinario.getText(),cientifica.getText()));
+            tipoDecimal.setOnAction(e->SetBase(tipoDecimal.getText()));
+            tipoBinario.setOnAction(e->SetBase(tipoBinario.getText()));
             
             Menu menu3 = new Menu("Puntos de Control");
                 mostrar= new MenuItem("Mostrar Puntos de Control");
@@ -732,14 +730,12 @@ public class Pantalla{
         }
         this.miMap.getLevel(level).setEndX(contenedor);
         
-        //contador+=200;
-        /*if(contador>14000){
-            espacioSuperior+=120;
-            contador=0;
-            espacioNumero=0;
-        }*/
     }
     //** aqui va todo lo de los cambios de tamaño **//
+    
+    /*
+    En este metodo se asignana el tamaño de los dibujos en la pantalla
+    */
     private void SetSize(String toString) {
         switch (toString){
             
@@ -768,18 +764,23 @@ public class Pantalla{
     }
     
     //** aqui va todo lo de los cambios de base **//
-    private void SetBase(String toString,String Calculadora) {
+    
+    /*
+    Este metodo se usa para hacer el cambio de base ademas del cambio de tipo de teclado
+    */
+    private void SetBase(String toString) {
+        if (tipoCalculadora==0) {
+            cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
+            primaryStage.setTitle("Cancer de Piel (Modo Científico)");
+            reinicia();
+            texto.setText("");
+            this.decimal = new ArrayList<>();
+        }
         
         switch(toString){
             
             case "Tipo Decimal":
-                if (tipoCalculadora==0) {
-                    cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
-                    primaryStage.setTitle("Cancer de Piel (Modo Científico)");
-                    reinicia();
-                    texto.setText("");
-                    this.decimal = new ArrayList<>();
-                }
+                
                 if(baseCalculadora==1){
                     contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
                     contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
@@ -793,13 +794,7 @@ public class Pantalla{
                 break;
                 
             case "Tipo Binario":
-                if(tipoCalculadora==0){
-                    cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
-                    primaryStage.setTitle("Cancer de Piel 100tifik0");
-                    reinicia();
-                    texto.setText("");
-                    this.decimal = new ArrayList<>();
-                }
+                
                 contenerdorPrincipal.getChildren().removeAll(contenedorNumeros,contenedorSimbolos);
                 contenerdorPrincipal.getChildren().addAll(binario,contenedorSimbolos);
                 toBinary();
@@ -814,6 +809,10 @@ public class Pantalla{
     }
 
     //** aqui va todo lo de los cambios de teclado **//
+    
+    /*
+    En este metodo se cambia el teclado a basico
+    */
     private void SetTypeKeyboard(String toString) {
         switch(toString){
             case "Básica":
@@ -837,6 +836,7 @@ public class Pantalla{
     /*
     Método que permite la transformación de lo que hay en pantalla a binario.
     */
+    
     private void toBinary(){
         //Se busca que sea un número lo que se analizará.
         for (int x=0; x<enPantalla.size(); x++){
@@ -944,7 +944,9 @@ public class Pantalla{
         this.contador(false, levelToPaint);
         
     }
-    
+    /*
+    Este metodo se utiliza para dibujar en la interfaz todos los numeros y simbolos.
+    */
     void dibujar (String id){
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
         {
@@ -976,6 +978,9 @@ public class Pantalla{
             System.out.println(this.currentlevel);
         }
     }
+    /*
+    Este metodo se utiliza para dibujar en la interfaz los terminos trigonometricos (cos, sen, tan).
+    */
     void dibujarTrigonometrica (String id1,String id2)
     {
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
@@ -1011,7 +1016,9 @@ public class Pantalla{
             dibujar(id2);
         }
     }
-    
+    /*
+    Este metodo pasa a texto todo lo que se ha ingresado
+    */
    private String agregarTexto(){
         String listString="";
         for (String s : decimal)
@@ -1019,7 +1026,6 @@ public class Pantalla{
             listString += s;
         }
         return listString;
-        //texto.setText(listString);
     }
 }
     
