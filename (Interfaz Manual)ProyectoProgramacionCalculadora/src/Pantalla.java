@@ -73,7 +73,7 @@ public class Pantalla{
     MenuItem tipoBinario;
     MenuItem mostrar;
     MenuItem ocultar;
-    
+    private String sabe;
     
     
     public Pantalla() {
@@ -83,6 +83,7 @@ public class Pantalla{
     }
 
     public void inicio(){
+        sabe="";
         this.miMap = new MapLevel();
         this.miMap.startMap(this.espacioNumero, this.espacioSuperior);
         this.startThisLevels();
@@ -434,12 +435,17 @@ public class Pantalla{
                 {
                     espacioNumero=miMap.getLevel(currentlevel).getEndX();
                     espacioSuperior=miMap.getLevel(currentlevel).getyLevel();
+                    sabe=miMap.getStringDivide(miximumLevel, minimumLevel);
                     miMap.startMap(espacioNumero, espacioSuperior);
+                   
                     startThisLevels();
                     divideStatus=false;
                     btnDawn.setDisable(true);
                     btnUp.setDisable(true);
                     btnClose.setDisable(true);
+                    decimal.add(sabe);
+                    
+                    
                     
                 }
                 else
