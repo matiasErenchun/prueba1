@@ -244,11 +244,11 @@ public class Pantalla{
        //buttonDiv.setMaxWidth(Double.MAX_VALUE);
        
        Button btnClose = new Button();
-        btnClose.setText("close");
+        btnClose.setText("Cerrar Nivel");
         btnClose.setDisable(true);
         
         Button btnUp = new Button();
-        btnUp.setText("up level");
+        btnUp.setText("Subir Nivel");
         btnUp.setDisable(true);
         btnUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -265,7 +265,7 @@ public class Pantalla{
         });
         
         Button btnDawn = new Button();
-        btnDawn.setText("dawn level");
+        btnDawn.setText("Bajar Nivel");
         btnDawn.setDisable(true);
         btnDawn.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -355,8 +355,8 @@ public class Pantalla{
             
             Menu menu2 = new Menu("Tipo de calculadora");
 
-                basica = new MenuItem("Basica");
-                Menu cientifica = new Menu("cientifica");
+                basica = new MenuItem("Básica");
+                Menu cientifica = new Menu("Científica");
                     tipoDecimal = new MenuItem("Tipo Decimal");
                     tipoBinario = new MenuItem("Tipo Binario");
                 cientifica.getItems().addAll(tipoDecimal,tipoBinario);
@@ -738,7 +738,7 @@ public class Pantalla{
             case "Tipo Decimal":
                 if (tipoCalculadora==0) {
                     cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
-                    primaryStage.setTitle("Cancer de Piel 100tifik0");
+                    primaryStage.setTitle("Cancer de Piel (Modo Científico)");
                     reinicia();
                     texto.setText("");
                     this.decimal = new ArrayList<>();
