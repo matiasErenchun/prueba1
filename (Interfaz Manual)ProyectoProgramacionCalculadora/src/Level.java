@@ -15,6 +15,7 @@ public class Level
     private double yLevel;
     private double endX;
     private boolean levelStatus;
+    private String stringLevel;
 
     public Level(int levelNumber, double xLevel, double yLevel)
     {
@@ -23,6 +24,7 @@ public class Level
         this.yLevel = yLevel;
         this.endX = xLevel;
         this.levelStatus = true;
+        this.stringLevel="(";
     }
 
     public int getLevelNumber() 
@@ -85,6 +87,19 @@ public class Level
         
     }
     
+    public String getStringLevel()
+    {
+        String miString=this.stringLevel+")";
+        System.out.println(miString+"salida");
+        return miString;
+    }
+    
+    public void addStringToStringLevel(String caracter)
+    {
+        String contenedor = this.stringLevel+caracter;
+        this.stringLevel=contenedor;
+        System.out.println(this.stringLevel+"resultado");
+    }
     
     
 }

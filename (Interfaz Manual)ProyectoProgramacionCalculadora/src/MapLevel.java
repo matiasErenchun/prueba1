@@ -94,7 +94,7 @@ public class MapLevel
     }
     
     
-    // si el nivele s par es un nivel de divicion 
+    // si el nivele es par es un nivel de divicion 
     public boolean levelIsEven(int level)
     {
         boolean isEven=false;
@@ -150,6 +150,7 @@ public class MapLevel
         }
         return isClosed;
     }
+    
     public void setEndOfThisLevel(int levelEndX, int levelToSet)
     {
         double xEnd =this.getLevel(levelEndX).getEndX();
@@ -190,5 +191,59 @@ public class MapLevel
         return isValid;
     }
 
-
+    public String getStringDivide(int maximun,int minimun)
+    {
+        String finalString="("+this.TopOfString(maximun)+"/"+this.bottomOfString(minimun)+")";
+        
+        return finalString;
+        
+    }
+    
+    private String TopOfString(int maximun)
+    {
+        String topPart;
+        if(maximun+1==0)
+        {
+            topPart=this.getLevel(maximun).getStringLevel();
+        }
+        else
+        {
+            String dividendo=this.getLevel(maximun).getStringLevel();
+            while((maximun+1)<0)
+            {
+                String elementosDelNivel=this.getLevel(maximun+1).getStringLevel();
+                String divisor=this.getLevel(maximun+2).getStringLevel();
+                dividendo="("+"("+dividendo+"/"+divisor+")"+elementosDelNivel+")";
+                maximun+=2;
+            }
+            topPart=dividendo;
+        }
+        System.out.println(topPart+"topPart");
+        return topPart;
+        
+    }
+    
+    private String bottomOfString(int minimun)
+    {
+        String bottomPart;
+        if(minimun-1==0)
+        {
+            bottomPart=this.getLevel(minimun).getStringLevel();
+        }
+        else
+        {
+            int level=2;
+            String dividendo=this.getLevel(minimun).getStringLevel();
+            while((minimun-1)>0)
+            {
+                String elementosDelNivel=this.getLevel(minimun-1).getStringLevel();
+                String divisor=this.getLevel(minimun-2).getStringLevel();
+                dividendo="("+"("+divisor+"/"+dividendo+")"+elementosDelNivel+")";
+                minimun-=2;
+            }
+            bottomPart=dividendo;
+        }
+        System.out.println(bottomPart+"bottomPart");
+        return bottomPart;
+    }
 }

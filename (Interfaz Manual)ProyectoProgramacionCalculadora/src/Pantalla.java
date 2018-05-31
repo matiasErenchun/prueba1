@@ -258,8 +258,8 @@ public class Pantalla{
                 {
                     currentlevel+=1;
                 }
-//                System.out.println(miximumLevel+"miximumLevel");
-//                System.out.println(currentlevel+"current");
+
+               System.out.println(currentlevel+"current");
             }
         });
         
@@ -276,8 +276,8 @@ public class Pantalla{
                 {
                     currentlevel-=1;
                 }
-//                System.out.println(currentlevel+"current");
-//                System.out.println(minimumLevel+"minimumLevel");
+               System.out.println(currentlevel+"current");
+
             }
         });
       
@@ -905,8 +905,23 @@ public class Pantalla{
             this.centro.getChildren().add(numero.dibujo(id));
             this.contador(false,currentlevel);
             this.enPantalla.add(numero);
-            decimal.add(numero.getID());
-            agregarTexto();
+            String miID=numero.getID();
+            if(this.divideStatus)
+            {
+                String aux ="";
+                String aux2="";
+                this.miMap.getLevel(currentlevel).addStringToStringLevel(miID);
+                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
+                System.out.println(aux+"div");
+                aux2=this.agregarTexto()+aux;
+                texto.setText(aux2);
+            }
+            else
+            {
+                decimal.add(numero.getID());
+                texto.setText(agregarTexto());
+            }
+            System.out.println(this.currentlevel);
         }
     }
     void dibujarTrigonometrica (String id1,String id2)
@@ -923,19 +938,36 @@ public class Pantalla{
             this.contador(true,currentlevel);
             
             enPantalla.add(numero1);
-            decimal.add(numero1.getID());            
-            agregarTexto();
+            String miID=numero1.getID();
+            if(this.divideStatus)
+            {
+                String aux ="";
+                String aux2="";
+                this.miMap.getLevel(currentlevel).addStringToStringLevel(miID+"(");
+                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
+                System.out.println(aux+"div");
+                aux2=this.agregarTexto()+aux;
+                texto.setText(aux2);
+                
+            }
+            else
+            {
+                decimal.add(numero1.getID());            
+                texto.setText(agregarTexto());
+            }
+            
             dibujar(id2);
         }
     }
     
-    void agregarTexto(){
+   private String agregarTexto(){
         String listString="";
         for (String s : decimal)
         {
             listString += s;
         }
-        texto.setText(listString);
+        return listString;
+        //texto.setText(listString);
     }
 }
     
