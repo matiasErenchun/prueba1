@@ -725,6 +725,34 @@ public class NumerosYSimbolos extends PuntosDeControl{
                 root.getChildren().addAll(pathActual, circle);
                 configura();
                 return root;
+                
+    //------------------------------------------------------------------------------------------------------------------//            
+            case "º":
+                type = "symbol";
+                ID = "º";
+                size=0.3;
+                xPoint = (152+espacio);
+                yPoint = (113+superior);
+
+                Arc arcº = new Arc(xPoint, yPoint,25*size,40*size,90,90);
+                Arc arc1º = new Arc(xPoint, yPoint,25*size,40*size,180,90);
+                Arc arc2º = new Arc(xPoint, yPoint,25*size,40*size,270,90);
+                Arc arc3º = new Arc(xPoint, yPoint,25*size,40*size,360,90);
+
+                configuraArco(arcº);
+                configuraArco(arc1º);
+                configuraArco(arc2º);
+                configuraArco(arc3º);
+
+                createCircle(arcº.getCenterX(), arcº.getCenterY()-40*size);
+                createCircle(arc1º.getCenterX()+25*size, arc1º.getCenterY());
+                createCircle(arc2º.getCenterX(), arc2º.getCenterY()+40*size);
+                createCircle(arc3º.getCenterX()-25*size, arc3º.getCenterY());
+
+                root.getChildren().addAll(arcº, arc1º, arc2º, arc3º, circle);
+                root.setScaleX(1.5);
+                configura();
+                return root;
     //------------------------------------------------------------------------------------------------------------------//
         }
         return null;
@@ -1348,5 +1376,5 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public String getType() {
         return type;
     }
-
+    
 }

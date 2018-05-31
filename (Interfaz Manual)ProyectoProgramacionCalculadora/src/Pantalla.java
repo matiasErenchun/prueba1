@@ -48,6 +48,7 @@ public class Pantalla{
     //divideStatus = 0; Significa que no hay división activa.
     private int divisiones = 0; //Contador de Divisiones. Utilizado para tener control sobre el crecimiento de la línea de división.
     private List<String> decimal;
+    private List<String> numDecimal;
     private MapLevel miMap;
     private int currentlevel;
     private int minimumLevel;
@@ -79,6 +80,7 @@ public class Pantalla{
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
         this.decimal = new ArrayList<>();
+        this.numDecimal = new ArrayList<>();
         inicio();
     }
 
@@ -353,7 +355,7 @@ public class Pantalla{
             docientos.setOnAction(e->SetSize(docientos.getText()));
             
             
-            Menu menu2 = new Menu("Tipo de calculadora");
+            Menu menu2 = new Menu("Tipo de Calculadora");
 
                 basica = new MenuItem("Básica");
                 Menu cientifica = new Menu("Científica");
@@ -570,6 +572,12 @@ public class Pantalla{
            
         {
           dibujar("!");
+        });
+       
+       buttonGrados.setOnAction((ActionEvent event) ->
+           
+        {
+            dibujar("º");
         });
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
@@ -799,28 +807,33 @@ public class Pantalla{
     }
     
     private void toBinary(){
-        NumerosYSimbolos cos = new NumerosYSimbolos(0, espacioNumero,espacioSuperior, puntosVisibles);
-        enPantalla.add(cos); 
+        
         for (int x=0; x<enPantalla.size(); x++){
             if ("number".equals(enPantalla.get(x).getType())){
-                decimal.add(enPantalla.get(x).getID());
+                System.out.println(enPantalla.get(x).getType());
+                numDecimal.add(enPantalla.get(x).getID());
             }
-            
-            else{
-                convertertoBinary();
-                
+
+            if ("symbol".equals(enPantalla.get(x).getType()) || x==enPantalla.size()-1){
+                if (x>1){
+                    if ("number".equals(enPantalla.get(x-1).getType()) || x==enPantalla.size()-1){
+                        convertertoBinary(); 
+                    }
+                }                
+                else {
+                    convertertoBinary(); 
+                }
             }
         }
-        enPantalla.remove(cos);
     }
     
     private void convertertoBinary(){
         
         Integer numeroLista = 0;
         
-        for (int x=0; x<decimal.size(); x++){
+        for (int x=0; x<numDecimal.size(); x++){
             numeroLista=numeroLista*10;
-            numeroLista += Integer.parseInt(decimal.get(x));
+            numeroLista += Integer.parseInt(numDecimal.get(x));
         }
         String base2="";
         while(numeroLista>0) {
@@ -828,9 +841,9 @@ public class Pantalla{
             numeroLista/=2;  
         }
         
-        decimal.clear();
+        numDecimal.clear();
         
-//        System.out.println(base2);
+        System.out.println(base2);
     }
     
     private void setScaleNumbers(double size){
