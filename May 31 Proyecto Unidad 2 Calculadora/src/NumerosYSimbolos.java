@@ -17,8 +17,8 @@ import javafx.scene.shape.VLineTo;
 /**
  *
  * @author elias
- * @numbers created by: Matias and Mario
- * @numbersPorted by: elias
+ * numbers created by: Matias and Mario
+ * numbersPorted by: elias
  */
 public class NumerosYSimbolos extends PuntosDeControl{
 
