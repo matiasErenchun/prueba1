@@ -18,15 +18,30 @@ public class Level
     private double endX;
     private boolean levelStatus;
     private String stringLevel;
+    private boolean drawBefore;
 
     public Level(int levelNumber, double xLevel, double yLevel)
     {
+        this.drawBefore=false;
+        if(levelNumber%2==0)
+        {
+            this.drawBefore=true;
+        }
         this.levelNumber = levelNumber;
         this.xLevel = xLevel;
         this.yLevel = yLevel;
         this.endX = xLevel;
         this.levelStatus = true;
         this.stringLevel="";
+    }
+
+    public boolean getDrawBefore() 
+    {
+        return drawBefore;
+    }
+
+    public void setDrawBefore(boolean drawBefore) {
+        this.drawBefore = drawBefore;
     }
 
     public int getLevelNumber() 
@@ -101,6 +116,11 @@ public class Level
         String miString=this.stringLevel+"";
         System.out.println(miString+"salida");
         return miString;
+    }
+    
+    public void setStringLevel(String string)
+    {
+        this.stringLevel="";
     }
     /*
     metodo que concatena un string que representa un elemento agregado al nivel con los otros elementos ya existentes en este nivel.

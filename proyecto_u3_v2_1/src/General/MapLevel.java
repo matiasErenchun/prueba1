@@ -170,6 +170,10 @@ public class MapLevel
     public boolean iCanDrawInEven(int level)
     {
         boolean iCanDraw=false;
+        if(this.getLevel(level).getDrawBefore())
+        {
+            return true;
+        }
         if(this.LevelIsClosed(level+1)&& this.LevelIsClosed(level-1) && !this.LevelIsClosed(level))
         {
             iCanDraw=true;
