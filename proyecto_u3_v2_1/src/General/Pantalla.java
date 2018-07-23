@@ -1068,11 +1068,19 @@ public class Pantalla{
             int tamanoPantalla=enPantalla.size()-1;
             while(contadorI<contenedor.length())
             {   
-                if (levelToPaint<0)   
-                enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
+                System.out.println("Largo Contenedor:");
+                System.out.println(contenedor.length());
+                if (levelToPaint<0) {  
+                    enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
+                    if (contadorI==0)
+                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-contenedor.length()*90);
+                }
                 
-                else
+                else {
                     enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(40);
+                    if (contadorI==0)
+                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-contenedor.length()*90);
+                }
                 
                 Character charAux=contenedor.charAt(contadorI);
                 dibujar(charAux.toString(),levelToPaint,false);
