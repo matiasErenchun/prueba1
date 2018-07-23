@@ -37,6 +37,7 @@ public class NumerosYSimbolos extends PuntosDeControl{
     private int numDivision; //Indica qué división es la que se está haciendo.
     private String type = "symbol"; //Para identificar si es símbolo o número.
     private int nivelActual;
+    private boolean divisionTerminada = false;
     Group root = new Group();
     
 
@@ -52,7 +53,7 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public void configura(){
         pathActual.setStrokeWidth(4);
         circle.setVisible(puntosVisibles);
-    }
+    }    
     /*
     En este metodo se crean los numeros, simbolos y los terminos trigonometricos (cos, sen, tan) dependiendo del id que se le entreguen.
     */
@@ -1037,10 +1038,12 @@ public class NumerosYSimbolos extends PuntosDeControl{
         ID = "/";
         nivelActual=level;
         size=1.2;
-        this.amountOfSymbolsDivide=amountOfSymbolsDivide;
         xPoint = (155+espacio);
         yPoint = (superior);
-        this.numDivision = numDivision; //Número de la división. (Orden)
+        
+        //Si la división es más larga de lo original, es decir, ya fue alargada, divisionTerminada se transforma en true para indicar que no crezca más.
+        if(finalDiv>90)
+            divisionTerminada=true;
 
         MoveTo startDivide = new MoveTo(xPoint, yPoint+150);
         //Por cada número que aumente en amountOfSymbolsDivide, la linea de división aumenta en 90.
@@ -1522,6 +1525,12 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public int getNivelActual() {
         return nivelActual;
     }
+
+    public boolean isDivisionTerminada() {
+        return divisionTerminada;
+    }
+    
+    
     
     
     

@@ -55,6 +55,7 @@ public class Pantalla{
     private int currentlevel;
     private int minimumLevel;
     private int miximumLevel;
+    private double endXMayor;
     //contenedor de los simbolos
     HBox cajaDeSimbolos = new HBox();
     VBox simbolos = new VBox();
@@ -515,22 +516,33 @@ public class Pantalla{
                 //Se busca si es que existe una división en ese nivel
                 for (int buscador=0; buscador<enPantalla.size(); buscador++) {
                     if ("symbol".equals(enPantalla.get(buscador).getType())){
-                        if ("/".equals(enPantalla.get(buscador).getID())) {
-                            if (getLevelActual()==enPantalla.get(buscador).getNivelActual()) {
+                        if ("/".equals(enPantalla.get(buscador).getID())) { 
+                            System.out.println(enPantalla.get(buscador).isDivisionTerminada());
+                            if (enPantalla.get(buscador).isDivisionTerminada()==false) {
+                                if (getLevelActual()==enPantalla.get(buscador).getNivelActual()) {
                                 
                                 
-                                //Se respaldan algunos datos de la división actual.
-                                double espacioDivision= enPantalla.get(buscador).getxPoint()-155;
-                                double superiorDivision = enPantalla.get(buscador).getyPoint();
-                                
-                                //Se remueve la división actual.
-                                enPantalla.remove(buscador);
-                                
-                                //Se añade una nueva división con el largo nuevo.
-                                NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
-                                
-                                centro.getChildren().add(division.division(getLevelActual(), miMap.getLevel(currentlevel).getEndX()-espacioDivision));
-   
+                                    //Se respaldan algunos datos de la división actual.
+                                    double espacioDivision= enPantalla.get(buscador).getxPoint()-155;
+                                    double superiorDivision = enPantalla.get(buscador).getyPoint();
+
+                                    //Se remueve la división actual.
+                                    //centro.getChildren().remove(enPantalla.get(buscador));
+                                    enPantalla.remove(buscador);
+
+                                    //Se añade una nueva división con el largo nuevo.
+                                    NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
+                                    System.out.println(endXMayor);
+                                    if (miMap.getLevel(currentlevel).getEndX()<endXMayor) {
+                                        miMap.getLevel(currentlevel).setEndX(endXMayor);
+                                    }
+                                    else {
+                                        endXMayor=miMap.getLevel(currentlevel).getEndX();
+                                    }
+
+                                    centro.getChildren().add(division.division(getLevelActual(), miMap.getLevel(currentlevel).getEndX()-espacioDivision));
+                                    enPantalla.add(division);
+                                }
                             }
                         }
                     }
@@ -542,82 +554,82 @@ public class Pantalla{
        
        buttonPor.setOnAction((ActionEvent event) ->
         { 
-            dibujar("*",currentlevel);
+            dibujar("*",currentlevel, true);
         });
        
        buttonPar1.setOnAction((ActionEvent event) ->
         { 
-            dibujar("(",currentlevel);
+            dibujar("(",currentlevel, true);
         });
        
        buttonPar2.setOnAction((ActionEvent event) ->
         { 
-            dibujar(")",currentlevel);
+            dibujar(")",currentlevel, true);
         });
 
        buttonMas.setOnAction((ActionEvent event) ->
         { 
-            dibujar("+",currentlevel);
+            dibujar("+",currentlevel, true);
         });
        
        buttonMenos.setOnAction((ActionEvent event) ->
         { 
-            dibujar("-",currentlevel);
+            dibujar("-",currentlevel, true);
         });
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            dibujar("0",currentlevel);
+            dibujar("0",currentlevel, true);
         });
        
        button1.setOnAction((ActionEvent event) ->
         { 
-            dibujar("1",currentlevel);
+            dibujar("1",currentlevel, true);
         });
        
        button2.setOnAction((ActionEvent event) ->
         { 
-            dibujar("2",currentlevel);
+            dibujar("2",currentlevel, true);
         });
        
        button3.setOnAction((ActionEvent event) ->
        { 
-            dibujar("3",currentlevel);
+            dibujar("3",currentlevel, true);
         });
        
        button4.setOnAction((ActionEvent event) ->
        {
-            dibujar("4",currentlevel);   
+            dibujar("4",currentlevel, true);   
         });
        
        button5.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("5",currentlevel);   
+            dibujar("5",currentlevel, true);   
         });
        
        button6.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("6",currentlevel);
+            dibujar("6",currentlevel, true);
          });
        
        button7.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("7",currentlevel);
+            dibujar("7",currentlevel, true);
          });
        
        button8.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("8",currentlevel);
+            dibujar("8",currentlevel, true);
          });
        
        button9.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("9",currentlevel);
+            dibujar("9",currentlevel, true);
          });
        
          buttonCos.setOnAction((ActionEvent event) ->
@@ -637,32 +649,31 @@ public class Pantalla{
         {
             dibujarTrigonometrica("tan","(");   
         });
-       /*
+       
        buttonGorrito.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("^");
+            dibujar("^", currentlevel, true);
         });
        
        buttonFactorial.setOnAction((ActionEvent event) ->
            
         {
-          dibujar("!");
+          dibujar("!",currentlevel, true);
         });
        
        buttonGrados.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("º");
+            dibujar("º",currentlevel, true);
         });
        
        buttonsqrt.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("√a");
-            dibujar("(");
+            dibujar("√a",currentlevel, true);
+            dibujar("(",currentlevel, true);
         });
-       */
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
        ocultar.setOnAction((ActionEvent event) ->
@@ -1050,15 +1061,29 @@ public class Pantalla{
         }
         else
         {
-                .i. //falta arreglar el areglo que guarda los numeros que estan antes  de la divicion y borrar la basura 
+                //falta arreglar el areglo que guarda los numeros que estan antes  de la divicion y borrar la basura 
             String contenedor = this.miMap.getLevel(currentlevel).getStringLevel();
             this.miMap.getLevel(currentlevel).setStringLevel("");
             int contadorI=0;
+            int tamanoPantalla=enPantalla.size()-1;
             while(contadorI<contenedor.length())
-            {
+            {   
+                if (levelToPaint<0)   
+                enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
+                
+                else
+                    enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(40);
+                
                 Character charAux=contenedor.charAt(contadorI);
-                dibujar(charAux.toString(),levelToPaint);
+                dibujar(charAux.toString(),levelToPaint,false);
+                enPantalla.get(enPantalla.size() -1).getPath().setVisible(false);
                 contadorI++;
+                
+                
+                //Código Matías
+                /*Character charAux=contenedor.charAt(contadorI);
+                dibujar(charAux.toString(),levelToPaint);
+                contadorI++;*/
             }
             double myEndX=this.miMap.getLevel(levelToPaint).getEndX();
             this.miMap.getLevel(levelToPaint+1).setEndX(myEndX);
@@ -1082,7 +1107,7 @@ public class Pantalla{
     /*
     Este metodo se utiliza para dibujar en la interfaz todos los numeros y simbolos.
     */
-    void dibujar (String id , int level){
+    void dibujar (String id , int level, boolean visible){
         if(this.miMap.validateLevelToWrite(level,this.divideStatus))
         {
             double n =0;
@@ -1090,10 +1115,13 @@ public class Pantalla{
             double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
 
             NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+            
+            
 
             this.centro.getChildren().add(numero.dibujo(id));
             this.contador(false,level);
             this.enPantalla.add(numero);
+            this.enPantalla.get(enPantalla.size()-1).getPath().setVisible(visible);
             String miID=numero.getID();
             if(this.divideStatus)
             {
@@ -1148,7 +1176,7 @@ public class Pantalla{
                 texto.setText(agregarTexto());
             }
             
-            dibujar(id2,currentlevel);
+            dibujar(id2,currentlevel,true);
         }
     }
     /*
