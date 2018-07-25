@@ -91,7 +91,8 @@ public class Pantalla{
     Group cBinarioGrup=new Group(cBinarioPath);
     Path cHexaPath = new Path();
     Group cHexaGrup=new Group(cHexaPath);
-    
+
+    boolean visible= true;
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
         this.decimal = new ArrayList<>(); 
@@ -576,6 +577,9 @@ public class Pantalla{
                 if (miMap.LevelIsClosed(currentlevel)) {
                     btnClose.setDisable(true);
                 }
+                else{
+                    btnClose.setDisable(false);
+                }
             }
         });
         
@@ -751,33 +755,33 @@ public class Pantalla{
         {
             numberToStrig(); 
         });
-       /*
+       
        //-------------------------------------//
        btnA.setOnAction((ActionEvent event) ->
         {
-            dibujar("A"); 
+            dibujar("A",currentlevel, true); 
         });
        btnB.setOnAction((ActionEvent event) ->
         {
-            dibujar("B"); 
+            dibujar("B",currentlevel, true); 
         });
        btnC.setOnAction((ActionEvent event) ->
         {
-            dibujar("C"); 
+            dibujar("C",currentlevel, true); 
         });
        btnD.setOnAction((ActionEvent event) ->
         {
-            dibujar("D"); 
+            dibujar("D",currentlevel, true); 
         });
        btnE.setOnAction((ActionEvent event) ->
         {
-            dibujar("E"); 
+            dibujar("E",currentlevel, true); 
         });
        btnF.setOnAction((ActionEvent event) ->
         {
-            dibujar("F"); 
+            dibujar("F",currentlevel, true); 
         });
-       */
+       
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
