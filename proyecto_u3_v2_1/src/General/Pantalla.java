@@ -83,7 +83,14 @@ public class Pantalla{
     VBox hexColum1=new VBox();
     VBox hexColum2=new VBox();
     Label labelCurrentLevel=new Label("Nivel actual: ");
+    Path center = new Path();
     
+    Path cDecimalPath = new Path();
+    Group cDecimalGrup=new Group(cDecimalPath);
+    Path cBinarioPath = new Path();
+    Group cBinarioGrup=new Group(cBinarioPath);
+    Path cHexaPath = new Path();
+    Group cHexaGrup=new Group(cHexaPath);
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -270,6 +277,12 @@ public class Pantalla{
 
                System.out.println(currentlevel+"current");
                labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+               if (miMap.LevelIsClosed(currentlevel)) {
+                    btnClose.setDisable(true);
+                }
+                else{
+                    btnClose.setDisable(false);
+                }
             }
         });
 
@@ -288,6 +301,12 @@ public class Pantalla{
                 }
                 System.out.println(currentlevel+"current");
                 labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+                if (miMap.LevelIsClosed(currentlevel)) {
+                    btnClose.setDisable(true);
+                }
+                else{
+                    btnClose.setDisable(false);
+                }
             }
         });
 
@@ -475,8 +494,15 @@ public class Pantalla{
             {
                 //error nivel cerrado
             }
+            if(currentlevel<=0){
+                btnUp.fire();
+                btnUp.fire();
+            }
+            if(currentlevel>0){
+                btnDawn.fire();
+                btnDawn.fire();
+            }
             labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-            btnUp.fire();
         });
        btnClose.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -546,6 +572,9 @@ public class Pantalla{
                             }
                         }
                     }
+                }
+                if (miMap.LevelIsClosed(currentlevel)) {
+                    btnClose.setDisable(true);
                 }
             }
         });
@@ -872,7 +901,7 @@ public class Pantalla{
         if (tipoCalculadora==0) {
             cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
             primaryStage.setTitle("Cancer de Piel (Modo Científico)");
-            reinicia();
+            
             texto.setText("");
             this.decimal = new ArrayList<>();
         }
@@ -896,6 +925,7 @@ public class Pantalla{
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=0;
+                cambioPantalla();
                 break;
                 
             case "Tipo Binario":
@@ -912,6 +942,7 @@ public class Pantalla{
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=1;
+                cambioPantalla();
                 break;
                 
             case "Tipo Hexadecimal":
@@ -927,11 +958,11 @@ public class Pantalla{
                 tipoHexadec.setDisable(true);
                 tipoCalculadora=1;
                 baseCalculadora=2;
+                cambioPantalla();
                 break;
         }
         
     }
-
     //** aqui va todo lo de los cambios de teclado **//
     
     /*
@@ -950,15 +981,17 @@ public class Pantalla{
                 
                 cajaDeSimbolos.getChildren().removeAll(trigonometria, simbolos);
                 primaryStage.setTitle("Cancer de Piel");
-                reinicia();
+//                reinicia();
                 basica.setDisable(true);
                 tipoBinario.setDisable(false);
                 tipoDecimal.setDisable(false);
                 tipoCalculadora=0;
                 baseCalculadora=0;
+                cambioPantalla();
             break;
         }
     }
+    
     /*
     Método que permite la transformación de lo que hay en pantalla a binario.
     */
@@ -998,11 +1031,21 @@ public class Pantalla{
     
     
     
-    private void setScaleNumbers(double size){
+        private void setScaleNumbers(double size){
         centro.setScaleX(size);
         centro.setScaleY(size);
+        
+        cDecimalGrup.setScaleX(size);
+        cDecimalGrup.setScaleY(size);
+        
+        cBinarioGrup.setScaleX(size);
+        cBinarioGrup.setScaleY(size);
+        
+        cHexaGrup.setScaleX(size);
+        cHexaGrup.setScaleY(size);
+        
     }
-    
+
     private void reinicia(){
         Node elemento = centro.getChildren().get(0);
             centro.getChildren().removeAll(centro.getChildren());
@@ -1124,9 +1167,20 @@ public class Pantalla{
 
             NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
             
+            if(tipoCalculadora==0)
+                this.centro.getChildren().add(numero.dibujo(id));
+            else{
+                if(baseCalculadora==0){
+                    this.cDecimalGrup.getChildren().add(numero.dibujo(id));
+                }
+                if(baseCalculadora==1){
+                    this.cBinarioGrup.getChildren().add(numero.dibujo(id));
+                }
+                if(baseCalculadora==2){
+                    this.cHexaGrup.getChildren().add(numero.dibujo(id));
+                }
+            }
             
-
-            this.centro.getChildren().add(numero.dibujo(id));
             this.contador(false,level);
             this.enPantalla.add(numero);
             this.enPantalla.get(enPantalla.size()-1).getPath().setVisible(visible);
@@ -1161,8 +1215,21 @@ public class Pantalla{
             double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
 
             NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
-            centro.getChildren().add(numero1.dibujo(id1));
-
+            if(tipoCalculadora==0)
+                this.centro.getChildren().add(numero1.dibujo(id1));
+            else{
+                if(baseCalculadora==0){
+                    this.cDecimalGrup.getChildren().add(numero1.dibujo(id1));
+                }
+                if(baseCalculadora==1){
+                    this.cBinarioGrup.getChildren().add(numero1.dibujo(id1));
+                }
+                if(baseCalculadora==2){
+                    this.cHexaGrup.getChildren().add(numero1.dibujo(id1));
+                }
+            }
+            
+            
             this.contador(true,currentlevel);
             
             enPantalla.add(numero1);
@@ -1206,6 +1273,43 @@ public class Pantalla{
             listString += s;
         }
         return listString;
+    }
+   
+   private void cambioPantalla() {
+        switch (tipoCalculadora) {
+            case 0:
+                switch (baseCalculadora){
+                    case 0:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(centro);
+                        break;
+                    case 1:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(centro);
+                        break;
+                    case 2:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(centro);
+                        break;
+                }
+                break;
+            case 1:
+                switch (baseCalculadora){
+                    case 0:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(cDecimalGrup);
+                        break;
+                    case 1:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(cBinarioGrup);
+                        break;
+                    case 2:
+                        grupoPantalla.getChildren().clear();
+                        grupoPantalla.getChildren().addAll(cHexaGrup);
+                        break;
+                }
+                break;
+        }
     }
 }
     
