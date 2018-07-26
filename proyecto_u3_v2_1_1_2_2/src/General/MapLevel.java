@@ -228,7 +228,8 @@ public class MapLevel
             {
                 String elementosDelNivel=this.getLevel(maximun+1).getStringLevel();
                 String divisor=this.getLevel(maximun+2).getStringLevel();
-                dividendo="("+"(("+dividendo+")/("+divisor+"))"+elementosDelNivel+")";
+                String beforeDivide = this.getLevel(maximun+1).getStringBeforeDivide();
+                dividendo="("+beforeDivide+"("+dividendo+"/"+divisor+")"+elementosDelNivel+")";
                 maximun+=2;
             }
             topPart=dividendo;
@@ -256,7 +257,8 @@ public class MapLevel
             {
                 String elementosDelNivel=this.getLevel(minimun-1).getStringLevel();
                 String divisor=this.getLevel(minimun-2).getStringLevel();
-                dividendo="("+"(("+divisor+")/("+dividendo+"))"+elementosDelNivel+")";
+                String beforeDivide = this.getLevel(minimun-1).getStringBeforeDivide();
+                dividendo="("+beforeDivide+"("+divisor+"/"+dividendo+")"+elementosDelNivel+")";
                 minimun-=2;
             }
             bottomPart=dividendo;

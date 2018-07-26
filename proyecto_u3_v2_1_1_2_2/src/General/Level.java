@@ -18,6 +18,7 @@ public class Level
     private double endX;
     private boolean levelStatus;
     private String stringLevel;
+    private String stringBeforeDivide;
     private boolean drawBefore;
 
     public Level(int levelNumber, double xLevel, double yLevel)
@@ -27,6 +28,7 @@ public class Level
         {
             this.drawBefore=true;
         }
+        this.stringBeforeDivide ="";
         this.levelNumber = levelNumber;
         this.xLevel = xLevel;
         this.yLevel = yLevel;
@@ -34,6 +36,23 @@ public class Level
         this.levelStatus = true;
         this.stringLevel="";
     }
+
+    public String getStringBeforeDivide() 
+    {
+        return stringBeforeDivide;
+    }
+
+    public void setStringBeforeDivide(String stringBeforeDivide) 
+    {
+        this.stringBeforeDivide = stringBeforeDivide;
+    }
+    
+    public void AddStringToStringBefore(String string)
+    {
+        String stringAuxiliar = this.stringBeforeDivide+string;
+        this.setStringBeforeDivide(stringAuxiliar);
+    }
+    
 
     public boolean getDrawBefore() 
     {

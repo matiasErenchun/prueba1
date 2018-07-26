@@ -1146,6 +1146,7 @@ public class Pantalla{
             this.miMap.getLevel(levelToPaint+1).setEndX(myEndX);
             this.miMap.getLevel(levelToPaint-1).setEndX(myEndX);
             this.paintDivide(marco, levelToPaint, puntos);
+            this.miMap.getLevel(levelToPaint).setDrawBefore(false);
             
         }
     }
@@ -1201,7 +1202,16 @@ public class Pantalla{
             {
                 String aux ="";
                 String aux2="";
-                this.miMap.getLevel(level).addStringToStringLevel(miID);
+                if(this.miMap.getLevel(level).getDrawBefore())
+                {
+                 
+                    this.miMap.getLevel(level).AddStringToStringBefore(miID);
+                }
+                else
+                {
+                    this.miMap.getLevel(level).addStringToStringLevel(miID);
+                }
+                
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
                 System.out.println(aux+"div");
                 aux2=this.agregarTexto()+aux;
