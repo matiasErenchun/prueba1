@@ -514,6 +514,8 @@ public class Pantalla{
                 Éste método sirve para que crezca la división una vez se cierre un nivel.
                 */
                 //Se busca si es que existe una división en ese nivel
+                //String stringLevel = getStringCurrentLevel(currentlevel);
+                //for (int buscador=0; buscador<stringLevel.length(); buscador++) {
                 for (int buscador=0; buscador<enPantalla.size(); buscador++) {
                     if ("symbol".equals(enPantalla.get(buscador).getType())){
                         if ("/".equals(enPantalla.get(buscador).getID())) { 
@@ -532,15 +534,32 @@ public class Pantalla{
 
                                     //Se añade una nueva división con el largo nuevo.
                                     NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
+                                    System.out.println("END X MAYOR---------------");
                                     System.out.println(endXMayor);
-                                    if (miMap.getLevel(currentlevel).getEndX()<endXMayor) {
+                                    endXMayor=miMap.getLevel(currentlevel).getEndX();
+                                    /*if (miMap.getLevel(currentlevel).getEndX()<endXMayor) {
                                         miMap.getLevel(currentlevel).setEndX(endXMayor);
                                     }
                                     else {
                                         endXMayor=miMap.getLevel(currentlevel).getEndX();
-                                    }
+                                    }*/
 
-                                    centro.getChildren().add(division.division(getLevelActual(), miMap.getLevel(currentlevel).getEndX()-espacioDivision));
+                                    //centro.getChildren().add(division.division(getLevelActual(), miMap.getLevel(currentlevel).getEndX()-espacioDivision));
+                                    if (currentlevel>1) {
+                                        if (miMap.getLevel(currentlevel-2).getEndX()>endXMayor) {
+                                            endXMayor=miMap.getLevel(currentlevel-2).getEndX();
+                                        }
+                                    }
+                                    
+                                    /*if (currentlevel<0) {
+                                        if (miMap.getLevel(currentlevel+1).getEndX()>endXMayor) {
+                                            endXMayor=miMap.getLevel(currentlevel+1).getEndX();
+                                        }
+                                    }*/
+                                    
+                                    System.out.println(endXMayor);
+                                    
+                                    centro.getChildren().add(division.division(getLevelActual(), endXMayor-espacioDivision));
                                     enPantalla.add(division);
                                 }
                             }
@@ -1358,6 +1377,9 @@ public class Pantalla{
         System.out.println(cantidadElementos);
         return cantidadElementos;
     }
-
+   
+   private String getStringCurrentLevel (int currentlevel) {
+       return this.miMap.getLevel(currentlevel).getStringLevel();
+   }
 }
     
