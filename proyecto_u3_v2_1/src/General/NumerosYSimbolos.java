@@ -1530,8 +1530,11 @@ public class NumerosYSimbolos extends PuntosDeControl{
         return divisionTerminada;
     }
     
+    public void visible(boolean visible){
+        root.setVisible(visible);
+    }
     
-    
-    
-    
+    public void moverNumeroDivision(double mover){
+        root.setTranslateY(mover);
+    }
 }

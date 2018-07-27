@@ -635,19 +635,19 @@ public class Pantalla{
          buttonCos.setOnAction((ActionEvent event) ->
            
         {
-         dibujarTrigonometrica("cos","(");
+         dibujarTrigonometrica("cos","(",currentlevel, true);
         });
        
        buttonSen.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("sen","(");   
+            dibujarTrigonometrica("sen","(",currentlevel, true);   
         });
        
        buttonTan.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("tan","(");   
+            dibujarTrigonometrica("tan","(",currentlevel, true);   
         });
        
        buttonGorrito.setOnAction((ActionEvent event) ->
@@ -699,56 +699,31 @@ public class Pantalla{
                 mostrar.setDisable(true);
             }
         });
-       
-        buttonEliminar.setOnAction((ActionEvent event) ->
-        {
-            reinicia();
-            buttonDiv.setText("/");
-        });
-        button0Bin.setOnAction((ActionEvent event) ->
-        { 
-            button0.fire();
-        });
-       
-       button1Bin.setOnAction((ActionEvent event) ->
-        { 
-            button1.fire();
-        });
-       buttonEliminarBin.setOnAction((ActionEvent event) ->
-        {
-            buttonEliminar.fire();
-        });
-       button.setOnAction((ActionEvent event) ->
-        {
-            numberToStrig(); 
-        });
-       /*
        //-------------------------------------//
-       btnA.setOnAction((ActionEvent event) ->
+        btnA.setOnAction((ActionEvent event) ->
         {
-            dibujar("A"); 
+            dibujar("A",currentlevel, true); 
         });
        btnB.setOnAction((ActionEvent event) ->
         {
-            dibujar("B"); 
+            dibujar("B",currentlevel, true); 
         });
        btnC.setOnAction((ActionEvent event) ->
         {
-            dibujar("C"); 
+            dibujar("C",currentlevel, true); 
         });
        btnD.setOnAction((ActionEvent event) ->
         {
-            dibujar("D"); 
+            dibujar("D",currentlevel, true); 
         });
        btnE.setOnAction((ActionEvent event) ->
         {
-            dibujar("E"); 
+            dibujar("E",currentlevel, true); 
         });
        btnF.setOnAction((ActionEvent event) ->
         {
-            dibujar("F"); 
+            dibujar("F",currentlevel, true); 
         });
-       */
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
@@ -1071,13 +1046,15 @@ public class Pantalla{
                 System.out.println("Largo Contenedor:");
                 System.out.println(contenedor.length());
                 if (levelToPaint<0) {  
-                    enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
+                    //enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
+                    enPantalla.get(tamanoPantalla-contadorI).moverNumeroDivision(-40);
                     if (contadorI==0)
                         this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-contenedor.length()*90);
                 }
                 
                 else {
-                    enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(40);
+                    //enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(40);
+                    enPantalla.get(tamanoPantalla-contadorI).moverNumeroDivision(40);
                     if (contadorI==0)
                         this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-contenedor.length()*90);
                 }
@@ -1097,6 +1074,7 @@ public class Pantalla{
             this.miMap.getLevel(levelToPaint+1).setEndX(myEndX);
             this.miMap.getLevel(levelToPaint-1).setEndX(myEndX);
             this.paintDivide(marco, levelToPaint, puntos);
+            this.miMap.getLevel(levelToPaint).setDrawBefore(false);
             
         }
     }
@@ -1124,18 +1102,31 @@ public class Pantalla{
 
             NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
             
-            
-
             this.centro.getChildren().add(numero.dibujo(id));
+            
             this.contador(false,level);
             this.enPantalla.add(numero);
-            this.enPantalla.get(enPantalla.size()-1).getPath().setVisible(visible);
+            //en caso de, se hacen invisibles los números para hacer el espacio
+            this.enPantalla.get(enPantalla.size()-1).visible(visible);
+            //se desactivan los círuclos permanentemente de los invisibles
+            /*if (visible==false) {
+                this.enPantalla.get(enPantalla.size()-1).deleteCircle();
+            }*/
             String miID=numero.getID();
             if(this.divideStatus)
             {
                 String aux ="";
                 String aux2="";
-                this.miMap.getLevel(level).addStringToStringLevel(miID);
+                if(this.miMap.getLevel(level).getDrawBefore())
+                {
+                 
+                    this.miMap.getLevel(level).AddStringToStringBefore(miID);
+                }
+                else
+                {
+                    this.miMap.getLevel(level).addStringToStringLevel(miID);
+                }
+                
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
                 System.out.println(aux+"div");
                 aux2=this.agregarTexto()+aux;
@@ -1152,7 +1143,7 @@ public class Pantalla{
     /*
     Este metodo se utiliza para dibujar en la interfaz los terminos trigonometricos (cos, sen, tan).
     */
-    void dibujarTrigonometrica (String id1,String id2)
+    void dibujarTrigonometrica (String id1,String id2, int level, boolean visible)
     {
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
         {
@@ -1171,6 +1162,37 @@ public class Pantalla{
             {
                 String aux ="";
                 String aux2="";
+                if(this.miMap.getLevel(level).getDrawBefore())
+                {
+                    
+                    String papa =this.miMap.getLevel(level).getStringBeforeDivide();
+                    System.out.println("papa"+ papa);
+                    this.miMap.getLevel(level).AddStringToStringBefore(miID);
+                    String mama =this.miMap.getLevel(level).getStringBeforeDivide();
+                    System.out.println("mama"+ mama);
+                }
+                else
+                {
+                    this.miMap.getLevel(level).addStringToStringLevel(miID);
+                }
+                
+                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
+                System.out.println(aux+"div");
+                aux2=this.agregarTexto()+aux;
+                texto.setText(aux2);
+            }
+            else
+            {
+                decimal.add(numero1.getID());
+                texto.setText(agregarTexto());
+            }
+            
+            /*
+            String miID=numero1.getID();
+            if(this.divideStatus)
+            {
+                String aux ="";
+                String aux2="";
                 this.miMap.getLevel(currentlevel).addStringToStringLevel(miID+"(");
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
                 System.out.println(aux+"div");
@@ -1183,7 +1205,7 @@ public class Pantalla{
                 decimal.add(numero1.getID());            
                 texto.setText(agregarTexto());
             }
-            
+            */
             dibujar(id2,currentlevel,true);
         }
     }
