@@ -57,32 +57,32 @@ public class Pantalla{
     private int miximumLevel;
     private double endXMayor;
     //contenedor de los simbolos
-    HBox cajaDeSimbolos = new HBox();
-    VBox simbolos = new VBox();
-    VBox trigonometria = new VBox();
-    HBox contenedorNumeros = new HBox();
-    HBox binario= new HBox();
-    HBox contenerdorPrincipal = new HBox();         
-    Stage primaryStage=new Stage();
-    VBox contenedorSimbolos = new VBox();
-    Label texto= new Label("");
-    ScrollPane textBox=new ScrollPane();
-    int tipoCalculadora=0;//0=basica 1=cientifica
-    int baseCalculadora=0;//0=decimal 1=binaria 2=hexadecimal
-    MenuItem cincuenta;
-    MenuItem cien;
-    MenuItem docientos;
-    MenuItem basica;
-    MenuItem tipoDecimal;
-    MenuItem tipoBinario;
-    MenuItem tipoHexadec;
-    MenuItem mostrar;
-    MenuItem ocultar;
+    private HBox cajaDeSimbolos = new HBox();
+    private VBox simbolos = new VBox();
+    private VBox trigonometria = new VBox();
+    private HBox contenedorNumeros = new HBox();
+    private HBox binario= new HBox();
+    private HBox contenerdorPrincipal = new HBox();         
+    private Stage primaryStage=new Stage();
+    private VBox contenedorSimbolos = new VBox();
+    private Label texto= new Label("");
+    private ScrollPane textBox=new ScrollPane();
+    private int tipoCalculadora=0;//0=basica 1=cientifica
+    private int baseCalculadora=0;//0=decimal 1=binaria 2=hexadecimal
+    private MenuItem cincuenta;
+    private MenuItem cien;
+    private MenuItem docientos;
+    private MenuItem basica;
+    private MenuItem tipoDecimal;
+    private MenuItem tipoBinario;
+    private MenuItem tipoHexadec;
+    private MenuItem mostrar;
+    private MenuItem ocultar;
     private String sabe;
-    Conversor conversor = new Conversor();
-    VBox hexColum1=new VBox();
-    VBox hexColum2=new VBox();
-    Label labelCurrentLevel=new Label("Nivel actual: ");
+    private Conversor conversor = new Conversor();
+    private VBox hexColum1=new VBox();
+    private VBox hexColum2=new VBox();
+    private Label labelCurrentLevel=new Label("Nivel actual: ");
     
     
     public Pantalla() {
@@ -530,7 +530,9 @@ public class Pantalla{
 
                                     //Se remueve la división actual.
                                     //centro.getChildren().remove(enPantalla.get(buscador));
-                                    enPantalla.remove(buscador);
+                                    //Se esconde, porque borrar falla :v
+                                    enPantalla.get(buscador).root.setVisible(false);
+                                    //enPantalla.remove(buscador);
 
                                     //Se añade una nueva división con el largo nuevo.
                                     NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
