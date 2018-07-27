@@ -635,19 +635,19 @@ public class Pantalla{
          buttonCos.setOnAction((ActionEvent event) ->
            
         {
-         dibujarTrigonometrica("cos","(",currentlevel, true);
+         dibujarTrigonometrica("cos","(",currentlevel, true, true);
         });
        
        buttonSen.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("sen","(",currentlevel, true);   
+            dibujarTrigonometrica("sen","(",currentlevel, true, true);   
         });
        
        buttonTan.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("tan","(",currentlevel, true);   
+            dibujarTrigonometrica("tan","(",currentlevel, true, true);   
         });
        
        buttonGorrito.setOnAction((ActionEvent event) ->
@@ -1060,35 +1060,103 @@ public class Pantalla{
         }
         else
         {
-                //falta arreglar el areglo que guarda los numeros que estan antes  de la divicion y borrar la basura 
+            /*Prepárense todos los que se atrevan a intentar descifrar esto, a continuación, damas y caballeros, posiblemente
+            una de las funciones más complejas del programa.
+            
+            Acá, para divisiones, se mueven los números y símbolos escritos anteriormente en el mismo nivel un poco más arriba o más abajo.*/
+            
             String contenedor = this.miMap.getLevel(currentlevel).getStringLevel();
+            
             this.miMap.getLevel(currentlevel).setStringLevel("");
-            int contadorI=0;
+            int contadorElementos=0;
+            int contadorChar=0;
             int tamanoPantalla=enPantalla.size()-1;
-            while(contadorI<contenedor.length())
+            int cantChar = contenedor.length(); //Acá se guarda la cantidad de caracteres que hay en un nivel específico.
+            int cantElementos = contadorElementos(contenedor); //Acá se guarda la cantidad de elementos que hay en un nivel específico
+            
+            /*Entiéndase, Elemento, a un elemento completo que se dibuja en pantalla, por ejemplo, "cos" es un elemento.
+            Caracter, como toda figura individual que se dibuje en pantalla, por ejemplo, cos es un elemento conformado por 3 caracteres, "c", "o" y "s".
+            */
+            while(contadorElementos<cantElementos)
+                
             {   
-                System.out.println("Largo Contenedor:");
-                System.out.println(contenedor.length());
+                /*Este boolean indica si el elemento ya fue dibujado con el fin de que no se dibuje dos veces o que resulte en un Null ya que
+                no se ha aumentado en la búqueda de char.*/
+                boolean dibujado = false;
+                
+                //Este boolean indica si se deben ejecutar las instrucciones para mover una función trigonométrica ya que esta se contiene de varios char.
+                boolean trigonometrica=false;
+                int aumentaChar=0;
+
+                if (contenedor.charAt(contadorChar)=='c') {
+                    if (contenedor.charAt(contadorChar+1)=='o') {
+                         if (contenedor.charAt(contadorChar+2)=='s') {
+                             if (dibujado==false) {
+                                dibujarTrigonometrica("cos","(",currentlevel, true, false);
+                                trigonometrica=true;
+                                
+                             }
+                         }
+                    }  
+                }
+                
+                if (contenedor.charAt(contadorChar)=='s') {
+                    if (contenedor.charAt(contadorChar+1)=='e') {
+                         if (contenedor.charAt(contadorChar+2)=='n') {
+                             if (dibujado==false) {
+                                dibujarTrigonometrica("sen","(",currentlevel, true, false);
+                                trigonometrica=true;
+                                
+                             }
+                         }
+                    }  
+                }
+                
+                if (contenedor.charAt(contadorChar)=='t') {
+                    if (contenedor.charAt(contadorChar+1)=='a') {
+                         if (contenedor.charAt(contadorChar+2)=='n') {
+                             if (dibujado==false) {
+                                dibujarTrigonometrica("tan","(",currentlevel, true, false);
+                                trigonometrica=true;
+                                
+                             }
+                         }
+                    }  
+                }
+                
+                if (trigonometrica==true) {
+                    // Se agregan items para que hagan espacio, estos son invisibles.
+                    dibujar("",levelToPaint,false);
+                    dibujar("",levelToPaint,false);
+                    dibujar("",levelToPaint,false);
+                    contadorChar+=3;
+                    aumentaChar=1;
+                    dibujado=true;
+                }
+                
+                
+                //Según si la división está en numerador o denominador, esta parte mueve los elementos hacia arriba o hacia abajo.
                 if (levelToPaint<0) {  
-                    //enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(-40);
-                    enPantalla.get(tamanoPantalla-contadorI).moverNumeroDivision(-40);
-                    if (contadorI==0)
-                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-contenedor.length()*90);
-                }
-                
+                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(-40);
+                    if (contadorElementos==0)
+                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-(cantChar+aumentaChar)*90);
+                    }
                 else {
-                    //enPantalla.get(tamanoPantalla-contadorI).getPath().setTranslateY(40);
-                    enPantalla.get(tamanoPantalla-contadorI).moverNumeroDivision(40);
-                    if (contadorI==0)
-                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-contenedor.length()*90);
+                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(40);
+                    if (contadorElementos==0)
+                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-(cantChar+aumentaChar)*90);
                 }
                 
-                Character charAux=contenedor.charAt(contadorI);
-                dibujar(charAux.toString(),levelToPaint,false);
-                enPantalla.get(enPantalla.size() -1).getPath().setVisible(false);
-                contadorI++;
+                if (dibujado==false) {
+                    Character charAux=contenedor.charAt(contadorChar);
+                    dibujar(charAux.toString(),levelToPaint,false);
+                    contadorChar++;
+                }
+                
+                contadorElementos++;
                 
                 
+                //enPantalla.get(enPantalla.size() -1).getPath().setVisible(false);
                 //Código Matías
                 /*Character charAux=contenedor.charAt(contadorI);
                 dibujar(charAux.toString(),levelToPaint);
@@ -1167,7 +1235,7 @@ public class Pantalla{
     /*
     Este metodo se utiliza para dibujar en la interfaz los terminos trigonometricos (cos, sen, tan).
     */
-    void dibujarTrigonometrica (String id1,String id2, int level, boolean visible)
+    void dibujarTrigonometrica (String id1,String id2, int level, boolean visible, boolean mostrar)
     {
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
         {
@@ -1181,6 +1249,7 @@ public class Pantalla{
             this.contador(true,currentlevel);
             
             enPantalla.add(numero1);
+            this.enPantalla.get(enPantalla.size()-1).visible(mostrar);
             String miID=numero1.getID();
             if(this.divideStatus)
             {
@@ -1230,7 +1299,7 @@ public class Pantalla{
                 texto.setText(agregarTexto());
             }
             */
-            dibujar(id2,currentlevel,true);
+            dibujar(id2,currentlevel,mostrar);
         }
     }
     /*
@@ -1253,5 +1322,42 @@ public class Pantalla{
         }
         return listString;
     }
+   
+   private int contadorElementos(String contenedor){
+       int contadorInterno=0;
+       int cantidadElementos=0;
+       while (contadorInterno<contenedor.length()) {
+
+           switch (contenedor.charAt(contadorInterno)) {
+               case 'c':
+                   if (contenedor.charAt(contadorInterno+1)=='o') {
+                       if (contenedor.charAt(contadorInterno+2)=='s') {
+                           contadorInterno+=2;
+                       }
+                   }  break;
+               case 's':
+                   if (contenedor.charAt(contadorInterno+1)=='e') {
+                       if (contenedor.charAt(contadorInterno+2)=='n') {
+                           contadorInterno+=2;
+                       }
+                   }  break;
+               case 't':
+                   if (contenedor.charAt(contadorInterno+1)=='a') {
+                       if (contenedor.charAt(contadorInterno+2)=='n') {
+                           contadorInterno+=2;
+                       }
+                   }  break;
+               default:
+                   break;
+           }
+            
+            contadorInterno+=1;
+            cantidadElementos+=1;
+        }
+        System.out.println("CANTIDAD DE ELEMENTOS EN NIVEL");
+        System.out.println(cantidadElementos);
+        return cantidadElementos;
+    }
+
 }
     
