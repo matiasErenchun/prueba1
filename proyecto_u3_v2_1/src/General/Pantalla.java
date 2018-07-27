@@ -700,6 +700,30 @@ public class Pantalla{
             }
         });
        //-------------------------------------//
+       
+        buttonEliminar.setOnAction((ActionEvent event) ->
+        {
+            reinicia();
+            buttonDiv.setText("/");
+        });
+        button0Bin.setOnAction((ActionEvent event) ->
+        { 
+            button0.fire();
+        });
+       
+       button1Bin.setOnAction((ActionEvent event) ->
+        { 
+            button1.fire();
+        });
+       buttonEliminarBin.setOnAction((ActionEvent event) ->
+        {
+            buttonEliminar.fire();
+        });
+       button.setOnAction((ActionEvent event) ->
+        {
+            numberToStrig(); 
+        });
+       //-------------------------------//
         btnA.setOnAction((ActionEvent event) ->
         {
             dibujar("A",currentlevel, true); 
