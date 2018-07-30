@@ -530,8 +530,7 @@ public class Pantalla{
 
                                     //Se remueve la división actual.
                                     //centro.getChildren().remove(enPantalla.get(buscador));
-                                    //Se esconde, porque borrar falla :v
-                                    enPantalla.get(buscador).root.setVisible(false);
+                                    enPantalla.get(buscador).root.setVisible(puntosVisibles);
                                     //enPantalla.remove(buscador);
 
                                     //Se añade una nueva división con el largo nuevo.
