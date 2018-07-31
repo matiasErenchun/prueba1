@@ -41,11 +41,12 @@ public class NumerosYSimbolos extends PuntosDeControl{
     Group root = new Group();
     
 
-    public NumerosYSimbolos(double marco, double espacio, double superior, boolean puntosVisibles) {
+    public NumerosYSimbolos(double marco, double espacio, double superior, boolean puntosVisibles, int nivelActual) {
         this.espacio=espacio;
         this.superior=superior;
         this.marco=marco;
         this.puntosVisibles=puntosVisibles;
+        this.nivelActual=nivelActual;
     }
     /*
     Acá se configuran los números en cuanto a grosor y si son visibles o no los puntos de control.
@@ -1038,15 +1039,14 @@ public class NumerosYSimbolos extends PuntosDeControl{
         return grup0;
     }
     
-    public Group division(int level, double finalDiv) {
+    public Group division(double finalDiv) {
         ID = "/";
-        nivelActual=level;
         size=1.2;
         xPoint = (155+espacio);
         yPoint = (superior);
         
         //Si la división es más larga de lo original, es decir, ya fue alargada, divisionTerminada se transforma en true para indicar que no crezca más.
-        if(finalDiv>90)
+        if(finalDiv>89)
             divisionTerminada=true;
 
         MoveTo startDivide = new MoveTo(xPoint, yPoint+150);
@@ -1541,4 +1541,10 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public void moverNumeroDivision(double mover){
         root.setTranslateY(mover);
     }
+
+    public void mueveNivelActual(int mover) {
+        this.nivelActual+=mover;
+    }
+    
+    
 }

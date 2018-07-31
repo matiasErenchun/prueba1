@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Path;
 import javafx.stage.Stage;
@@ -91,6 +92,8 @@ public class Pantalla{
         this.numDecimal = new ArrayList<>();
         inicio();
     }
+    
+    
     /*
     Este es el metodo principal en donde se genera la interfaz geafica y muchas de las acciones de los botones
     */
@@ -270,6 +273,8 @@ public class Pantalla{
 
                System.out.println(currentlevel+"current");
                labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+               
+               pintaNivel();
             }
         });
 
@@ -288,7 +293,12 @@ public class Pantalla{
                 }
                 System.out.println(currentlevel+"current");
                 labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+                
+                pintaNivel();
             }
+            
+            
+            
         });
 
       btnDawn.setMaxWidth(Double.MAX_VALUE);
@@ -506,7 +516,7 @@ public class Pantalla{
                 {
                     boolean status=miMap.closeLevel(currentlevel, divideStatus);
                     boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
-//                    System.out.println(currentlevel);
+                    
 //                    System.out.println(statusLevel);
 //                    System.out.println(status);
                 }
@@ -519,10 +529,8 @@ public class Pantalla{
                 for (int buscador=0; buscador<enPantalla.size(); buscador++) {
                     if ("symbol".equals(enPantalla.get(buscador).getType())){
                         if ("/".equals(enPantalla.get(buscador).getID())) { 
-                            System.out.println(enPantalla.get(buscador).isDivisionTerminada());
                             if (enPantalla.get(buscador).isDivisionTerminada()==false) {
                                 if (getLevelActual()==enPantalla.get(buscador).getNivelActual()) {
-                                
                                 
                                     //Se respaldan algunos datos de la división actual.
                                     double espacioDivision= enPantalla.get(buscador).getxPoint()-155;
@@ -530,38 +538,25 @@ public class Pantalla{
 
                                     //Se remueve la división actual.
                                     //centro.getChildren().remove(enPantalla.get(buscador));
-                                    enPantalla.get(buscador).root.setVisible(puntosVisibles);
+                                    enPantalla.get(buscador).root.setVisible(false);
                                     //enPantalla.remove(buscador);
-
+                                    
+                                    
                                     //Se añade una nueva división con el largo nuevo.
-                                    NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles);
-                                    System.out.println("END X MAYOR---------------");
-                                    System.out.println(endXMayor);
+                                    NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
+                                    
                                     endXMayor=miMap.getLevel(currentlevel).getEndX();
-                                    /*if (miMap.getLevel(currentlevel).getEndX()<endXMayor) {
-                                        miMap.getLevel(currentlevel).setEndX(endXMayor);
-                                    }
-                                    else {
-                                        endXMayor=miMap.getLevel(currentlevel).getEndX();
-                                    }*/
-
-                                    //centro.getChildren().add(division.division(getLevelActual(), miMap.getLevel(currentlevel).getEndX()-espacioDivision));
-                                    if (currentlevel>1) {
-                                        if (miMap.getLevel(currentlevel-2).getEndX()>endXMayor) {
-                                            endXMayor=miMap.getLevel(currentlevel-2).getEndX();
+                                    if (currentlevel!=0) {
+                                        endXMayor=miMap.getLevel(currentlevel+1).getEndX();
+                                        if (miMap.getLevel(currentlevel-1).getEndX()>endXMayor) {
+                                                endXMayor=miMap.getLevel(currentlevel-1).getEndX();
                                         }
                                     }
-                                    
-                                    /*if (currentlevel<0) {
-                                        if (miMap.getLevel(currentlevel+1).getEndX()>endXMayor) {
-                                            endXMayor=miMap.getLevel(currentlevel+1).getEndX();
-                                        }
-                                    }*/
                                     
                                     System.out.println(endXMayor);
                                     
-                                    centro.getChildren().add(division.division(getLevelActual(), endXMayor-espacioDivision));
-                                    enPantalla.add(division);
+                                    centro.getChildren().add(division.division(endXMayor-espacioDivision));
+                                    enPantalla.set(buscador, division);
                                 }
                             }
                         }
@@ -882,6 +877,16 @@ public class Pantalla{
         }
     }
     
+    private int aModificarDivision(){
+        if (getLevelActual()>0) {
+            return 1;
+        }
+        else if (getLevelActual()<0) {
+            return -1;
+        }
+        return 0;
+    }
+    
     //** aqui va todo lo de los cambios de base **//
     
     /*
@@ -1158,11 +1163,13 @@ public class Pantalla{
                 //Según si la división está en numerador o denominador, esta parte mueve los elementos hacia arriba o hacia abajo.
                 if (levelToPaint<0) {  
                     enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(-40);
+                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).mueveNivelActual(-1);
                     if (contadorElementos==0)
                         this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-(cantChar+aumentaChar)*90);
                     }
                 else {
                     enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(40);
+                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).mueveNivelActual(1);
                     if (contadorElementos==0)
                         this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-(cantChar+aumentaChar)*90);
                 }
@@ -1191,13 +1198,16 @@ public class Pantalla{
         }
     }
     
+    
+    
     public void paintDivide(double marco ,int levelToPaint, boolean puntos)
     {
+        
         double miX=this.miMap.getLevel(levelToPaint).getEndX();
         double miY=this.miMap.getLevel(levelToPaint).getyLevel();
        
-        NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos);
-        this.centro.getChildren().add(symbol.division(getLevelActual(), 90));
+        NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos,getLevelActual()+aModificarDivision());
+        this.centro.getChildren().add(symbol.division(89));
         this.miMap.getLevel(levelToPaint).setDrawBefore(false);
         this.enPantalla.add(symbol);
         this.contador(false, levelToPaint);
@@ -1212,7 +1222,7 @@ public class Pantalla{
             double xFromThisLevel =this.miMap.getLevel(level).getEndX();
             double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
 
-            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
             
             this.centro.getChildren().add(numero.dibujo(id));
             
@@ -1263,7 +1273,7 @@ public class Pantalla{
             double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
             double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
 
-            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles);
+            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, currentlevel);
             centro.getChildren().add(numero1.dibujo(id1));
 
             this.contador(true,currentlevel);
@@ -1382,5 +1392,15 @@ public class Pantalla{
    private String getStringCurrentLevel (int currentlevel) {
        return this.miMap.getLevel(currentlevel).getStringLevel();
    }
+   
+    private void pintaNivel(){
+       for (int buscador=0; buscador<enPantalla.size(); buscador++) {
+            if (enPantalla.get(buscador).getNivelActual()==currentlevel){
+                enPantalla.get(buscador).getPath().setStroke(Color.RED);
+            }
+            else
+                enPantalla.get(buscador).getPath().setStroke(Color.BLACK);
+        }
+    }
 }
     
