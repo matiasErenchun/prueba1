@@ -43,7 +43,6 @@ public class Pantalla{
     private double espacioSuperior=0; //Espacio en Y que indica a las figuras en qué posición deben dibujarse.
     private boolean puntosVisibles = false;
     private List<NumerosYSimbolos> enPantalla; //Lista de todos los elementos dibujados en Pantalla.
-    private Group centro;
     private Group grupoPantalla;
     private boolean divideStatus =false; //Variable que sirve para saber en qué estado está una división.
     //divideStatus = 1; Significa que se ha iniciado una nueva división y se está dibujando en la parte de arriba de esta.
@@ -84,7 +83,19 @@ public class Pantalla{
     private VBox hexColum1=new VBox();
     private VBox hexColum2=new VBox();
     private Label labelCurrentLevel=new Label("Nivel actual: ");
+    //-----------------------------------//
+    private Path center = new Path();
+    private Group centro=new Group(center);
     
+    private Path cienDecimalPath = new Path();
+    private Group cienDecimalGroup=new Group(cienDecimalPath);
+    
+    private Path cienBinPath = new Path();
+    private Group cienBinGroup=new Group(cienBinPath);
+    
+    private Path cienHexaPath = new Path();
+    private Group cienHexaGroup=new Group(cienHexaPath);
+    //-----------------------------------//
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -98,6 +109,7 @@ public class Pantalla{
     Este es el metodo principal en donde se genera la interfaz geafica y muchas de las acciones de los botones
     */
     public void inicio(){
+        setScaleNumbers(0.5);
         labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
         sabe="";
         this.miMap = new MapLevel();
@@ -275,6 +287,12 @@ public class Pantalla{
                labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
                
                pintaNivel();
+               if(miMap.LevelIsClosed(currentlevel)==true){
+                    btnClose.setDisable(true);
+                }
+                else{
+                    btnClose.setDisable(false);
+                }
             }
         });
 
@@ -295,10 +313,13 @@ public class Pantalla{
                 labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
                 
                 pintaNivel();
+                if(miMap.LevelIsClosed(currentlevel)==true){
+                    btnClose.setDisable(true);
+                }
+                else{
+                    btnClose.setDisable(false);
+                }
             }
-            
-            
-            
         });
 
       btnDawn.setMaxWidth(Double.MAX_VALUE);
@@ -380,13 +401,9 @@ public class Pantalla{
        BorderPane pane = new BorderPane();
        box.setManaged(true);    
        //pane.setCenter(box);
-       Path center = new Path();
+       
        center.setManaged(false);
        
-       centro=new Group(center);
-       centro.setScaleX(0.5);
-       centro.setScaleY(0.5);
-
        grupoPantalla=new Group(centro);
        
        ScrollPane mainPane=new ScrollPane(grupoPantalla); 
@@ -488,6 +505,7 @@ public class Pantalla{
             labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
             btnUp.fire();
         });
+       
        btnClose.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -543,7 +561,7 @@ public class Pantalla{
                                     
                                     
                                     //Se añade una nueva división con el largo nuevo.
-                                    NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
+                                   
                                     
                                     endXMayor=miMap.getLevel(currentlevel).getEndX();
                                     if (currentlevel!=0) {
@@ -554,14 +572,36 @@ public class Pantalla{
                                     }
                                     
                                     System.out.println(endXMayor);
-                                    
-                                    centro.getChildren().add(division.division(endXMayor-espacioDivision));
-                                    enPantalla.set(buscador, division);
+                                    if(tipoCalculadora==0){
+                                        NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
+                                        centro.getChildren().add(division.division(endXMayor-espacioDivision));
+                                        System.out.println("END X MAYOR Y ESPACIO DIVISION");
+                                        System.out.println(endXMayor);
+                                        System.out.println(espacioDivision);
+                                        enPantalla.set(buscador, division);
+                                    }
+                                    else{
+                                        NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
+                                        paintDivide(division);
+                                        System.out.println("END X MAYOR Y ESPACIO DIVISION");
+                                        System.out.println(endXMayor);
+                                        System.out.println(espacioDivision);
+                                        enPantalla.set(buscador, division);
+                                    }
+                                        
+//                                    enPantalla.set(buscador, division);
                                 }
                             }
                         }
                     }
                 }
+                if(miMap.LevelIsClosed(currentlevel)==true){
+                    btnClose.setDisable(true);
+                }
+            }
+
+            private void paintDivide(NumerosYSimbolos division) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
         
@@ -569,125 +609,125 @@ public class Pantalla{
        
        buttonPor.setOnAction((ActionEvent event) ->
         { 
-            dibujar("*",currentlevel, true);
+            addToScreen("*",currentlevel, true);
         });
        
        buttonPar1.setOnAction((ActionEvent event) ->
         { 
-            dibujar("(",currentlevel, true);
+            addToScreen("(",currentlevel, true);
         });
        
        buttonPar2.setOnAction((ActionEvent event) ->
         { 
-            dibujar(")",currentlevel, true);
+            addToScreen(")",currentlevel, true);
         });
 
        buttonMas.setOnAction((ActionEvent event) ->
         { 
-            dibujar("+",currentlevel, true);
+            addToScreen("+",currentlevel, true);
         });
        
        buttonMenos.setOnAction((ActionEvent event) ->
         { 
-            dibujar("-",currentlevel, true);
+            addToScreen("-",currentlevel, true);
         });
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            dibujar("0",currentlevel, true);
+            addToScreen("0",currentlevel, true);
         });
        
        button1.setOnAction((ActionEvent event) ->
         { 
-            dibujar("1",currentlevel, true);
+            addToScreen("1",currentlevel, true);
         });
        
        button2.setOnAction((ActionEvent event) ->
         { 
-            dibujar("2",currentlevel, true);
+            addToScreen("2",currentlevel, true);
         });
        
        button3.setOnAction((ActionEvent event) ->
        { 
-            dibujar("3",currentlevel, true);
+            addToScreen("3",currentlevel, true);
         });
        
        button4.setOnAction((ActionEvent event) ->
        {
-            dibujar("4",currentlevel, true);   
+            addToScreen("4",currentlevel, true);   
         });
        
        button5.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("5",currentlevel, true);   
+            addToScreen("5",currentlevel, true);   
         });
        
        button6.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("6",currentlevel, true);
+            addToScreen("6",currentlevel, true);
          });
        
        button7.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("7",currentlevel, true);
+            addToScreen("7",currentlevel, true);
          });
        
        button8.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("8",currentlevel, true);
+            addToScreen("8",currentlevel, true);
          });
        
        button9.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("9",currentlevel, true);
+            addToScreen("9",currentlevel, true);
          });
        
          buttonCos.setOnAction((ActionEvent event) ->
            
         {
-         dibujarTrigonometrica("cos","(",currentlevel, true, true);
+         addToScreenTrigonometric("cos","(",currentlevel, true, true);
         });
        
        buttonSen.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("sen","(",currentlevel, true, true);   
+            addToScreenTrigonometric("sen","(",currentlevel, true, true);   
         });
        
        buttonTan.setOnAction((ActionEvent event) ->
            
         {
-            dibujarTrigonometrica("tan","(",currentlevel, true, true);   
+            addToScreenTrigonometric("tan","(",currentlevel, true, true);   
         });
        
        buttonGorrito.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("^", currentlevel, true);
+            addToScreen("^", currentlevel, true);
         });
        
        buttonFactorial.setOnAction((ActionEvent event) ->
            
         {
-          dibujar("!",currentlevel, true);
+          addToScreen("!",currentlevel, true);
         });
        
        buttonGrados.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("º",currentlevel, true);
+            addToScreen("º",currentlevel, true);
         });
        
        buttonsqrt.setOnAction((ActionEvent event) ->
            
         {
-            dibujar("√a",currentlevel, true);
-            dibujar("(",currentlevel, true);
+            addToScreen("√a",currentlevel, true);
+            addToScreen("(",currentlevel, true);
         });
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
@@ -718,7 +758,7 @@ public class Pantalla{
        
         buttonEliminar.setOnAction((ActionEvent event) ->
         {
-            reinicia();
+            reset();
             buttonDiv.setText("/");
         });
         button0Bin.setOnAction((ActionEvent event) ->
@@ -741,27 +781,27 @@ public class Pantalla{
        //-------------------------------//
         btnA.setOnAction((ActionEvent event) ->
         {
-            dibujar("A",currentlevel, true); 
+            addToScreen("A",currentlevel, true); 
         });
        btnB.setOnAction((ActionEvent event) ->
         {
-            dibujar("B",currentlevel, true); 
+            addToScreen("B",currentlevel, true); 
         });
        btnC.setOnAction((ActionEvent event) ->
         {
-            dibujar("C",currentlevel, true); 
+            addToScreen("C",currentlevel, true); 
         });
        btnD.setOnAction((ActionEvent event) ->
         {
-            dibujar("D",currentlevel, true); 
+            addToScreen("D",currentlevel, true); 
         });
        btnE.setOnAction((ActionEvent event) ->
         {
-            dibujar("E",currentlevel, true); 
+            addToScreen("E",currentlevel, true); 
         });
        btnF.setOnAction((ActionEvent event) ->
         {
-            dibujar("F",currentlevel, true); 
+            addToScreen("F",currentlevel, true); 
         });
        //-------------------------------------//
        
@@ -896,7 +936,7 @@ public class Pantalla{
         if (tipoCalculadora==0) {
             cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
             primaryStage.setTitle("Cancer de Piel (Modo Científico)");
-            reinicia();
+            //reinicia();
             texto.setText("");
             this.decimal = new ArrayList<>();
         }
@@ -920,6 +960,7 @@ public class Pantalla{
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=0;
+                swapSreen(cienDecimalGroup);
                 break;
                 
             case "Tipo Binario":
@@ -936,6 +977,7 @@ public class Pantalla{
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=1;
+                swapSreen(cienBinGroup);
                 break;
                 
             case "Tipo Hexadecimal":
@@ -951,6 +993,7 @@ public class Pantalla{
                 tipoHexadec.setDisable(true);
                 tipoCalculadora=1;
                 baseCalculadora=2;
+                swapSreen(cienHexaGroup);
                 break;
         }
         
@@ -974,12 +1017,14 @@ public class Pantalla{
                 
                 cajaDeSimbolos.getChildren().removeAll(trigonometria, simbolos);
                 primaryStage.setTitle("Cancer de Piel");
-                reinicia();
+                
                 basica.setDisable(true);
                 tipoBinario.setDisable(false);
                 tipoDecimal.setDisable(false);
                 tipoCalculadora=0;
                 baseCalculadora=0;
+                reset();
+                swapSreen(centro);
             break;
         }
     }
@@ -1023,11 +1068,20 @@ public class Pantalla{
     
     
     private void setScaleNumbers(double size){
-        centro.setScaleX(size);
-        centro.setScaleY(size);
+        
+        this.centro.setScaleX(size);
+        this.centro.setScaleY(size);
+        this.cienDecimalGroup.setScaleX(size);
+        this.cienDecimalGroup.setScaleY(size);
+        this.cienBinGroup.setScaleX(size);
+        this.cienBinGroup.setScaleY(size);
+        this.cienHexaGroup.setScaleX(size);
+        this.cienHexaGroup.setScaleY(size);
+        
+        
     }
     
-    private void reinicia(){
+    private void reset(){
         Node elemento = centro.getChildren().get(0);
             centro.getChildren().removeAll(centro.getChildren());
             centro.getChildren().add(elemento);
@@ -1117,7 +1171,7 @@ public class Pantalla{
                     if (contenedor.charAt(contadorChar+1)=='o') {
                          if (contenedor.charAt(contadorChar+2)=='s') {
                              if (dibujado==false) {
-                                dibujarTrigonometrica("cos","(",currentlevel, true, false);
+                                addToScreenTrigonometric("cos","(",currentlevel, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -1129,7 +1183,7 @@ public class Pantalla{
                     if (contenedor.charAt(contadorChar+1)=='e') {
                          if (contenedor.charAt(contadorChar+2)=='n') {
                              if (dibujado==false) {
-                                dibujarTrigonometrica("sen","(",currentlevel, true, false);
+                                addToScreenTrigonometric("sen","(",currentlevel, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -1141,7 +1195,7 @@ public class Pantalla{
                     if (contenedor.charAt(contadorChar+1)=='a') {
                          if (contenedor.charAt(contadorChar+2)=='n') {
                              if (dibujado==false) {
-                                dibujarTrigonometrica("tan","(",currentlevel, true, false);
+                                addToScreenTrigonometric("tan","(",currentlevel, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -1151,9 +1205,9 @@ public class Pantalla{
                 
                 if (trigonometrica==true) {
                     // Se agregan items para que hagan espacio, estos son invisibles.
-                    dibujar("",levelToPaint,false);
-                    dibujar("",levelToPaint,false);
-                    dibujar("",levelToPaint,false);
+                    addToScreen("",levelToPaint,false);
+                    addToScreen("",levelToPaint,false);
+                    addToScreen("",levelToPaint,false);
                     contadorChar+=3;
                     aumentaChar=1;
                     dibujado=true;
@@ -1176,7 +1230,7 @@ public class Pantalla{
                 
                 if (dibujado==false) {
                     Character charAux=contenedor.charAt(contadorChar);
-                    dibujar(charAux.toString(),levelToPaint,false);
+                    addToScreen(charAux.toString(),levelToPaint,false);
                     contadorChar++;
                 }
                 
@@ -1207,7 +1261,12 @@ public class Pantalla{
         double miY=this.miMap.getLevel(levelToPaint).getyLevel();
        
         NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos,getLevelActual()+aModificarDivision());
+        if(tipoCalculadora==0){
         this.centro.getChildren().add(symbol.division(89));
+        }
+        else{
+            this.cienDecimalGroup.getChildren().add(symbol.division(89));
+        }
         this.miMap.getLevel(levelToPaint).setDrawBefore(false);
         this.enPantalla.add(symbol);
         this.contador(false, levelToPaint);
@@ -1215,7 +1274,7 @@ public class Pantalla{
     /*
     Este metodo se utiliza para dibujar en la interfaz todos los numeros y simbolos.
     */
-    void dibujar (String id , int level, boolean visible){
+    void addToScreen (String id , int level, boolean visible){
         if(this.miMap.validateLevelToWrite(level,this.divideStatus))
         {
             double n =0;
@@ -1224,7 +1283,12 @@ public class Pantalla{
 
             NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
             
-            this.centro.getChildren().add(numero.dibujo(id));
+            if(tipoCalculadora==0)
+                this.centro.getChildren().add(numero.dibujo(id));
+            
+            else{
+                this.cienDecimalGroup.getChildren().add(numero.dibujo(id));
+            }
             
             this.contador(false,level);
             this.enPantalla.add(numero);
@@ -1265,7 +1329,7 @@ public class Pantalla{
     /*
     Este metodo se utiliza para dibujar en la interfaz los terminos trigonometricos (cos, sen, tan).
     */
-    void dibujarTrigonometrica (String id1,String id2, int level, boolean visible, boolean mostrar)
+    void addToScreenTrigonometric (String id1,String id2, int level, boolean visible, boolean mostrar)
     {
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
         {
@@ -1276,8 +1340,12 @@ public class Pantalla{
             NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, currentlevel);
             centro.getChildren().add(numero1.dibujo(id1));
 
-            this.contador(true,currentlevel);
+            if(tipoCalculadora==0)
+                this.centro.getChildren().add(numero1.dibujo(id1));
             
+            else{
+                this.cienDecimalGroup.getChildren().add(numero1.dibujo(id1));
+            }
             enPantalla.add(numero1);
             this.enPantalla.get(enPantalla.size()-1).visible(mostrar);
             String miID=numero1.getID();
@@ -1329,7 +1397,7 @@ public class Pantalla{
                 texto.setText(agregarTexto());
             }
             */
-            dibujar(id2,currentlevel,mostrar);
+            addToScreen(id2,currentlevel,mostrar);
         }
     }
     /*
@@ -1401,6 +1469,11 @@ public class Pantalla{
             else
                 enPantalla.get(buscador).getPath().setStroke(Color.BLACK);
         }
+    }
+
+    private void swapSreen(Group grupo) {
+        grupoPantalla.getChildren().clear();
+        grupoPantalla.getChildren().add(grupo);
     }
 }
     
