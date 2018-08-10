@@ -96,6 +96,7 @@ public class Pantalla{
     private Path cienHexaPath = new Path();
     private Group cienHexaGroup=new Group(cienHexaPath);
     //-----------------------------------//
+    private Group root=new Group();
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -1288,6 +1289,10 @@ public class Pantalla{
             
             else{
                 this.cienDecimalGroup.getChildren().add(numero.dibujo(id));
+                if("symbol".equalsIgnoreCase(numero.getType())){
+                    printScientific(id,level,0);
+                    printScientific(id,level,1);
+                }
             }
             
             this.contador(false,level);
@@ -1474,6 +1479,19 @@ public class Pantalla{
     private void swapSreen(Group grupo) {
         grupoPantalla.getChildren().clear();
         grupoPantalla.getChildren().add(grupo);
+    }
+
+    private void printScientific(String id, int level, int i) {
+        double n =0;    
+        double xFromThisLevel =this.miMap.getLevel(level).getEndX();
+        double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
+        NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
+        if(i==0){
+            this.cienHexaGroup.getChildren().add(numero.dibujo(id));
+        }
+        if(i==1){
+            this.cienBinGroup.getChildren().add(numero.dibujo(id));
+        }        
     }
 }
     
