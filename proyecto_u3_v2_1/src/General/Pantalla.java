@@ -66,6 +66,7 @@ public class Pantalla{
     private Stage primaryStage=new Stage();
     private VBox contenedorSimbolos = new VBox();
     private Label texto= new Label("");
+    private Label texto1= new Label("");
     private ScrollPane textBox=new ScrollPane();
     private int tipoCalculadora=0;//0=basica 1=cientifica
     private int baseCalculadora=0;//0=decimal 1=binaria 2=hexadecimal
@@ -96,7 +97,7 @@ public class Pantalla{
     private Path cienHexaPath = new Path();
     private Group cienHexaGroup=new Group(cienHexaPath);
     //-----------------------------------//
-    private Group root=new Group();
+    private Group textoGrup=new Group();
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -845,10 +846,16 @@ public class Pantalla{
        VBox bottom =new VBox();
        texto=new Label("");
        texto.setStyle("-fx-font-size:20px;");
-       textBox.setContent(texto);
+       texto1.setStyle("-fx-font-size:20px;");
+       
+       textBox.setContent(textoGrup);
+       textoGrup.getChildren().add(texto);
        textBox.setMinHeight(50);
        texto.setMaxWidth(Double.MAX_VALUE);
+       texto1.setMaxWidth(Double.MAX_VALUE);
+       
        texto.setAlignment(Pos.CENTER_LEFT);
+       texto1.setAlignment(Pos.CENTER_LEFT);
        bottom.getChildren().addAll(contenerdorPrincipal,textBox,labelCurrentLevel);
        BpanePrueba.setBottom(bottom);
        //BpanePrueba.setCenter(pantallaDibujo);
@@ -938,7 +945,8 @@ public class Pantalla{
             cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
             primaryStage.setTitle("Cancer de Piel (Modo Científico)");
             //reinicia();
-            texto.setText("");
+            this.textoGrup.getChildren().clear();
+            this.textoGrup.getChildren().add(texto1);
             this.decimal = new ArrayList<>();
         }
         
@@ -1024,8 +1032,11 @@ public class Pantalla{
                 tipoDecimal.setDisable(false);
                 tipoCalculadora=0;
                 baseCalculadora=0;
-                reset();
+//                reset();
                 swapSreen(centro);
+                textoGrup.getChildren().clear();
+                textoGrup.getChildren().add(texto);
+                
             break;
         }
     }
@@ -1088,11 +1099,20 @@ public class Pantalla{
             Node elemento = centro.getChildren().get(0);
             centro.getChildren().removeAll(centro.getChildren());
             centro.getChildren().add(elemento);
+            texto.setText("");
         }
         else{
+            
             Node elemento = cienDecimalGroup.getChildren().get(0);
+            Node elemento1 = cienHexaGroup.getChildren().get(0);
+            Node elemento2 = cienBinGroup.getChildren().get(0);
             this.cienDecimalGroup.getChildren().removeAll(cienDecimalGroup.getChildren());
             cienDecimalGroup.getChildren().add(elemento);
+            this.cienHexaGroup.getChildren().removeAll(cienHexaGroup.getChildren());
+            cienHexaGroup.getChildren().add(elemento1);
+            this.cienBinGroup.getChildren().removeAll(cienBinGroup.getChildren());
+            cienBinGroup.getChildren().add(elemento2);
+            texto1.setText("");
         }
             
             enPantalla.removeAll(enPantalla);
@@ -1102,7 +1122,7 @@ public class Pantalla{
             espacioSuperior=0;
             this.miMap.startMap(espacioNumero, espacioSuperior);
             this.startThisLevels();
-            texto.setText("");
+            
             this.decimal = new ArrayList<>();
     }
     
@@ -1330,12 +1350,23 @@ public class Pantalla{
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
                 System.out.println(aux+"div");
                 aux2=this.agregarTexto()+aux;
-                texto.setText(aux2);
+                if (tipoCalculadora==0) {
+                    texto.setText(aux2);    
+                }
+                else{
+                    texto1.setText(aux2);
+                }
             }
             else
             {
                 decimal.add(numero.getID());
-                texto.setText(agregarTexto());
+                
+                if (tipoCalculadora==0) {
+                    texto.setText(agregarTexto());
+                }
+                else{
+                    texto1.setText(agregarTexto());
+                }
             }
             System.out.println(level);
         }
