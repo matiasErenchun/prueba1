@@ -1083,9 +1083,18 @@ public class Pantalla{
     }
     
     private void reset(){
-        Node elemento = centro.getChildren().get(0);
+        
+        if(tipoCalculadora==0){
+            Node elemento = centro.getChildren().get(0);
             centro.getChildren().removeAll(centro.getChildren());
             centro.getChildren().add(elemento);
+        }
+        else{
+            Node elemento = cienDecimalGroup.getChildren().get(0);
+            this.cienDecimalGroup.getChildren().removeAll(cienDecimalGroup.getChildren());
+            cienDecimalGroup.getChildren().add(elemento);
+        }
+            
             enPantalla.removeAll(enPantalla);
             divideStatus=false;
             divisiones=0;
@@ -1289,10 +1298,10 @@ public class Pantalla{
             
             else{
                 this.cienDecimalGroup.getChildren().add(numero.dibujo(id));
-                if("symbol".equalsIgnoreCase(numero.getType())){
+//                if("symbol".equalsIgnoreCase(numero.getType())){
                     printScientific(id,level,0);
                     printScientific(id,level,1);
-                }
+//                }
             }
             
             this.contador(false,level);
