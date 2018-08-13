@@ -98,6 +98,7 @@ public class Pantalla{
     private Group cienHexaGroup=new Group(cienHexaPath);
     //-----------------------------------//
     private Group textoGrup=new Group();
+    private Button btnClose = new Button();
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
@@ -268,7 +269,6 @@ public class Pantalla{
        button.setMaxWidth(Double.MAX_VALUE);
        //buttonDiv.setMaxWidth(Double.MAX_VALUE);
         HBox div=new HBox();
-        Button btnClose = new Button();
         btnClose.setText("Cerrar Nivel");
         btnClose.setDisable(true);
 
@@ -459,6 +459,7 @@ public class Pantalla{
         {
             if(this.miMap.LevelIsClosed(this.currentlevel)==false)
             {
+                
                 if(this.currentlevel==0)
                 {
                     this.divideStatus=true;
@@ -471,7 +472,6 @@ public class Pantalla{
                     this.miMap.createLevel(this.espacioNumero, this.currentlevel+1);
                     this.setMinimumLevel(1);
                     this.setMiximumLevel(-1);
-                
                 
                 }
                 else
@@ -505,7 +505,15 @@ public class Pantalla{
                 //error nivel cerrado
             }
             labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-            btnUp.fire();
+            if(currentlevel<=0){
+                btnUp.fire();
+                btnUp.fire();
+                
+            }
+            else{
+                btnDawn.fire();
+                btnDawn.fire();
+            }
         });
        
        btnClose.setOnAction(new EventHandler<ActionEvent>() {
@@ -584,7 +592,9 @@ public class Pantalla{
                                     }
                                     else{
                                         NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
-                                        paintDivide(division);
+                                        cienDecimalGroup.getChildren().add(division.division(endXMayor-espacioDivision));
+                                        divideCientifica(0,espacioDivision,superiorDivision);
+                                        divideCientifica(1,espacioDivision,superiorDivision);
                                         System.out.println("END X MAYOR Y ESPACIO DIVISION");
                                         System.out.println(endXMayor);
                                         System.out.println(espacioDivision);
@@ -600,10 +610,6 @@ public class Pantalla{
                 if(miMap.LevelIsClosed(currentlevel)==true){
                     btnClose.setDisable(true);
                 }
-            }
-
-            private void paintDivide(NumerosYSimbolos division) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
         
@@ -1046,30 +1052,39 @@ public class Pantalla{
     
     private void numberToStrig(){
         //Se busca que sea un número lo que se analizará.
+        System.out.println("transformacion");
         for (int x=0; x<enPantalla.size(); x++){
             if ("number".equals(enPantalla.get(x).getType())){
-                System.out.println(enPantalla.get(x).getType());
+                System.out.println("+---------------+");                
+                System.out.println("nivel: "+enPantalla.get(x).getNivelActual());
+                System.out.println("tipo: "+enPantalla.get(x).getType());
+                System.out.println("id: "+enPantalla.get(x).getID());
+                System.out.println("---------------");
                 numDecimal.add(enPantalla.get(x).getID());
+                System.out.println("numero: "+numDecimal);
+                System.out.println("+++++++++++++++++++");
             }
             
             //Separa de forma correcta los elementos, es decir, sólo captura números y deja de lado los símbolos.
             if ("symbol".equals(enPantalla.get(x).getType()) || x==enPantalla.size()-1){
                 if (x>1){
                     if ("number".equals(enPantalla.get(x-1).getType()) || x==enPantalla.size()-1){
-                        ArrayList<String>b=conversor.decToHexList(numDecimal);
-                        conversor.hexToDecString(b);
-                        conversor.hexToDecInt(b);
-                        conversor.toBinaryList(numDecimal);
-                        conversor.binToDecList(conversor.toBinaryString(numDecimal));
+//                        ArrayList<String>b=conversor.decToHexList(numDecimal);
+//                        conversor.hexToDecString(b);
+//                        conversor.hexToDecInt(b);
+//                        conversor.toBinaryList(numDecimal);
+//                        conversor.binToDecList(conversor.toBinaryString(numDecimal));
                         numDecimal.clear();
+                          System.out.println("la wea");
                     }
                 }                
                 else {
-                    ArrayList<String>b=conversor.decToHexList(numDecimal);
-                    conversor.hexToDecString(b);
-                    conversor.hexToDecInt(b);
-                    conversor.toBinaryList(numDecimal);
-                    conversor.binToDecList(conversor.toBinaryString(numDecimal));
+                    System.out.println("holis");
+//                    ArrayList<String>b=conversor.decToHexList(numDecimal);
+//                    conversor.hexToDecString(b);
+//                    conversor.hexToDecInt(b);
+//                    conversor.toBinaryList(numDecimal);
+//                    conversor.binToDecList(conversor.toBinaryString(numDecimal));
                     numDecimal.clear();
                 }
             }
@@ -1122,7 +1137,7 @@ public class Pantalla{
             espacioSuperior=0;
             this.miMap.startMap(espacioNumero, espacioSuperior);
             this.startThisLevels();
-            
+            btnClose.fire();            
             this.decimal = new ArrayList<>();
     }
     
@@ -1295,7 +1310,15 @@ public class Pantalla{
         this.centro.getChildren().add(symbol.division(89));
         }
         else{
+            if(baseCalculadora==0){
             this.cienDecimalGroup.getChildren().add(symbol.division(89));
+            }
+            if(baseCalculadora==1){
+            this.cienBinGroup.getChildren().add(symbol.division(89));
+            }
+            if(baseCalculadora==2){
+            this.cienHexaGroup.getChildren().add(symbol.division(89));
+            }
         }
         this.miMap.getLevel(levelToPaint).setDrawBefore(false);
         this.enPantalla.add(symbol);
@@ -1311,7 +1334,7 @@ public class Pantalla{
             double xFromThisLevel =this.miMap.getLevel(level).getEndX();
             double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
 
-            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
+            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,level);
             
             if(tipoCalculadora==0)
                 this.centro.getChildren().add(numero.dibujo(id));
@@ -1348,7 +1371,7 @@ public class Pantalla{
                 }
                 
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
-                System.out.println(aux+"div");
+                System.out.println(aux+"div1");
                 aux2=this.agregarTexto()+aux;
                 if (tipoCalculadora==0) {
                     texto.setText(aux2);    
@@ -1383,14 +1406,11 @@ public class Pantalla{
             double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
 
             NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, currentlevel);
-            centro.getChildren().add(numero1.dibujo(id1));
-
-            if(tipoCalculadora==0)
-                this.centro.getChildren().add(numero1.dibujo(id1));
             
-            else{
+
                 this.cienDecimalGroup.getChildren().add(numero1.dibujo(id1));
-            }
+                printScientific(id1, level, level);
+                this.contador(true, level);
             enPantalla.add(numero1);
             this.enPantalla.get(enPantalla.size()-1).visible(mostrar);
             String miID=numero1.getID();
@@ -1415,12 +1435,12 @@ public class Pantalla{
                 aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
                 System.out.println(aux+"div");
                 aux2=this.agregarTexto()+aux;
-                texto.setText(aux2);
+                texto1.setText(aux2);
             }
             else
             {
                 decimal.add(numero1.getID());
-                texto.setText(agregarTexto());
+                texto1.setText(agregarTexto());
             }
             
             /*
@@ -1521,7 +1541,7 @@ public class Pantalla{
         grupoPantalla.getChildren().add(grupo);
     }
 
-    private void printScientific(String id, int level, int i) {
+    void printScientific(String id, int level, int i) {
         double n =0;    
         double xFromThisLevel =this.miMap.getLevel(level).getEndX();
         double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
@@ -1533,5 +1553,17 @@ public class Pantalla{
             this.cienBinGroup.getChildren().add(numero.dibujo(id));
         }        
     }
+    
+    private void divideCientifica(int i, double espacioDivision, double superiorDivision) {
+        NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
+        
+        if(i==0){
+            cienHexaGroup.getChildren().add(division.division(endXMayor-espacioDivision));
+        }
+        if(i==1){
+            cienBinGroup.getChildren().add(division.division(endXMayor-espacioDivision));
+        }
+    }
+            
 }
     
