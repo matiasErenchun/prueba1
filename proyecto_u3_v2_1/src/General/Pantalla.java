@@ -43,6 +43,7 @@ public class Pantalla{
     private double espacioSuperior=0; //Espacio en Y que indica a las figuras en qué posición deben dibujarse.
     private boolean puntosVisibles = false;
     private List<NumerosYSimbolos> enPantalla; //Lista de todos los elementos dibujados en Pantalla.
+    private List<NumerosYSimbolos> enPantallaBinaria;
     private Group grupoPantalla;
     private boolean divideStatus =false; //Variable que sirve para saber en qué estado está una división.
     //divideStatus = 1; Significa que se ha iniciado una nueva división y se está dibujando en la parte de arriba de esta.
@@ -101,6 +102,7 @@ public class Pantalla{
     
     public Pantalla() {
         this.enPantalla = new ArrayList<NumerosYSimbolos>();
+        this.enPantallaBinaria = new ArrayList<NumerosYSimbolos>();
         this.decimal = new ArrayList<>(); 
         this.numDecimal = new ArrayList<>();
         inicio();
@@ -260,12 +262,12 @@ public class Pantalla{
        
        HBox simbolos4 = new HBox();
        simbolos4.setPadding(new Insets(0));// se define el  margen entre el  borde del panel y  los objetos que estan dentro en pixeles 
-       Button button = new Button("=");
+       Button buttonEquals = new Button("=");
        //Button buttonDiv = new Button(" / ");// en este caso el contenido se entrega en el contructor
        
-       HBox.setHgrow(button, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
+       HBox.setHgrow(buttonEquals, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
        //HBox.setHgrow(buttonDiv, Priority.ALWAYS);
-       button.setMaxWidth(Double.MAX_VALUE);
+       buttonEquals.setMaxWidth(Double.MAX_VALUE);
        //buttonDiv.setMaxWidth(Double.MAX_VALUE);
         HBox div=new HBox();
         Button btnClose = new Button();
@@ -334,7 +336,7 @@ public class Pantalla{
       HBox.setHgrow(btnUp, Priority.ALWAYS);
       
       div.getChildren().addAll(btnDawn,btnClose,btnUp);
-      simbolos4.getChildren().addAll(div,button);
+      simbolos4.getChildren().addAll(div,buttonEquals);
        
        //-------------------------------------//
        
@@ -627,6 +629,7 @@ public class Pantalla{
        buttonMas.setOnAction((ActionEvent event) ->
         { 
             addToScreen("+",currentlevel, true);
+            numberToString();
         });
        
        buttonMenos.setOnAction((ActionEvent event) ->
@@ -776,9 +779,9 @@ public class Pantalla{
         {
             buttonEliminar.fire();
         });
-       button.setOnAction((ActionEvent event) ->
+       buttonEquals.setOnAction((ActionEvent event) ->
         {
-            numberToStrig(); 
+            numberToString();
         });
        //-------------------------------//
         btnA.setOnAction((ActionEvent event) ->
@@ -979,7 +982,7 @@ public class Pantalla{
                 if (baseCalculadora==2) {
                     contenedorNumeros.getChildren().removeAll(hexColum1,hexColum2);
                 }
-                numberToStrig();
+ //               numberToString();
                 basica.setDisable(false);
                 tipoBinario.setDisable(true);
                 tipoDecimal.setDisable(false);
@@ -1044,37 +1047,92 @@ public class Pantalla{
     Método que permite la transformación de lo que hay en pantalla a binario.
     */
     
-    private void numberToStrig(){
-        //Se busca que sea un número lo que se analizará.
-        for (int x=0; x<enPantalla.size(); x++){
-            if ("number".equals(enPantalla.get(x).getType())){
-                System.out.println(enPantalla.get(x).getType());
-                numDecimal.add(enPantalla.get(x).getID());
-            }
-            
-            //Separa de forma correcta los elementos, es decir, sólo captura números y deja de lado los símbolos.
-            if ("symbol".equals(enPantalla.get(x).getType()) || x==enPantalla.size()-1){
-                if (x>1){
-                    if ("number".equals(enPantalla.get(x-1).getType()) || x==enPantalla.size()-1){
+    
+   /* private void numberToStringOld(){
+        
+        
+            int tamanoPantalla=enPantalla.size()-1;
+        
+            //Se busca que sea un número lo que se analizará.
+            for (int x=0; x<tamanoPantalla+1; x++){
+                
+                if ("number".equals(enPantalla.get(x).getType())){
+                    System.out.println(enPantalla.get(x).getType());
+                    numDecimal.add(enPantalla.get(x).getID());
+                }
+
+                //Separa de forma correcta los elementos, es decir, sólo captura números y deja de lado los símbolos.
+                if ("symbol".equals(enPantalla.get(x).getType()) || x==tamanoPantalla){
+                    if (x>1){
+                        if ("number".equals(enPantalla.get(x-1).getType()) || x==tamanoPantalla){
+                            ArrayList<String>b=conversor.decToHexList(numDecimal);
+                            conversor.hexToDecString(b);
+                            conversor.hexToDecInt(b);
+                            conversor.toBinaryList(numDecimal);
+                            conversor.binToDecList(conversor.toBinaryString(numDecimal));
+
+                            //Acá se escribe en Pantalla los números en la otra base.
+                            escribeNumeros(conversor.toBinaryString(numDecimal));
+
+
+                            numDecimal.clear();
+                        }
+                    }                
+                    else {
                         ArrayList<String>b=conversor.decToHexList(numDecimal);
                         conversor.hexToDecString(b);
                         conversor.hexToDecInt(b);
                         conversor.toBinaryList(numDecimal);
                         conversor.binToDecList(conversor.toBinaryString(numDecimal));
+                        //escribeNumeros(conversor.toBinaryString(numDecimal));
                         numDecimal.clear();
                     }
-                }                
-                else {
-                    ArrayList<String>b=conversor.decToHexList(numDecimal);
-                    conversor.hexToDecString(b);
-                    conversor.hexToDecInt(b);
-                    conversor.toBinaryList(numDecimal);
-                    conversor.binToDecList(conversor.toBinaryString(numDecimal));
-                    numDecimal.clear();
                 }
             }
-        }
         
+        
+    }*/
+    
+    private void numberToString() {
+            int tamanoPantalla=enPantalla.size()-1;
+            
+            //Se busca el último número escrito entre símbolos
+            
+            for (int x=tamanoPantalla-1; x>=0; x--){
+                if ("symbol".equals(enPantalla.get(x).getType()) || x==0) {
+                    
+                    for (int consigueNumero=x; consigueNumero<=tamanoPantalla; consigueNumero++) {
+                        if ("number".equals(enPantalla.get(consigueNumero).getType()))
+                            numDecimal.add(enPantalla.get(consigueNumero).getID());
+                    }
+                    break;
+                }
+            }
+                
+            if (numDecimal.size()>0) {
+                ArrayList<String>b=conversor.decToHexList(numDecimal);
+                conversor.hexToDecString(b);
+                conversor.hexToDecInt(b);
+                conversor.toBinaryList(numDecimal);
+                conversor.binToDecList(conversor.toBinaryString(numDecimal));
+
+                //Acá se escribe en Pantalla los números en la otra base.
+                escribeNumeros(conversor.toBinaryString(numDecimal));
+
+
+                numDecimal.clear();
+            }
+
+    }
+    
+    
+    private void escribeNumeros(String numeroAEscribir){
+        System.out.println("ESTE NUMERO SE ESCRIBE");
+        System.out.println(numeroAEscribir);
+
+        for (int recorreNumero=0; recorreNumero<numeroAEscribir.length(); recorreNumero++) {
+            addToScreen(String.valueOf(numeroAEscribir.charAt(recorreNumero)),currentlevel, true);
+        }
     }
     
     
