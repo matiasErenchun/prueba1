@@ -336,7 +336,7 @@ public class Pizarra {
                     if (contenedor.charAt(contadorChar+1)=='o') {
                          if (contenedor.charAt(contadorChar+2)=='s') {
                              if (dibujado==false) {
-                                addToScreenTrigonometric("cos","(",currentlevel, true, false);
+                                addToScreenTrigonometric("cos","(",levelToPaint, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -348,7 +348,7 @@ public class Pizarra {
                     if (contenedor.charAt(contadorChar+1)=='e') {
                          if (contenedor.charAt(contadorChar+2)=='n') {
                              if (dibujado==false) {
-                                addToScreenTrigonometric("sen","(",currentlevel, true, false);
+                                addToScreenTrigonometric("sen","(",levelToPaint, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -360,7 +360,7 @@ public class Pizarra {
                     if (contenedor.charAt(contadorChar+1)=='a') {
                          if (contenedor.charAt(contadorChar+2)=='n') {
                              if (dibujado==false) {
-                                addToScreenTrigonometric("tan","(",currentlevel, true, false);
+                                addToScreenTrigonometric("tan","(",levelToPaint, true, false);
                                 trigonometrica=true;
                                 
                              }
@@ -621,24 +621,24 @@ public class Pizarra {
     */
     void addToScreenTrigonometric (String id1,String id2, int level,boolean visible, boolean mostrar)
     {
+        String aux2 = "";
         if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
         {
             double n =0;
             double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
             double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
 
-            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, currentlevel, 0);
-            centro.getChildren().add(numero1.dibujo(id1));
+            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, level, 0);
+            this.centro.getChildren().add(numero1.dibujo(id1));
 
             this.contador(true,currentlevel);
             
-            enPantalla.add(numero1);
+            this.enPantalla.add(numero1);
             this.enPantalla.get(enPantalla.size()-1).visible(mostrar);
             String miID=numero1.getID();
             if(this.divideStatus)
             {
                 String aux ="";
-                String aux2="";
                 if(this.miMap.getLevel(level).getDrawBefore())
                 {
                     

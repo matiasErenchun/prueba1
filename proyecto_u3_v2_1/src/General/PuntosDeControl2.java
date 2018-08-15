@@ -16,7 +16,7 @@ import javafx.scene.shape.MoveTo;
  *
  * @author elias
  */
-public class PuntosDeControl{
+public class PuntosDeControl2{
     public Group circle=new Group(); //Grupo donde se almacenarán los Circle que se irán creando.
     public double marco; 
     public boolean puntosVisibles; //Indica si los puntos deben ser visibles o no.

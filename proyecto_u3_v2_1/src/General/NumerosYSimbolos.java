@@ -5,7 +5,6 @@ package General;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import PuntosDeControlYMovimiento.PuntosDeControl;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -22,7 +21,7 @@ import javafx.scene.shape.VLineTo;
  * @numbers created by: Matias and Mario
  * @numbersPorted by: elias
  */
-public class NumerosYSimbolos extends PuntosDeControl{
+public class NumerosYSimbolos extends PuntosDeControl2{
 
     
     
