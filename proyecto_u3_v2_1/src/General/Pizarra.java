@@ -780,6 +780,13 @@ public class Pizarra {
     public Label getTexto() {
         return texto;
     }
+    
+    public String getStringTexto(){
+
+        String texto=this.texto.getText();
+        System.out.println("texto2 "+texto);
+        return texto;
+    }
 
     public List<NumerosYSimbolos> getEnPantalla() {
         return enPantalla;

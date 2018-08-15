@@ -1,6 +1,8 @@
 package General;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -20,6 +22,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Box;
 import javafx.stage.Stage;
+import javax.script.ScriptException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -63,6 +66,7 @@ public class Pantalla{
     private BorderPane pane;
     private boolean puntosVisibles = false;
     private double tamanoPizarra = 0.5;
+    private CalculationCore calculationCore;
     
 
     private VBox hexColum1=new VBox();
@@ -80,7 +84,7 @@ public class Pantalla{
     private Pizarra pizarraHexa;
     private Pizarra pizarraActual;
     
-    public Pantalla() {
+    public Pantalla() throws ScriptException {
         inicio();
     }
     
@@ -88,8 +92,8 @@ public class Pantalla{
     /*
     Este es el metodo principal en donde se genera la interfaz geafica y muchas de las acciones de los botones
     */
-    public void inicio(){
-        
+    public void inicio() throws ScriptException{
+        this.calculationCore=new CalculationCore();
         this.pizarraBasica = new Pizarra("basica");
         this.pizarraCientifica = new Pizarra("cientifica");
         this.pizarraBinaria = new Pizarra("binaria");
@@ -699,7 +703,11 @@ public class Pantalla{
         });
        buttonEquals.setOnAction((ActionEvent event) ->
         {
-            obtenerResultado();
+            try {
+                obtenerResultado();
+            } catch (Exception e) {
+                System.out.println("error en la formula ");
+            }
         });
        //-------------------------------//
         btnA.setOnAction((ActionEvent event) ->
@@ -1038,13 +1046,29 @@ public class Pantalla{
                 this.pizarraActual.ocultaPuntosVisibles();
     }
     
-    private void obtenerResultado(){
+    private void obtenerResultado() throws ScriptException{
+        
+        
         dibujaOtrasBases(true,false);
         Label textoACalcular;
         //Aquí obtienes el texto de la Pizarra Decimal, sin importar en cual se esté escribiendo.
-        textoACalcular=this.pizarraCientifica.getTexto();
-        System.out.println("TEXTO A CALCULAR");
-        System.out.println(textoACalcular);
+        if(this.pizarraActual.equals(this.pizarraBasica))
+        {
+            String texto=this.pizarraBasica.getStringTexto();
+            texto=this.calculationCore.calculate(texto);
+            System.out.println("resultado = "+texto);
+        }
+        else{
+            String texto=this.pizarraCientifica.getStringTexto();
+            texto=this.calculationCore.calculate(texto);
+            System.out.println("resultado = "+texto);
+        }
+        
+       // System.out.println(textoACalcular);
+        
+            
+            
+        
     }
 }
     
