@@ -38,15 +38,17 @@ public class NumerosYSimbolos extends PuntosDeControl{
     private String type = "symbol"; //Para identificar si es símbolo o número.
     private int nivelActual;
     private boolean divisionTerminada = false;
+    private int transformado;
     Group root = new Group();
     
 
-    public NumerosYSimbolos(double marco, double espacio, double superior, boolean puntosVisibles, int nivelActual) {
+    public NumerosYSimbolos(double marco, double espacio, double superior, boolean puntosVisibles, int nivelActual, int transformado) {
         this.espacio=espacio;
         this.superior=superior;
         this.marco=marco;
         this.puntosVisibles=puntosVisibles;
         this.nivelActual=nivelActual;
+        this.transformado=transformado;
     }
     /*
     Acá se configuran los números en cuanto a grosor y si son visibles o no los puntos de control.
@@ -1002,7 +1004,7 @@ public class NumerosYSimbolos extends PuntosDeControl{
                 return root;
                 
     //------------------------------------------------------------------------------------------------------------------//
-            case "√a":
+            case "√":
                 ID = "√";
                 size=1;
                 xPoint = (180+espacio);
@@ -1545,6 +1547,13 @@ public class NumerosYSimbolos extends PuntosDeControl{
     public void mueveNivelActual(int mover) {
         this.nivelActual+=mover;
     }
-    
-    
+
+    public int getTransformado() {
+        return transformado;
+    }
+
+    public void aumentaTransformado(int transformado) {
+        this.transformado+=transformado;
+    }
+  
 }

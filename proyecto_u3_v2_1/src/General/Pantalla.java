@@ -1,15 +1,11 @@
 package General;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,9 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 
 /*
@@ -39,24 +33,7 @@ import javafx.stage.Stage;
  */
 public class Pantalla{
 
-    private double espacioNumero=0; //Espacio en X que indica a las figuras en qué posición deben dibujarse.
-    private double espacioSuperior=0; //Espacio en Y que indica a las figuras en qué posición deben dibujarse.
-    private boolean puntosVisibles = false;
-    private List<NumerosYSimbolos> enPantalla; //Lista de todos los elementos dibujados en Pantalla.
-    private List<NumerosYSimbolos> enPantallaBinaria;
-    private Group grupoPantalla;
-    private boolean divideStatus =false; //Variable que sirve para saber en qué estado está una división.
-    //divideStatus = 1; Significa que se ha iniciado una nueva división y se está dibujando en la parte de arriba de esta.
-    //divideStatus = 2; Significa que se está dibujando en la parte inferior de uan división.
-    //divideStatus = 0; Significa que no hay división activa.
-    private int divisiones = 0; //Contador de Divisiones. Utilizado para tener control sobre el crecimiento de la línea de división.
-    private List<String> decimal;
-    private List<String> numDecimal;
-    private MapLevel miMap;
-    private int currentlevel;
-    private int minimumLevel;
-    private int miximumLevel;
-    private double endXMayor;
+    
     //contenedor de los simbolos
     private HBox cajaDeSimbolos = new HBox();
     private VBox simbolos = new VBox();
@@ -67,7 +44,6 @@ public class Pantalla{
     private Stage primaryStage=new Stage();
     private VBox contenedorSimbolos = new VBox();
     private Label texto= new Label("");
-    private Label texto1= new Label("");
     private ScrollPane textBox=new ScrollPane();
     private int tipoCalculadora=0;//0=basica 1=cientifica
     private int baseCalculadora=0;//0=decimal 1=binaria 2=hexadecimal
@@ -80,31 +56,31 @@ public class Pantalla{
     private MenuItem tipoHexadec;
     private MenuItem mostrar;
     private MenuItem ocultar;
-    private String sabe;
-    private Conversor conversor = new Conversor();
+    private ScrollPane mainPane;
+    private ScrollPane mainPaneCientifica;
+    private ScrollPane mainPaneBinario;
+    private ScrollPane mainPaneHexa;
+    private BorderPane pane;
+    private boolean puntosVisibles = false;
+    private double tamanoPizarra = 0.5;
+    
+
     private VBox hexColum1=new VBox();
     private VBox hexColum2=new VBox();
     private Label labelCurrentLevel=new Label("Nivel actual: ");
     //-----------------------------------//
-    private Path center = new Path();
-    private Group centro=new Group(center);
     
-    private Path cienDecimalPath = new Path();
-    private Group cienDecimalGroup=new Group(cienDecimalPath);
-    
-    private Path cienBinPath = new Path();
-    private Group cienBinGroup=new Group(cienBinPath);
-    
-    private Path cienHexaPath = new Path();
-    private Group cienHexaGroup=new Group(cienHexaPath);
     //-----------------------------------//
     private Group textoGrup=new Group();
+    private Button btnClose = new Button();
+    
+    public Pizarra pizarraBasica;
+    private Pizarra pizarraCientifica;
+    private Pizarra pizarraBinaria;
+    private Pizarra pizarraHexa;
+    private Pizarra pizarraActual;
     
     public Pantalla() {
-        this.enPantalla = new ArrayList<NumerosYSimbolos>();
-        this.enPantallaBinaria = new ArrayList<NumerosYSimbolos>();
-        this.decimal = new ArrayList<>(); 
-        this.numDecimal = new ArrayList<>();
         inicio();
     }
     
@@ -113,13 +89,17 @@ public class Pantalla{
     Este es el metodo principal en donde se genera la interfaz geafica y muchas de las acciones de los botones
     */
     public void inicio(){
-        setScaleNumbers(0.5);
-        labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-        sabe="";
-        this.miMap = new MapLevel();
-        this.miMap.startMap(this.espacioNumero, this.espacioSuperior);
-        this.startThisLevels();
         
+        this.pizarraBasica = new Pizarra("basica");
+        this.pizarraCientifica = new Pizarra("cientifica");
+        this.pizarraBinaria = new Pizarra("binaria");
+        this.pizarraHexa = new Pizarra("hexa");
+        
+        pizarraActual=pizarraBasica;
+        
+        labelCurrentLevel.setText(pizarraActual.getTextoNivel());
+        
+
         VBox numerosColumna1 = new VBox();//creamos el Hbox
         VBox numerosColumna2 = new VBox();
         VBox numerosColumna3 = new VBox();  
@@ -137,6 +117,7 @@ public class Pantalla{
        button1.setText(" 1 ");//contenido del boton 
        button1.setMaxWidth(Double.MAX_VALUE);
        buttonsqrt.setVisible(true);
+       
        
        //HBox.setMargin(button1, new Insets(0,0,0,0));//margen entre objetos en este caso se dejo 5 a la  derecha 
        HBox.setHgrow(button7, Priority.ALWAYS);// esto  se define la prioridad  en caso de aumentar el tamaño de la ventana  los objetos con prioridad llenaran  el espacio 
@@ -270,59 +251,58 @@ public class Pantalla{
        buttonEquals.setMaxWidth(Double.MAX_VALUE);
        //buttonDiv.setMaxWidth(Double.MAX_VALUE);
         HBox div=new HBox();
-        Button btnClose = new Button();
         btnClose.setText("Cerrar Nivel");
         btnClose.setDisable(true);
 
         Button btnUp = new Button();
         btnUp.setText("Subir Nivel");
         btnUp.setDisable(true);
-        btnUp.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) 
-            {
-                currentlevel-=1;
-                if(currentlevel<miximumLevel)
-                {
-                    currentlevel+=1;
-                }
-
-               System.out.println(currentlevel+"current");
-               labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-               
-               pintaNivel();
-               if(miMap.LevelIsClosed(currentlevel)==true){
-                    btnClose.setDisable(true);
-                }
-                else{
-                    btnClose.setDisable(false);
-                }
+        btnUp.setOnAction((ActionEvent event) ->
+        {
+           int currentlevel=this.pizarraActual.getCurrentlevel();
+           
+           
+           if (tipoCalculadora==0)
+                this.pizarraActual.botonSubir();
+            else {
+                dibujaOtrasBases(true, false);
+                this.pizarraBinaria.botonSubir();
+                this.pizarraHexa.botonSubir();
+                this.pizarraCientifica.botonSubir();
+            }
+           
+           labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+           if(pizarraActual.getNivelCerrado()==true){
+                btnClose.setDisable(true);
+            }
+            else{
+                btnClose.setDisable(false);
             }
         });
 
         Button btnDawn = new Button();
         btnDawn.setText("Bajar Nivel");
         btnDawn.setDisable(true);
-        btnDawn.setOnAction(new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(ActionEvent event) 
-            {
-                currentlevel+=1;
-                if(currentlevel>minimumLevel)
-                {
-                    currentlevel-=1;
-                }
-                System.out.println(currentlevel+"current");
-                labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-                
-                pintaNivel();
-                if(miMap.LevelIsClosed(currentlevel)==true){
-                    btnClose.setDisable(true);
-                }
-                else{
-                    btnClose.setDisable(false);
-                }
+        btnDawn.setOnAction((ActionEvent event) ->
+        {
+           int currentlevel=this.pizarraActual.getCurrentlevel();
+           
+           if (tipoCalculadora==0)
+                this.pizarraActual.botonBajar();
+            else {
+                dibujaOtrasBases(true, false);
+                this.pizarraBinaria.botonBajar();
+                this.pizarraHexa.botonBajar();
+                this.pizarraCientifica.botonBajar();
+            }
+           
+           labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
+           if(pizarraActual.getNivelCerrado()==true){
+                btnClose.setDisable(true);
+            }
+            else{
+                btnClose.setDisable(false);
             }
         });
 
@@ -402,19 +382,16 @@ public class Pantalla{
        hexColum2.getChildren().addAll(btnB,btnD,btnF);
       //*******inicio Esena de dibujo***********
        Box box = new Box(100,100,100);
-       BorderPane pane = new BorderPane();
+       pane = new BorderPane();
        box.setManaged(true);    
        //pane.setCenter(box);
-       
-       center.setManaged(false);
-       
-       grupoPantalla=new Group(centro);
-       
-       ScrollPane mainPane=new ScrollPane(grupoPantalla); 
-       
+       mainPane=new ScrollPane(this.pizarraBasica.getGrupoPantalla());
+       mainPaneCientifica=new ScrollPane(this.pizarraCientifica.getGrupoPantalla());
+       mainPaneBinario=new ScrollPane(this.pizarraBinaria.getGrupoPantalla());
+       mainPaneHexa=new ScrollPane(this.pizarraHexa.getGrupoPantalla());
        pane.setCenter(mainPane);
        BorderPane.setAlignment(mainPane, Pos.CENTER);
-       
+    
        //** menu de opciones **//
        
         MenuBar barraSuperior= new MenuBar();
@@ -459,305 +436,246 @@ public class Pantalla{
        
        buttonDiv.setOnAction((ActionEvent event) ->
         {
-            if(this.miMap.LevelIsClosed(this.currentlevel)==false)
-            {
-                if(this.currentlevel==0)
-                {
-                    this.divideStatus=true;
-                    btnDawn.setDisable(false);
-                    btnUp.setDisable(false);
-                    btnClose.setDisable(false);
-                    this.espacioNumero=this.miMap.getLevel(0).getEndX();
-                    this.paintDivide(0, this.currentlevel,this.puntosVisibles);
-                    this.miMap.createLevel(this.espacioNumero, this.currentlevel-1);
-                    this.miMap.createLevel(this.espacioNumero, this.currentlevel+1);
-                    this.setMinimumLevel(1);
-                    this.setMiximumLevel(-1);
-                
-                
+            int currentlevel=this.pizarraActual.getLevelActual();
+            if (tipoCalculadora==0)
+                this.pizarraActual.division();
+            else {
+                dibujaOtrasBases(true, false);
+                this.pizarraCientifica.division();
+                this.pizarraBinaria.division();
+                this.pizarraHexa.division();
+                if (currentlevel<=0) {
+                    this.pizarraCientifica.botonSubir();
+                    this.pizarraCientifica.botonSubir();
+                    this.pizarraBinaria.botonSubir();
+                    this.pizarraBinaria.botonSubir();
+                    this.pizarraHexa.botonSubir();
+                    this.pizarraHexa.botonSubir();
                 }
-                else
-                {
-                    if(this.currentlevel>0 && this.currentlevel==this.minimumLevel)
-                    {
-                    
-                        this.miMap.createLevel(this.espacioNumero, this.currentlevel+1);
-                        this.miMap.createLevel(this.espacioNumero, this.currentlevel+2);
-                        this.setMinimumLevel(this.currentlevel+2);
-                        this.paintDivideSubLevels(0, this.currentlevel+1,this.puntosVisibles);
-                    
-                    }
-                    else
-                    {
-                        if(this.currentlevel==this.miximumLevel)
-                        {
-                            
-                            this.miMap.createLevel(this.espacioNumero, this.currentlevel-1);
-                            this.miMap.createLevel(this.espacioNumero, this.currentlevel-2);
-                            this.setMiximumLevel(this.currentlevel-2);
-                            this.paintDivideSubLevels(0, this.currentlevel-1,this.puntosVisibles);
-                            
-                        }
-                    
-                    }
+                else {
+                    this.pizarraCientifica.botonBajar();
+                    this.pizarraCientifica.botonBajar();
+                    this.pizarraBinaria.botonBajar();
+                    this.pizarraBinaria.botonBajar();
+                    this.pizarraHexa.botonBajar();
+                    this.pizarraHexa.botonBajar();
                 }
-            }
-            else
-            {
-                //error nivel cerrado
             }
             labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(currentlevel));
-            btnUp.fire();
+            
+            
+           if (currentlevel==0) {
+                btnDawn.setDisable(false);
+                btnUp.setDisable(false);
+                btnClose.setDisable(false);
+           }
+           if(currentlevel<=0){
+                btnUp.fire();
+                btnUp.fire();
+                
+            }
+            else{
+                btnDawn.fire();
+                btnDawn.fire();
+            }
         });
        
-       btnClose.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) 
-            {
+       
+       btnClose.setOnAction((ActionEvent event) ->
+        {
+            if (tipoCalculadora==0)
+                this.pizarraActual.botonCerrar();
+            else {
+                dibujaOtrasBases(true, false);
+                this.pizarraBinaria.botonCerrar();
+                this.pizarraHexa.botonCerrar();
+                this.pizarraCientifica.botonCerrar();
+            }
+
+           if (this.pizarraActual.getNivelCerrado()) {
+               btnClose.setDisable(true);
+           }
+           
+           if (this.pizarraActual.getLevelActual()==0) {
+               btnDawn.setDisable(true);
+               btnUp.setDisable(true);
+               btnClose.setDisable(true);
+           }
                
-
-                if(currentlevel==0)
-                {
-                    espacioNumero=miMap.getLevel(currentlevel).getEndX();
-                    espacioSuperior=miMap.getLevel(currentlevel).getyLevel();
-                    sabe=miMap.getStringDivide(miximumLevel, minimumLevel);
-                    miMap.startMap(espacioNumero, espacioSuperior);
-                   
-                    startThisLevels();
-                    divideStatus=false;
-                    btnDawn.setDisable(true);
-                    btnUp.setDisable(true);
-                    btnClose.setDisable(true);
-                    decimal.add(sabe);
-                    
-                    
-                    
-                }
-                else
-                {
-                    boolean status=miMap.closeLevel(currentlevel, divideStatus);
-                    boolean statusLevel=miMap.getLevel(currentlevel).isLevelStatus();
-                    
-//                    System.out.println(statusLevel);
-//                    System.out.println(status);
-                }
-                /*
-                Éste método sirve para que crezca la división una vez se cierre un nivel.
-                */
-                //Se busca si es que existe una división en ese nivel
-                //String stringLevel = getStringCurrentLevel(currentlevel);
-                //for (int buscador=0; buscador<stringLevel.length(); buscador++) {
-                for (int buscador=0; buscador<enPantalla.size(); buscador++) {
-                    if ("symbol".equals(enPantalla.get(buscador).getType())){
-                        if ("/".equals(enPantalla.get(buscador).getID())) { 
-                            if (enPantalla.get(buscador).isDivisionTerminada()==false) {
-                                if (getLevelActual()==enPantalla.get(buscador).getNivelActual()) {
-                                
-                                    //Se respaldan algunos datos de la división actual.
-                                    double espacioDivision= enPantalla.get(buscador).getxPoint()-155;
-                                    double superiorDivision = enPantalla.get(buscador).getyPoint();
-
-                                    //Se remueve la división actual.
-                                    //centro.getChildren().remove(enPantalla.get(buscador));
-                                    enPantalla.get(buscador).root.setVisible(false);
-                                    //enPantalla.remove(buscador);
-                                    
-                                    
-                                    //Se añade una nueva división con el largo nuevo.
-                                   
-                                    
-                                    endXMayor=miMap.getLevel(currentlevel).getEndX();
-                                    if (currentlevel!=0) {
-                                        endXMayor=miMap.getLevel(currentlevel+1).getEndX();
-                                        if (miMap.getLevel(currentlevel-1).getEndX()>endXMayor) {
-                                                endXMayor=miMap.getLevel(currentlevel-1).getEndX();
-                                        }
-                                    }
-                                    
-                                    System.out.println(endXMayor);
-                                    if(tipoCalculadora==0){
-                                        NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
-                                        centro.getChildren().add(division.division(endXMayor-espacioDivision));
-                                        System.out.println("END X MAYOR Y ESPACIO DIVISION");
-                                        System.out.println(endXMayor);
-                                        System.out.println(espacioDivision);
-                                        enPantalla.set(buscador, division);
-                                    }
-                                    else{
-                                        NumerosYSimbolos division = new NumerosYSimbolos(0, espacioDivision,superiorDivision, puntosVisibles, getLevelActual()+aModificarDivision());
-                                        paintDivide(division);
-                                        System.out.println("END X MAYOR Y ESPACIO DIVISION");
-                                        System.out.println(endXMayor);
-                                        System.out.println(espacioDivision);
-                                        enPantalla.set(buscador, division);
-                                    }
-                                        
-//                                    enPantalla.set(buscador, division);
-                                }
-                            }
-                        }
-                    }
-                }
-                if(miMap.LevelIsClosed(currentlevel)==true){
-                    btnClose.setDisable(true);
-                }
-            }
-
-            private void paintDivide(NumerosYSimbolos division) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
         });
         
        
        
        buttonPor.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("*",currentlevel, true);
+            dibujaEnPizarra("*", true);
         });
        
        buttonPar1.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("(",currentlevel, true);
+            dibujaEnPizarra("(", true);
         });
        
        buttonPar2.setOnAction((ActionEvent event) ->
         { 
-            addToScreen(")",currentlevel, true);
+            dibujaEnPizarra(")", true);
         });
 
        buttonMas.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("+",currentlevel, true);
-            numberToString();
+            dibujaEnPizarra("+", true);
         });
        
        buttonMenos.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("-",currentlevel, true);
+            dibujaEnPizarra("-", true);
         });
        
        button0.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("0",currentlevel, true);
+            dibujaEnPizarra("0",true);
         });
        
        button1.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("1",currentlevel, true);
+            dibujaEnPizarra("1", true);
         });
        
        button2.setOnAction((ActionEvent event) ->
         { 
-            addToScreen("2",currentlevel, true);
+            dibujaEnPizarra("2", true);
         });
        
        button3.setOnAction((ActionEvent event) ->
        { 
-            addToScreen("3",currentlevel, true);
+            dibujaEnPizarra("3", true);
         });
        
        button4.setOnAction((ActionEvent event) ->
        {
-            addToScreen("4",currentlevel, true);   
+            dibujaEnPizarra("4", true);   
         });
        
        button5.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("5",currentlevel, true);   
+            dibujaEnPizarra("5", true);   
         });
        
        button6.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("6",currentlevel, true);
+            dibujaEnPizarra("6", true);
          });
        
        button7.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("7",currentlevel, true);
+            dibujaEnPizarra("7", true);
          });
        
        button8.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("8",currentlevel, true);
+            dibujaEnPizarra("8", true);
          });
        
        button9.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("9",currentlevel, true);
+            dibujaEnPizarra("9", true);
          });
        
          buttonCos.setOnAction((ActionEvent event) ->
            
         {
-         addToScreenTrigonometric("cos","(",currentlevel, true, true);
+         if (tipoCalculadora==0)
+            this.pizarraActual.addToScreenTrigonometric("cos","(",this.pizarraActual.getLevelActual(),true, true);
+         
+         else {
+             dibujaOtrasBases(true,false);
+             
+             this.pizarraCientifica.addToScreenTrigonometric("cos","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraBinaria.addToScreenTrigonometric("cos","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraHexa.addToScreenTrigonometric("cos","(",this.pizarraActual.getLevelActual(),true, true);
+            }
         });
        
        buttonSen.setOnAction((ActionEvent event) ->
            
         {
-            addToScreenTrigonometric("sen","(",currentlevel, true, true);   
+            if (tipoCalculadora==0)
+            this.pizarraActual.addToScreenTrigonometric("cos","(",this.pizarraActual.getLevelActual(),true, true);
+         
+         else {
+             dibujaOtrasBases(true,false);
+             
+             this.pizarraCientifica.addToScreenTrigonometric("sen","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraBinaria.addToScreenTrigonometric("sen","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraHexa.addToScreenTrigonometric("sen","(",this.pizarraActual.getLevelActual(),true, true);
+            }   
         });
        
        buttonTan.setOnAction((ActionEvent event) ->
            
         {
-            addToScreenTrigonometric("tan","(",currentlevel, true, true);   
+            if (tipoCalculadora==0)
+            this.pizarraActual.addToScreenTrigonometric("tan","(",this.pizarraActual.getLevelActual(),true, true);
+         
+         else {
+             dibujaOtrasBases(true,false);
+             
+             this.pizarraCientifica.addToScreenTrigonometric("tan","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraBinaria.addToScreenTrigonometric("tan","(",this.pizarraActual.getLevelActual(),true, true);
+             this.pizarraHexa.addToScreenTrigonometric("tan","(",this.pizarraActual.getLevelActual(),true, true);
+            }  
         });
        
        buttonGorrito.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("^", currentlevel, true);
+            dibujaEnPizarra("^",  true);
         });
        
        buttonFactorial.setOnAction((ActionEvent event) ->
            
         {
-          addToScreen("!",currentlevel, true);
+          dibujaEnPizarra("!", true);
         });
        
        buttonGrados.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("º",currentlevel, true);
+            dibujaEnPizarra("º", true);
         });
        
        buttonsqrt.setOnAction((ActionEvent event) ->
            
         {
-            addToScreen("√a",currentlevel, true);
-            addToScreen("(",currentlevel, true);
+            dibujaEnPizarra("√", true);
+            dibujaEnPizarra("(", true);
         });
        //Este botón quita o pone los Puntos de Control.
        //Va cambiando el texto del botón según el estado de puntosVisibles.
        ocultar.setOnAction((ActionEvent event) ->
         { 
-            if (puntosVisibles==true) {
-                puntosVisibles=false;
-                for (int x=0; x<enPantalla.size(); x++) {
-                    enPantalla.get(x).visibleCircle(puntosVisibles);
-                }
+            if (puntosVisibles) {
+                this.pizarraActual.ocultaPuntosVisibles();
                 ocultar.setDisable(true);
                 mostrar.setDisable(false);
+                this.puntosVisibles=false;
             }
         });
                
         mostrar.setOnAction((ActionEvent event) ->
         { 
-            if (puntosVisibles==false) {
-                puntosVisibles=true;
-                for (int x=0; x<enPantalla.size(); x++) {
-                    enPantalla.get(x).visibleCircle(puntosVisibles);
-                }
+            if(puntosVisibles==false) {
+                this.pizarraActual.muestraPuntosVisibles();
                 ocultar.setDisable(false);
                 mostrar.setDisable(true);
+                this.puntosVisibles=true;
             }
+            
         });
        //-------------------------------------//
        
@@ -781,46 +699,46 @@ public class Pantalla{
         });
        buttonEquals.setOnAction((ActionEvent event) ->
         {
-            numberToString();
+            obtenerResultado();
         });
        //-------------------------------//
         btnA.setOnAction((ActionEvent event) ->
         {
-            addToScreen("A",currentlevel, true); 
+            this.pizarraActual.addToScreen("A",this.pizarraActual.getCurrentlevel(),true,0); 
         });
        btnB.setOnAction((ActionEvent event) ->
         {
-            addToScreen("B",currentlevel, true); 
+            this.pizarraActual.addToScreen("B", this.pizarraActual.getCurrentlevel(), true,0); 
         });
        btnC.setOnAction((ActionEvent event) ->
         {
-            addToScreen("C",currentlevel, true); 
+            this.pizarraActual.addToScreen("C", this.pizarraActual.getCurrentlevel(), true,0); 
         });
        btnD.setOnAction((ActionEvent event) ->
         {
-            addToScreen("D",currentlevel, true); 
+            this.pizarraActual.addToScreen("D", this.pizarraActual.getCurrentlevel(), true,0); 
         });
        btnE.setOnAction((ActionEvent event) ->
         {
-            addToScreen("E",currentlevel, true); 
+            this.pizarraActual.addToScreen("E", this.pizarraActual.getCurrentlevel(), true,0); 
         });
        btnF.setOnAction((ActionEvent event) ->
         {
-            addToScreen("F",currentlevel, true); 
+            this.pizarraActual.addToScreen("F", this.pizarraActual.getCurrentlevel(), true,0); 
         });
        //-------------------------------------//
        
        Slider sliderSubScene = new Slider();
        sliderSubScene.setMax(10000);// se define el largo maximo del  slider
        sliderSubScene.setMin(-10000);
-       sliderSubScene.valueProperty().bindBidirectional(centro.translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
+       sliderSubScene.valueProperty().bindBidirectional(this.pizarraActual.getGrupoPantalla().translateXProperty());//se le da el recorrido al Slider en este caso es el largo del box
        //pane.setBottom(sliderSubScene);
        
        Slider sliderSubScene2 = new Slider();
        sliderSubScene2.setMax(10000);// se define el largo maximo del  slider
        sliderSubScene2.setMin(-10000);
        sliderSubScene2.setOrientation(Orientation.VERTICAL);
-       sliderSubScene2.valueProperty().bindBidirectional(centro.translateYProperty());//se le da el recorrido al Slider en este caso es el largo del box
+       sliderSubScene2.valueProperty().bindBidirectional(this.pizarraActual.getGrupoPantalla().translateYProperty());//se le da el recorrido al Slider en este caso es el largo del box
        //pane.setLeft(sliderSubScene2);
        
        
@@ -849,16 +767,13 @@ public class Pantalla{
        VBox bottom =new VBox();
        texto=new Label("");
        texto.setStyle("-fx-font-size:20px;");
-       texto1.setStyle("-fx-font-size:20px;");
        
        textBox.setContent(textoGrup);
        textoGrup.getChildren().add(texto);
        textBox.setMinHeight(50);
        texto.setMaxWidth(Double.MAX_VALUE);
-       texto1.setMaxWidth(Double.MAX_VALUE);
        
        texto.setAlignment(Pos.CENTER_LEFT);
-       texto1.setAlignment(Pos.CENTER_LEFT);
        bottom.getChildren().addAll(contenerdorPrincipal,textBox,labelCurrentLevel);
        BpanePrueba.setBottom(bottom);
        //BpanePrueba.setCenter(pantallaDibujo);
@@ -880,22 +795,7 @@ public class Pantalla{
         primaryStage.setScene(scene);//agregamos scene a la pantalla
         primaryStage.show();//mostramos la pantalla
     }
-    //ahora hace lo de abajo pero para  el nivel en que se encuentra 
-    //Método que aumenta en X para dejar espacio a los números.
-    private void contador(boolean saltaTres,int level)
-    {
-        double contenedor = this.miMap.getLevel(level).getEndX();
-        if (saltaTres==false)
-        {
-            contenedor+=90;
-        }
-        else
-        {
-            contenedor+=270;
-        }
-        this.miMap.getLevel(level).setEndX(contenedor);
-        
-    }
+    
     //** aqui va todo lo de los cambios de tamaño **//
     
     /*
@@ -905,14 +805,16 @@ public class Pantalla{
         switch (toString){
             
             case "100%":
-                setScaleNumbers(0.5);
+                tamanoPizarra=0.5;
+                setScaleNumbers(tamanoPizarra);
                 cien.setDisable(true);
                 cincuenta.setDisable(false);
                 docientos.setDisable(false);    
             break;
             
             case "50%":
-                setScaleNumbers(0.25);
+                tamanoPizarra=0.25;
+                setScaleNumbers(tamanoPizarra);
                 cien.setDisable(false);
                 cincuenta.setDisable(true);
                 docientos.setDisable(false);
@@ -920,7 +822,8 @@ public class Pantalla{
             break;
                 
             case "200%":
-                setScaleNumbers(1);
+                tamanoPizarra=1;
+                setScaleNumbers(tamanoPizarra);
                 cien.setDisable(false);
                 cincuenta.setDisable(false);
                 docientos.setDisable(true);
@@ -928,15 +831,7 @@ public class Pantalla{
         }
     }
     
-    private int aModificarDivision(){
-        if (getLevelActual()>0) {
-            return 1;
-        }
-        else if (getLevelActual()<0) {
-            return -1;
-        }
-        return 0;
-    }
+
     
     //** aqui va todo lo de los cambios de base **//
     
@@ -946,11 +841,8 @@ public class Pantalla{
     private void SetBase(String toString) {
         if (tipoCalculadora==0) {
             cajaDeSimbolos.getChildren().addAll(trigonometria, simbolos);
-            primaryStage.setTitle("Cancer de Piel (Modo Científico)");
-            //reinicia();
+            primaryStage.setTitle("Kancer de Phiel (Modo 100tifk0)");
             this.textoGrup.getChildren().clear();
-            this.textoGrup.getChildren().add(texto1);
-            this.decimal = new ArrayList<>();
         }
         
         switch(toString){
@@ -965,6 +857,7 @@ public class Pantalla{
                 if(baseCalculadora==2){
                     contenedorNumeros.getChildren().removeAll(hexColum1,hexColum2);
                 }
+                dibujaOtrasBases(true, false);
                 
                 basica.setDisable(false);
                 tipoBinario.setDisable(false);
@@ -972,7 +865,13 @@ public class Pantalla{
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=0;
-                swapSreen(cienDecimalGroup);
+                pizarraActual=pizarraCientifica;
+                actualizaTexto();
+                pane.setCenter(mainPaneCientifica);
+                traspasaPuntosVisibles();
+                setScaleNumbers(tamanoPizarra);
+                
+                
                 break;
                 
             case "Tipo Binario":
@@ -982,14 +881,20 @@ public class Pantalla{
                 if (baseCalculadora==2) {
                     contenedorNumeros.getChildren().removeAll(hexColum1,hexColum2);
                 }
- //               numberToString();
+                dibujaOtrasBases(true, false);
                 basica.setDisable(false);
                 tipoBinario.setDisable(true);
                 tipoDecimal.setDisable(false);
                 tipoHexadec.setDisable(false);
                 tipoCalculadora=1;
                 baseCalculadora=1;
-                swapSreen(cienBinGroup);
+                pizarraActual=pizarraBinaria;
+                actualizaTexto();
+                pane.setCenter(mainPaneBinario);
+                setScaleNumbers(tamanoPizarra);
+                
+                traspasaPuntosVisibles();
+                
                 break;
                 
             case "Tipo Hexadecimal":
@@ -998,6 +903,7 @@ public class Pantalla{
                     contenerdorPrincipal.getChildren().removeAll(binario,contenedorSimbolos);
                     contenerdorPrincipal.getChildren().addAll(contenedorNumeros,contenedorSimbolos);
                 }
+                dibujaOtrasBases(true, false);
                 contenedorNumeros.getChildren().addAll(hexColum1,hexColum2);
                 basica.setDisable(false);
                 tipoBinario.setDisable(false);
@@ -1005,7 +911,11 @@ public class Pantalla{
                 tipoHexadec.setDisable(true);
                 tipoCalculadora=1;
                 baseCalculadora=2;
-                swapSreen(cienHexaGroup);
+                pizarraActual=pizarraHexa;
+                pane.setCenter(mainPaneHexa);
+                actualizaTexto();
+                traspasaPuntosVisibles();
+                setScaleNumbers(tamanoPizarra);
                 break;
         }
         
@@ -1029,567 +939,112 @@ public class Pantalla{
                 
                 cajaDeSimbolos.getChildren().removeAll(trigonometria, simbolos);
                 primaryStage.setTitle("Cancer de Piel");
-                
+                dibujaOtrasBases(true,false);
                 basica.setDisable(true);
                 tipoBinario.setDisable(false);
                 tipoDecimal.setDisable(false);
                 tipoCalculadora=0;
                 baseCalculadora=0;
-//                reset();
-                swapSreen(centro);
-                textoGrup.getChildren().clear();
-                textoGrup.getChildren().add(texto);
+                pizarraActual=pizarraBasica;
+                actualizaTexto();
+                pane.setCenter(mainPane);
+                traspasaPuntosVisibles();
+                setScaleNumbers(tamanoPizarra);
+                
+                
                 
             break;
         }
     }
-    /*
-    Método que permite la transformación de lo que hay en pantalla a binario.
-    */
-    
-    
-   /* private void numberToStringOld(){
-        
-        
-            int tamanoPantalla=enPantalla.size()-1;
-        
-            //Se busca que sea un número lo que se analizará.
-            for (int x=0; x<tamanoPantalla+1; x++){
-                
-                if ("number".equals(enPantalla.get(x).getType())){
-                    System.out.println(enPantalla.get(x).getType());
-                    numDecimal.add(enPantalla.get(x).getID());
-                }
 
-                //Separa de forma correcta los elementos, es decir, sólo captura números y deja de lado los símbolos.
-                if ("symbol".equals(enPantalla.get(x).getType()) || x==tamanoPantalla){
-                    if (x>1){
-                        if ("number".equals(enPantalla.get(x-1).getType()) || x==tamanoPantalla){
-                            ArrayList<String>b=conversor.decToHexList(numDecimal);
-                            conversor.hexToDecString(b);
-                            conversor.hexToDecInt(b);
-                            conversor.toBinaryList(numDecimal);
-                            conversor.binToDecList(conversor.toBinaryString(numDecimal));
-
-                            //Acá se escribe en Pantalla los números en la otra base.
-                            escribeNumeros(conversor.toBinaryString(numDecimal));
-
-
-                            numDecimal.clear();
-                        }
-                    }                
-                    else {
-                        ArrayList<String>b=conversor.decToHexList(numDecimal);
-                        conversor.hexToDecString(b);
-                        conversor.hexToDecInt(b);
-                        conversor.toBinaryList(numDecimal);
-                        conversor.binToDecList(conversor.toBinaryString(numDecimal));
-                        //escribeNumeros(conversor.toBinaryString(numDecimal));
-                        numDecimal.clear();
-                    }
-                }
-            }
-        
-        
-    }*/
-    
-    private void numberToString() {
-            int tamanoPantalla=enPantalla.size()-1;
-            
-            //Se busca el último número escrito entre símbolos
-            
-            for (int x=tamanoPantalla-1; x>=0; x--){
-                if ("symbol".equals(enPantalla.get(x).getType()) || x==0) {
-                    
-                    for (int consigueNumero=x; consigueNumero<=tamanoPantalla; consigueNumero++) {
-                        if ("number".equals(enPantalla.get(consigueNumero).getType()))
-                            numDecimal.add(enPantalla.get(consigueNumero).getID());
-                    }
-                    break;
-                }
-            }
-                
-            if (numDecimal.size()>0) {
-                ArrayList<String>b=conversor.decToHexList(numDecimal);
-                conversor.hexToDecString(b);
-                conversor.hexToDecInt(b);
-                conversor.toBinaryList(numDecimal);
-                conversor.binToDecList(conversor.toBinaryString(numDecimal));
-
-                //Acá se escribe en Pantalla los números en la otra base.
-                escribeNumeros(conversor.toBinaryString(numDecimal));
-
-
-                numDecimal.clear();
-            }
-
-    }
-    
-    
-    private void escribeNumeros(String numeroAEscribir){
-        System.out.println("ESTE NUMERO SE ESCRIBE");
-        System.out.println(numeroAEscribir);
-
-        for (int recorreNumero=0; recorreNumero<numeroAEscribir.length(); recorreNumero++) {
-            addToScreen(String.valueOf(numeroAEscribir.charAt(recorreNumero)),currentlevel, true);
-        }
-    }
-    
-    
+ 
     
     private void setScaleNumbers(double size){
-        
-        this.centro.setScaleX(size);
-        this.centro.setScaleY(size);
-        this.cienDecimalGroup.setScaleX(size);
-        this.cienDecimalGroup.setScaleY(size);
-        this.cienBinGroup.setScaleX(size);
-        this.cienBinGroup.setScaleY(size);
-        this.cienHexaGroup.setScaleX(size);
-        this.cienHexaGroup.setScaleY(size);
-        
-        
+        this.pizarraActual.cambiarTamanoElementos(size);
     }
     
     private void reset(){
+        this.pizarraBasica.reiniciar();
+        this.pizarraBinaria.reiniciar();
+        this.pizarraCientifica.reiniciar();
+        this.pizarraHexa.reiniciar();
+        //tamanoPizarra=0.5;
+        //setScaleNumbers(tamanoPizarra);
+        actualizaTexto();
+    }
+
+    private int getCurrentLevel(){
+        return this.pizarraActual.getCurrentlevel();
+    }
+    
+    private void setCurrentLevel(int level){
+        this.pizarraActual.setCurrentlevel(level);
+    }
+    
+    private void dibujaEnPizarra(String elemento, boolean seVe){
         
-        if(tipoCalculadora==0){
-            Node elemento = centro.getChildren().get(0);
-            centro.getChildren().removeAll(centro.getChildren());
-            centro.getChildren().add(elemento);
-            texto.setText("");
-        }
-        else{
-            
-            Node elemento = cienDecimalGroup.getChildren().get(0);
-            Node elemento1 = cienHexaGroup.getChildren().get(0);
-            Node elemento2 = cienBinGroup.getChildren().get(0);
-            this.cienDecimalGroup.getChildren().removeAll(cienDecimalGroup.getChildren());
-            cienDecimalGroup.getChildren().add(elemento);
-            this.cienHexaGroup.getChildren().removeAll(cienHexaGroup.getChildren());
-            cienHexaGroup.getChildren().add(elemento1);
-            this.cienBinGroup.getChildren().removeAll(cienBinGroup.getChildren());
-            cienBinGroup.getChildren().add(elemento2);
-            texto1.setText("");
-        }
-            
-            enPantalla.removeAll(enPantalla);
-            divideStatus=false;
-            divisiones=0;
-            espacioNumero=0;
-            espacioSuperior=0;
-            this.miMap.startMap(espacioNumero, espacioSuperior);
-            this.startThisLevels();
-            
-            this.decimal = new ArrayList<>();
-    }
-    
-    //reinicia los valores de level min max y actual.
-    private void startThisLevels()
-    {
-        this.setLevelActual(0);
-        this.setMinimumLevel(0);
-        this.setMiximumLevel(0);
-    }
-                
-
-
-    public int getLevelActual() {
-        return this.currentlevel;
-    }
-
-    public void setLevelActual(int levelActual) {
-        this.currentlevel = levelActual;
-    }
-
-    public int getMinimumLevel() {
-        return this.minimumLevel;
-    }
-
-    public void setMinimumLevel(int minimumLevel) {
-        this.minimumLevel = minimumLevel;
-    }
-
-    public int getMiximumLevel() {
-        return this.miximumLevel;
-    }
-
-    public void setMiximumLevel(int miximumLevel) 
-    {
-        this.miximumLevel = miximumLevel;
-    }
-    
-    public void paintDivideSubLevels(double marco ,int levelToPaint, boolean puntos)
-    {
-        if(this.miMap.getLevel(this.currentlevel).getStringLevel().equalsIgnoreCase(""))
-        {
-            this.paintDivide(marco, levelToPaint, puntos);
-        }
-        else
-        {
-            /*Prepárense todos los que se atrevan a intentar descifrar esto, a continuación, damas y caballeros, posiblemente
-            una de las funciones más complejas del programa.
-            
-            Acá, para divisiones, se mueven los números y símbolos escritos anteriormente en el mismo nivel un poco más arriba o más abajo.*/
-            
-            String contenedor = this.miMap.getLevel(currentlevel).getStringLevel();
-            
-            this.miMap.getLevel(currentlevel).setStringLevel("");
-            int contadorElementos=0;
-            int contadorChar=0;
-            int tamanoPantalla=enPantalla.size()-1;
-            int cantChar = contenedor.length(); //Acá se guarda la cantidad de caracteres que hay en un nivel específico.
-            int cantElementos = contadorElementos(contenedor); //Acá se guarda la cantidad de elementos que hay en un nivel específico
-            
-            /*Entiéndase, Elemento, a un elemento completo que se dibuja en pantalla, por ejemplo, "cos" es un elemento.
-            Caracter, como toda figura individual que se dibuje en pantalla, por ejemplo, cos es un elemento conformado por 3 caracteres, "c", "o" y "s".
-            */
-            while(contadorElementos<cantElementos)
-                
-            {   
-                /*Este boolean indica si el elemento ya fue dibujado con el fin de que no se dibuje dos veces o que resulte en un Null ya que
-                no se ha aumentado en la búqueda de char.*/
-                boolean dibujado = false;
-                
-                //Este boolean indica si se deben ejecutar las instrucciones para mover una función trigonométrica ya que esta se contiene de varios char.
-                boolean trigonometrica=false;
-                int aumentaChar=0;
-
-                if (contenedor.charAt(contadorChar)=='c') {
-                    if (contenedor.charAt(contadorChar+1)=='o') {
-                         if (contenedor.charAt(contadorChar+2)=='s') {
-                             if (dibujado==false) {
-                                addToScreenTrigonometric("cos","(",currentlevel, true, false);
-                                trigonometrica=true;
-                                
-                             }
-                         }
-                    }  
-                }
-                
-                if (contenedor.charAt(contadorChar)=='s') {
-                    if (contenedor.charAt(contadorChar+1)=='e') {
-                         if (contenedor.charAt(contadorChar+2)=='n') {
-                             if (dibujado==false) {
-                                addToScreenTrigonometric("sen","(",currentlevel, true, false);
-                                trigonometrica=true;
-                                
-                             }
-                         }
-                    }  
-                }
-                
-                if (contenedor.charAt(contadorChar)=='t') {
-                    if (contenedor.charAt(contadorChar+1)=='a') {
-                         if (contenedor.charAt(contadorChar+2)=='n') {
-                             if (dibujado==false) {
-                                addToScreenTrigonometric("tan","(",currentlevel, true, false);
-                                trigonometrica=true;
-                                
-                             }
-                         }
-                    }  
-                }
-                
-                if (trigonometrica==true) {
-                    // Se agregan items para que hagan espacio, estos son invisibles.
-                    addToScreen("",levelToPaint,false);
-                    addToScreen("",levelToPaint,false);
-                    addToScreen("",levelToPaint,false);
-                    contadorChar+=3;
-                    aumentaChar=1;
-                    dibujado=true;
-                }
-                
-                
-                //Según si la división está en numerador o denominador, esta parte mueve los elementos hacia arriba o hacia abajo.
-                if (levelToPaint<0) {  
-                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(-40);
-                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).mueveNivelActual(-1);
-                    if (contadorElementos==0)
-                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint+1).getEndX()-(cantChar+aumentaChar)*90);
-                    }
-                else {
-                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).moverNumeroDivision(40);
-                    enPantalla.get(tamanoPantalla-cantElementos+contadorElementos+1).mueveNivelActual(1);
-                    if (contadorElementos==0)
-                        this.miMap.getLevel(levelToPaint).setEndX(this.miMap.getLevel(levelToPaint-1).getEndX()-(cantChar+aumentaChar)*90);
-                }
-                
-                if (dibujado==false) {
-                    Character charAux=contenedor.charAt(contadorChar);
-                    addToScreen(charAux.toString(),levelToPaint,false);
-                    contadorChar++;
-                }
-                
-                contadorElementos++;
-                
-                
-                //enPantalla.get(enPantalla.size() -1).getPath().setVisible(false);
-                //Código Matías
-                /*Character charAux=contenedor.charAt(contadorI);
-                dibujar(charAux.toString(),levelToPaint);
-                contadorI++;*/
-            }
-            double myEndX=this.miMap.getLevel(levelToPaint).getEndX();
-            this.miMap.getLevel(levelToPaint+1).setEndX(myEndX);
-            this.miMap.getLevel(levelToPaint-1).setEndX(myEndX);
-            this.paintDivide(marco, levelToPaint, puntos);
-            this.miMap.getLevel(levelToPaint).setDrawBefore(false);
-            
-        }
-    }
-    
-    
-    
-    public void paintDivide(double marco ,int levelToPaint, boolean puntos)
-    {
+        this.pizarraActual.addToScreen(elemento, this.pizarraActual.getCurrentlevel(),seVe,0);
         
-        double miX=this.miMap.getLevel(levelToPaint).getEndX();
-        double miY=this.miMap.getLevel(levelToPaint).getyLevel();
-       
-        NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos,getLevelActual()+aModificarDivision());
-        if(tipoCalculadora==0){
-        this.centro.getChildren().add(symbol.division(89));
+        if ("symbol".equals(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getType()) && tipoCalculadora==1) {
+            dibujaOtrasBases(seVe, true);
         }
-        else{
-            this.cienDecimalGroup.getChildren().add(symbol.division(89));
-        }
-        this.miMap.getLevel(levelToPaint).setDrawBefore(false);
-        this.enPantalla.add(symbol);
-        this.contador(false, levelToPaint);
-    }
-    /*
-    Este metodo se utiliza para dibujar en la interfaz todos los numeros y simbolos.
-    */
-    void addToScreen (String id , int level, boolean visible){
-        if(this.miMap.validateLevelToWrite(level,this.divideStatus))
-        {
-            double n =0;
-            double xFromThisLevel =this.miMap.getLevel(level).getEndX();
-            double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
 
-            NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
-            
-            if(tipoCalculadora==0)
-                this.centro.getChildren().add(numero.dibujo(id));
-            
-            else{
-                this.cienDecimalGroup.getChildren().add(numero.dibujo(id));
-//                if("symbol".equalsIgnoreCase(numero.getType())){
-                    printScientific(id,level,0);
-                    printScientific(id,level,1);
-//                }
+        actualizaTexto();
+    }
+    
+    private void actualizaTexto(){
+        textoGrup.getChildren().setAll(this.pizarraActual.getTexto());
+        labelCurrentLevel.setText("Nivel actual: "+ Integer.toString(this.pizarraActual.getCurrentlevel()));
+    }
+    
+    private void dibujaOtrasBases(boolean seVe, boolean seDibujaSimbolo){
+        String numeroBinarioADibujar=this.pizarraActual.numeroAString("a Binario");
+        String numeroHexaADibujar=this.pizarraActual.numeroAString("a Hexa");
+        String numeroDecimalADibujar=this.pizarraActual.numeroAString("a Decimal");
+        
+        if ("binaria".equals(this.pizarraActual.getTipoDePizarra())) {
+            this.pizarraHexa.escribeNumeros(numeroHexaADibujar);
+            this.pizarraCientifica.escribeNumeros(numeroDecimalADibujar);
+            if (seDibujaSimbolo) {
+                this.pizarraHexa.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
+                this.pizarraCientifica.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
             }
-            
-            this.contador(false,level);
-            this.enPantalla.add(numero);
-            //en caso de, se hacen invisibles los números para hacer el espacio
-            this.enPantalla.get(enPantalla.size()-1).visible(visible);
-            //se desactivan los círuclos permanentemente de los invisibles
-            /*if (visible==false) {
-                this.enPantalla.get(enPantalla.size()-1).deleteCircle();
-            }*/
-            String miID=numero.getID();
-            if(this.divideStatus)
-            {
-                String aux ="";
-                String aux2="";
-                if(this.miMap.getLevel(level).getDrawBefore())
-                {
-                 
-                    this.miMap.getLevel(level).AddStringToStringBefore(miID);
-                }
-                else
-                {
-                    this.miMap.getLevel(level).addStringToStringLevel(miID);
-                }
-                
-                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
-                System.out.println(aux+"div");
-                aux2=this.agregarTexto()+aux;
-                if (tipoCalculadora==0) {
-                    texto.setText(aux2);    
-                }
-                else{
-                    texto1.setText(aux2);
-                }
+        }
+        
+        else if ("hexa".equals(this.pizarraActual.getTipoDePizarra())) {
+            this.pizarraBinaria.escribeNumeros(numeroBinarioADibujar);
+            this.pizarraCientifica.escribeNumeros(numeroDecimalADibujar);
+            if (seDibujaSimbolo) {
+                this.pizarraBinaria.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
+                this.pizarraCientifica.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
             }
+        }
+        
+        else if ("cientifica".equals(this.pizarraActual.getTipoDePizarra())) {
+            this.pizarraBinaria.escribeNumeros(numeroBinarioADibujar);
+            this.pizarraHexa.escribeNumeros(numeroHexaADibujar);
+            if (seDibujaSimbolo){ 
+                this.pizarraBinaria.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
+                this.pizarraHexa.addToScreen(this.pizarraActual.getEnPantalla().get(this.pizarraActual.getEnPantalla().size()-1).getID(), this.pizarraActual.getCurrentlevel(), seVe,0);
+            }
+        }
+
+    }
+    
+    private void traspasaPuntosVisibles(){
+        if (puntosVisibles)
+                this.pizarraActual.muestraPuntosVisibles();
             else
-            {
-                decimal.add(numero.getID());
-                
-                if (tipoCalculadora==0) {
-                    texto.setText(agregarTexto());
-                }
-                else{
-                    texto1.setText(agregarTexto());
-                }
-            }
-            System.out.println(level);
-        }
+                this.pizarraActual.ocultaPuntosVisibles();
     }
-    /*
-    Este metodo se utiliza para dibujar en la interfaz los terminos trigonometricos (cos, sen, tan).
-    */
-    void addToScreenTrigonometric (String id1,String id2, int level, boolean visible, boolean mostrar)
-    {
-        if(this.miMap.validateLevelToWrite(currentlevel,this.divideStatus))
-        {
-            double n =0;
-            double xFromThisLevel =this.miMap.getLevel(this.currentlevel).getEndX();
-            double yFromThisLevel =this.miMap.getLevel(this.currentlevel).getyLevel();
-
-            NumerosYSimbolos numero1 = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles, currentlevel);
-            centro.getChildren().add(numero1.dibujo(id1));
-
-            if(tipoCalculadora==0)
-                this.centro.getChildren().add(numero1.dibujo(id1));
-            
-            else{
-                this.cienDecimalGroup.getChildren().add(numero1.dibujo(id1));
-            }
-            enPantalla.add(numero1);
-            this.enPantalla.get(enPantalla.size()-1).visible(mostrar);
-            String miID=numero1.getID();
-            if(this.divideStatus)
-            {
-                String aux ="";
-                String aux2="";
-                if(this.miMap.getLevel(level).getDrawBefore())
-                {
-                    
-                    String papa =this.miMap.getLevel(level).getStringBeforeDivide();
-                    System.out.println("papa"+ papa);
-                    this.miMap.getLevel(level).AddStringToStringBefore(miID);
-                    String mama =this.miMap.getLevel(level).getStringBeforeDivide();
-                    System.out.println("mama"+ mama);
-                }
-                else
-                {
-                    this.miMap.getLevel(level).addStringToStringLevel(miID);
-                }
-                
-                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
-                System.out.println(aux+"div");
-                aux2=this.agregarTexto()+aux;
-                texto.setText(aux2);
-            }
-            else
-            {
-                decimal.add(numero1.getID());
-                texto.setText(agregarTexto());
-            }
-            
-            /*
-            String miID=numero1.getID();
-            if(this.divideStatus)
-            {
-                String aux ="";
-                String aux2="";
-                this.miMap.getLevel(currentlevel).addStringToStringLevel(miID+"(");
-                aux=this.miMap.getStringDivide(this.miximumLevel, this.minimumLevel);
-                System.out.println(aux+"div");
-                aux2=this.agregarTexto()+aux;
-                texto.setText(aux2);
-                
-            }
-            else
-            {
-                decimal.add(numero1.getID());            
-                texto.setText(agregarTexto());
-            }
-            */
-            addToScreen(id2,currentlevel,mostrar);
-        }
-    }
-    /*
-    Este metodo pasa a texto todo lo que se ha ingresado
-    */
-   private String agregarTexto(){
-        String listString="";
-        for (String s : decimal)
-        {
-            listString += s;
-        }
-        return listString;
-    }
-
-   private String agregarTexto2(ArrayList<String> a){
-        String listString="";
-        for (String s : a)
-        {
-            listString += s;
-        }
-        return listString;
-    }
-   
-   private int contadorElementos(String contenedor){
-       int contadorInterno=0;
-       int cantidadElementos=0;
-       while (contadorInterno<contenedor.length()) {
-
-           switch (contenedor.charAt(contadorInterno)) {
-               case 'c':
-                   if (contenedor.charAt(contadorInterno+1)=='o') {
-                       if (contenedor.charAt(contadorInterno+2)=='s') {
-                           contadorInterno+=2;
-                       }
-                   }  break;
-               case 's':
-                   if (contenedor.charAt(contadorInterno+1)=='e') {
-                       if (contenedor.charAt(contadorInterno+2)=='n') {
-                           contadorInterno+=2;
-                       }
-                   }  break;
-               case 't':
-                   if (contenedor.charAt(contadorInterno+1)=='a') {
-                       if (contenedor.charAt(contadorInterno+2)=='n') {
-                           contadorInterno+=2;
-                       }
-                   }  break;
-               default:
-                   break;
-           }
-            
-            contadorInterno+=1;
-            cantidadElementos+=1;
-        }
-        System.out.println("CANTIDAD DE ELEMENTOS EN NIVEL");
-        System.out.println(cantidadElementos);
-        return cantidadElementos;
-    }
-   
-   private String getStringCurrentLevel (int currentlevel) {
-       return this.miMap.getLevel(currentlevel).getStringLevel();
-   }
-   
-    private void pintaNivel(){
-       for (int buscador=0; buscador<enPantalla.size(); buscador++) {
-            if (enPantalla.get(buscador).getNivelActual()==currentlevel){
-                enPantalla.get(buscador).getPath().setStroke(Color.RED);
-            }
-            else
-                enPantalla.get(buscador).getPath().setStroke(Color.BLACK);
-        }
-    }
-
-    private void swapSreen(Group grupo) {
-        grupoPantalla.getChildren().clear();
-        grupoPantalla.getChildren().add(grupo);
-    }
-
-    private void printScientific(String id, int level, int i) {
-        double n =0;    
-        double xFromThisLevel =this.miMap.getLevel(level).getEndX();
-        double yFromThisLevel =this.miMap.getLevel(level).getyLevel();
-        NumerosYSimbolos numero = new NumerosYSimbolos(n, xFromThisLevel,yFromThisLevel, puntosVisibles,currentlevel);
-        if(i==0){
-            this.cienHexaGroup.getChildren().add(numero.dibujo(id));
-        }
-        if(i==1){
-            this.cienBinGroup.getChildren().add(numero.dibujo(id));
-        }        
+    
+    private void obtenerResultado(){
+        dibujaOtrasBases(true,false);
+        Label textoACalcular;
+        //Aquí obtienes el texto de la Pizarra Decimal, sin importar en cual se esté escribiendo.
+        textoACalcular=this.pizarraCientifica.getTexto();
+        System.out.println("TEXTO A CALCULAR");
+        System.out.println(textoACalcular);
     }
 }
     
