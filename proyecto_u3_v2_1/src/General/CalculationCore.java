@@ -391,7 +391,47 @@ public class CalculationCore
         System.out.println("answer = "+answer);
         return answer;
     }
-    
+     public String searchResolveSquareRoot(String expression) throws ScriptException
+    {
+        String answer="";
+        Double squareRoot;
+        String container1;
+        String container2;
+        Character character;
+        int index=0;
+        while(index<expression.length())
+        {
+            character = expression.charAt(index);
+            if(character=='√')
+            {
+                container1=this.lookTowards(expression, index, 1);
+                container1=this.findParentheses(expression, index+1, 1);
+                container2=this.calculate(container1);
+                if(Double.parseDouble(container2)<0)
+                {
+                    answer=answer+"√-a";
+                }
+                else
+                {
+                    squareRoot=Math.sqrt(Double.parseDouble(container2));
+                    container2=squareRoot.toString();
+                    container2=this.cutFloat(container2, 3);
+                    answer=answer+container2;
+                }
+                
+               
+                index+=container1.length()+1;
+            }
+            else
+            {
+                answer=answer+character.toString();
+                index++;
+            }
+        }
+        return answer;
+        
+        
+    }
     public String searchResolveParenthesis(String expression) throws ScriptException
     {
         String answer="";
@@ -477,17 +517,20 @@ public class CalculationCore
         }
         return answer;
     }
-    public String calculateAdvanced(String expression) throws ScriptException
+     public String calculateAdvanced(String expression) throws ScriptException
     {
         String answer=" ";
        expression=this.searchResolverTrigonometric(expression);// se recorre la expresion y se resulvan todas las expresiones trigonometricas 
-       System.out.println("expression33"+expression);
+       System.out.println("expression33 "+expression);
+       expression=this.searchResolveSquareRoot(expression);
+       System.out.println("expression36 "+expression);
        expression=this.searchResolveParenthesis(expression);
-       System.out.println("expression34"+expression);
+       System.out.println("expression34 "+expression);
        expression=this.searchResolvePowers(expression);
-       System.out.println("expression35"+expression);
+       System.out.println("expression35 "+expression);
+       
        expression=this.searchResolveFactorial(expression);
-       System.out.println("expression36"+expression);
+       System.out.println("expression37 "+expression);
        
        
        answer = this.calculateBasic(expression);// una vez resueltas todas las operaciones avanzadas se  calcula todas la soperaciones basicas
