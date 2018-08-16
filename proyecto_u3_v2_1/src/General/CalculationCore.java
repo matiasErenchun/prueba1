@@ -62,7 +62,9 @@ public class CalculationCore
        else {
            String tempRespuesta=this.cutFloat(answer,1);
            String respuestaCortada="";
-           for (int cortaNumero=0; cortaNumero<tempRespuesta.length()-2; cortaNumero++) {
+           for (int cortaNumero=0; answer.length()>cortaNumero; cortaNumero++) {
+               if (".".equals(String.valueOf(tempRespuesta.charAt(cortaNumero))))
+                   break;
                respuestaCortada=respuestaCortada+String.valueOf(tempRespuesta.charAt(cortaNumero));
            }
            return respuestaCortada;
