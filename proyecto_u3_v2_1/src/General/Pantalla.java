@@ -79,6 +79,8 @@ public class Pantalla{
     //-----------------------------------//
     private Group textoGrup=new Group();
     private Button btnClose = new Button();
+    private Button btnUp = new Button();
+    private Button btnDawn = new Button();
     
     public Pizarra pizarraBasica;
     private Pizarra pizarraCientifica;
@@ -262,7 +264,6 @@ public class Pantalla{
         btnClose.setText("Cerrar Nivel");
         btnClose.setDisable(true);
 
-        Button btnUp = new Button();
         btnUp.setText("Subir Nivel");
         btnUp.setDisable(true);
         btnUp.setOnAction((ActionEvent event) ->
@@ -288,7 +289,6 @@ public class Pantalla{
             }
         });
 
-        Button btnDawn = new Button();
         btnDawn.setText("Bajar Nivel");
         btnDawn.setDisable(true);
 
@@ -981,8 +981,12 @@ public class Pantalla{
         this.pizarraBinaria.reiniciar();
         this.pizarraCientifica.reiniciar();
         this.pizarraHexa.reiniciar();
-        //tamanoPizarra=0.5;
-        //setScaleNumbers(tamanoPizarra);
+        btnClose.setDisable(true);
+        btnUp.setDisable(true);
+        btnDawn.setDisable(true);
+        
+        tamanoPizarra=0.5;
+        setScaleNumbers(tamanoPizarra);
         actualizaTexto();
     }
 
