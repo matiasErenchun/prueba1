@@ -163,12 +163,13 @@ public class Pizarra {
        
 
        if (numeroATransformar.size()>0 || numeroATransformarBinario.length()>0) {
-           ArrayList<String>b=conversor.decToHexList(numeroATransformar);
-           conversor.hexToDecString(b);
-           conversor.hexToDecInt(b);
-           conversor.toBinaryList(numeroATransformar);
-           conversor.decToHexString(numeroATransformar);
-           conversor.binToDecList(conversor.toBinaryString(numeroATransformar));
+           
+//           ArrayList<String>b=conversor.decToHexList(numeroATransformar);
+//           conversor.hexToDecString(numeroATransformar);
+//           conversor.hexToDecInt(numeroATransformar);
+//           conversor.toBinaryList(numeroATransformar);
+//           conversor.decToHexString(numeroATransformar);
+//           conversor.binToDecList(conversor.toBinaryString(numeroATransformar));
            
            //Acá se escribe en Pantalla los números en la otra base.
             if (transformacion.equals("a Binario")){
@@ -178,7 +179,7 @@ public class Pizarra {
                 }
                 //Hexa a Binario
                 if ("hexa".equals(getTipoDePizarra())) {
-                    escribir = (conversor.decToHexString(numeroATransformar));
+                    escribir = conversor.hexaToBin(numeroATransformar);
                 }
             }
            
@@ -189,7 +190,10 @@ public class Pizarra {
                 }
                 //Hexa a Decimal
                 if ("hexa".equals(getTipoDePizarra())) {
-                    escribir= String.valueOf(conversor.hexToDecInt(b));
+                    String a;
+                    a = String.valueOf(conversor.binToDecInt(conversor.hexaToBin(numeroATransformar)));
+                    
+                    escribir= a;
                 }
             }
             
@@ -200,7 +204,7 @@ public class Pizarra {
                 }
                 //Binario a Hexa
                 if ("binaria".equals(getTipoDePizarra())) {
-                    escribir = conversor.decToHexString(numeroATransformar);
+                    escribir = conversor.binToHexa(numeroATransformar);
                 }
             }
 

@@ -1,14 +1,14 @@
 package General;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -707,6 +707,7 @@ public class Pantalla{
                 obtenerResultado();
             } catch (Exception e) {
                 System.out.println("error en la formula ");
+                popupError();
             }
         });
        //-------------------------------//
@@ -1057,18 +1058,35 @@ public class Pantalla{
             String texto=this.pizarraBasica.getStringTexto();
             texto=this.calculationCore.calculate(texto);
             System.out.println("resultado = "+texto);
+            popup(texto);
         }
         else{
             String texto=this.pizarraCientifica.getStringTexto();
             texto=this.calculationCore.calculate(texto);
             System.out.println("resultado = "+texto);
+            popup(texto);
         }
         
        // System.out.println(textoACalcular);
         
-            
-            
+    }
+    private void popup(String text){
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Resultado");
+            alert.setHeaderText(null);
+            alert.setContentText("El resultado es:"+"\n"+text);
+            alert.setGraphic(null);
+            alert.showAndWait();
+        }
+
+    private void popupError() {
         
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Error en la formula");
+        alert.setContentText("Por favor revise y vuelva a escribir la formula");
+
+        alert.showAndWait();
     }
 }
     

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Conversor {
     
-    int decimal;
+    long decimal;
    /*
     transforma un decimal a hexadecimal
     */ 
@@ -26,11 +26,11 @@ public class Conversor {
         
         for (int x=0; x<numDecimal.size(); x++){
             decimal=decimal*10;
-            decimal += Integer.parseInt(numDecimal.get(x));
+            decimal += Integer.valueOf(numDecimal.get(x));
         }
         
         while(decimal>0){ 
-            resto=(decimal%16); 
+            resto=(int) (decimal%16); 
             if(resto>9) {
                 Hexadecimal=letras(resto)+Hexadecimal; 
             }
@@ -83,8 +83,9 @@ public class Conversor {
     /*
     este metodo transforma un hexadecimal en decimal y lo retorna en forma de int
     */
-    int hexToDecInt(ArrayList<String> hex){
+    int hexToDecInt(String input){
         
+        List<String> hex=stringCharSeparator(input);
         int numero = 0;
         for (String string : hex) {
             int u=numeros(string);
@@ -96,7 +97,7 @@ public class Conversor {
     /*
     este metodo transforma un hexadecimal en decimal y lo retorna en forma de arraylist de strings
     */
-    ArrayList<String> hexToDecString(ArrayList<String> hex){
+    ArrayList<String> hexToDecString(String hex){
         
         String a= Integer.toString(hexToDecInt(hex));
         ArrayList<String> finalList=stringCharSeparator(a);
@@ -176,6 +177,23 @@ public class Conversor {
         ArrayList<String> finalList=stringCharSeparator(a);
         System.out.println("arreglo decimal 2:"+finalList);
         return finalList;
+    }
+    
+    
+    String hexaToBin(List<String> input){
+        String a="";
+        for (String string : input) {
+            a+=string;
+        }
+        return toBinaryString(hexToDecString(a));
+    }
+
+    String binToHexa(List<String> input) {
+        String a="";
+        for (String string : input) {
+            a+=string;
+        }
+        return decToHexString(binToDecList(a));
     }
 }
 
