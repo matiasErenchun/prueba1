@@ -69,6 +69,8 @@ public class Pantalla{
     private boolean puntosVisibles = false;
     private double tamanoPizarra = 0.5;
     private CalculationCore calculationCore;
+    private String textoDecimal="";
+    private String textoAprox="";
     
 
     private VBox hexColum1=new VBox();
@@ -347,10 +349,10 @@ public class Pantalla{
  
        
        
-       Button buttonsqrtBin = new Button("Bajar");
+       Button buttonsqrtBin = new Button("√a");
        buttonsqrtBin.setMaxWidth(Double.MAX_VALUE);
        HBox.setHgrow(buttonsqrtBin, Priority.ALWAYS);
-       buttonsqrtBin.setVisible(false);
+       buttonsqrtBin.setVisible(true);
        
        Button buttonEliminarBin = new Button(" CE ");
        HBox.setHgrow(buttonEliminarBin, Priority.ALWAYS);
@@ -658,6 +660,13 @@ public class Pantalla{
         });
        
        buttonsqrt.setOnAction((ActionEvent event) ->
+           
+        {
+            dibujaEnPizarra("√", true);
+            dibujaEnPizarra("(", true);
+        });
+       
+       buttonsqrtBin.setOnAction((ActionEvent event) ->
            
         {
             dibujaEnPizarra("√", true);
@@ -1072,13 +1081,17 @@ public class Pantalla{
             if (baseCalculadora==0)
                 texto=this.calculationCore.calculate(texto,false);
             else {
+                textoDecimal=this.calculationCore.calculate(texto,false);
                 texto=this.calculationCore.calculate(texto,true);
+                textoAprox=texto;
                 System.out.println(texto);
                 System.out.println("HELLO");
             }
+
             int x=0;
             boolean negativo=false;
             if ((baseCalculadora==1 || baseCalculadora==2) && (!"Infinity".equals(texto)) && (!"-Infinity".equals(texto))){
+                
                 //En caso de estar en una base distinta de 10.
                 if ("-".equals(String.valueOf(texto.charAt(0)))) {
                     x++;
@@ -1097,7 +1110,6 @@ public class Pantalla{
                     texto=conversor.toBinaryString(enteroLista);
                 if (baseCalculadora==2)
                     texto=conversor.decToHexString(enteroLista);
-                
             }
             
             //Wevo de paskua
@@ -1119,6 +1131,9 @@ public class Pantalla{
             alert.setTitle("Resultado");
             alert.setHeaderText(null);
             alert.setContentText("El resultado es:"+"\n"+text);
+             if ((baseCalculadora==1 || baseCalculadora==2) && (!"Infinity".equals(textoDecimal)) && (!"-Infinity".equals(textoDecimal))){
+                 alert.setContentText("El resultado es:"+"\n"+text+" ("+textoAprox+")"+"\n"+"El resultado decimal es:"+"\n"+textoDecimal);
+             }
             alert.setGraphic(null);
             alert.showAndWait();
         }
