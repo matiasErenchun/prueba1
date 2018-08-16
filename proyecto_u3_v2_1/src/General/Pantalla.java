@@ -1,6 +1,8 @@
 package General;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -83,6 +85,7 @@ public class Pantalla{
     private Pizarra pizarraBinaria;
     private Pizarra pizarraHexa;
     private Pizarra pizarraActual;
+    private Conversor conversor;
     
     public Pantalla() throws ScriptException {
         inicio();
@@ -98,6 +101,7 @@ public class Pantalla{
         this.pizarraCientifica = new Pizarra("cientifica");
         this.pizarraBinaria = new Pizarra("binaria");
         this.pizarraHexa = new Pizarra("hexa");
+        this.conversor = new Conversor();
         
         pizarraActual=pizarraBasica;
         
@@ -1048,23 +1052,59 @@ public class Pantalla{
     }
     
     private void obtenerResultado() throws ScriptException{
-        
-        
+
         dibujaOtrasBases(true,false);
         Label textoACalcular;
         //Aquí obtienes el texto de la Pizarra Decimal, sin importar en cual se esté escribiendo.
         if(this.pizarraActual.equals(this.pizarraBasica))
         {
             String texto=this.pizarraBasica.getStringTexto();
-            texto=this.calculationCore.calculate(texto);
+            texto=this.calculationCore.calculate(texto,false);
             System.out.println("resultado = "+texto);
             popup(texto);
         }
         else{
             String texto=this.pizarraCientifica.getStringTexto();
-            texto=this.calculationCore.calculate(texto);
-            System.out.println("resultado = "+texto);
+            if (baseCalculadora==0)
+                texto=this.calculationCore.calculate(texto,false);
+            else {
+                texto=this.calculationCore.calculate(texto,true);
+                System.out.println(texto);
+                System.out.println("HELLO");
+            }
+            int x=0;
+            boolean negativo=false;
+            if ((baseCalculadora==1 || baseCalculadora==2) && (!"Infinity".equals(texto)) && (!"-Infinity".equals(texto))){
+                //En caso de estar en una base distinta de 10.
+                if ("-".equals(String.valueOf(texto.charAt(0)))) {
+                    x++;
+                    negativo=true;
+                }
+                List<String> enteroLista;
+                enteroLista= new ArrayList<>();
+                enteroLista.clear();
+                String entero=texto;
+                while (x<entero.length()) {
+                    enteroLista.add(String.valueOf(entero.charAt(x)));
+                    x++;
+                }
+                //Se transforma el resultado desde la base decimal a la correspondiente.
+                if (baseCalculadora==1)
+                    texto=conversor.toBinaryString(enteroLista);
+                if (baseCalculadora==2)
+                    texto=conversor.decToHexString(enteroLista);
+                
+            }
+            
+            //Wevo de paskua
+            if ("Infinity".equals(texto) || "-Infinity".equals(texto))
+                texto="Infinity War, tu número es tan grande que no cabe en este box :c";
+            else {
+                if (negativo)
+                    texto="-"+texto;
+            }
             popup(texto);
+            System.out.println("resultado = "+texto);
         }
         
        // System.out.println(textoACalcular);

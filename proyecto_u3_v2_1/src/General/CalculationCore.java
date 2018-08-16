@@ -43,7 +43,7 @@ public class CalculationCore
         expression=expression.substring(0, index);
         return expression;
     }
-   public String calculate(String expression) throws ScriptException
+   public String calculate(String expression, boolean baseNoDecimal) throws ScriptException
    {
        String answer;
        expression=this.deleteDegreesSymbol(expression);
@@ -57,8 +57,16 @@ public class CalculationCore
            answer=this.calculateBasic(expression);
            
        }
-      
-       answer=this.cutFloat(answer, 3);
+       if (!baseNoDecimal)
+          answer=this.cutFloat(answer, 3);
+       else {
+           String tempRespuesta=this.cutFloat(answer,1);
+           String respuestaCortada="";
+           for (int cortaNumero=0; cortaNumero<tempRespuesta.length()-2; cortaNumero++) {
+               respuestaCortada=respuestaCortada+String.valueOf(tempRespuesta.charAt(cortaNumero));
+           }
+           return respuestaCortada;
+       }
        
        return answer;
    }
@@ -303,7 +311,7 @@ public class CalculationCore
         if(containerExpression.isIsGrade())
         {
             
-            auxiliaryContainer=this.calculate(containerExpression.getExpresion());//se pasa la exprecion a calcular 
+            auxiliaryContainer=this.calculate(containerExpression.getExpresion(), false);//se pasa la exprecion a calcular 
             toCalculate =Double.parseDouble(auxiliaryContainer);//como  la libreria matematica trabaja con double se pasa  el valor calculado a double
             toCalculate=(toCalculate*Math.PI)/180;// se transforma de grados a radianes
             switch(trigonometric)
@@ -330,7 +338,7 @@ public class CalculationCore
         }
         else//esto se usa  ya que  la resoues que vamos a procesar es un escalar y no esta ni en grado ni radianes 
         {
-            auxiliaryContainer=this.calculate(expression);
+            auxiliaryContainer=this.calculate(expression,false);
             toCalculate=Double.parseDouble(auxiliaryContainer);
             switch(trigonometric)
             {
@@ -406,7 +414,7 @@ public class CalculationCore
             {
                 container1=this.lookTowards(expression, index, 1);
                 container1=this.findParentheses(expression, index+1, 1);
-                container2=this.calculate(container1);
+                container2=this.calculate(container1,false);
                 if(Double.parseDouble(container2)<0)
                 {
                     answer=answer+"√-a";
@@ -445,7 +453,7 @@ public class CalculationCore
             {
                 parenthesis=this.findParentheses(expression, index, 1);
                 parenthesis=this.cutParentheses(parenthesis);
-                answer=answer+this.calculate(parenthesis);
+                answer=answer+this.calculate(parenthesis,false);
                 index+=(parenthesis.length()+2);
             }
             else
@@ -642,7 +650,7 @@ public class CalculationCore
             {
                 answer=this.findParentheses(expression, index+increase, increase);
                 
-                answer=this.calculate(answer);
+                answer=this.calculate(answer,false);
                 
             }
             else
@@ -656,7 +664,7 @@ public class CalculationCore
              if(character ==')')// si el lemento que encuentra a la derecha del indice es un )  buscara y resolvera lo que este dentro de ese parentesis
             {
                 answer=this.findParentheses(expression, index+increase, increase);
-                answer=this.calculate(answer);
+                answer=this.calculate(answer,false);
                 
             }
             else
