@@ -58,9 +58,9 @@ public class CalculationCore
            
        }
        if (!baseNoDecimal)
-          answer=this.cutFloat(answer, 3);
+          answer=this.cutFloat(answer, 10);
        else {
-           String tempRespuesta=this.cutFloat(answer,1);
+           String tempRespuesta=this.cutFloat(answer,10);
            String respuestaCortada="";
            for (int cortaNumero=0; answer.length()>cortaNumero; cortaNumero++) {
                if (".".equals(String.valueOf(tempRespuesta.charAt(cortaNumero))))
@@ -72,6 +72,8 @@ public class CalculationCore
        
        return answer;
    }
+   
+   
    
    public boolean containsAdvancedSymbols(String expression)// retorna falso si la expresion no contiene simbolos avanzados
    {
@@ -368,7 +370,7 @@ public class CalculationCore
         }
         if(answer!="funcion erronea 2")
         {
-            answer=this.cutFloat(answer, 3);
+            answer=this.cutFloat(answer, 10);
 
         }
          return answer;
@@ -425,7 +427,7 @@ public class CalculationCore
                 {
                     squareRoot=Math.sqrt(Double.parseDouble(container2));
                     container2=squareRoot.toString();
-                    container2=this.cutFloat(container2, 3);
+                    container2=this.cutFloat(container2, 10);
                     answer=answer+container2;
                 }
                 
@@ -633,11 +635,11 @@ public class CalculationCore
     {
         String answerRight=this.lookTowards(expression, index, -1);//base//buscamos la base hacia la izquierda
         String answerLeft=this.lookTowards(expression, index, 1);//exponente//buscamos el exponenete  hacia la derecha
-        Double base =Double.parseDouble(this.cutFloat(answerRight, 3));// se da formato al numero en caso de que se  de punto flotante con 3 digitos luego del 0
-        Double exponent =Double.parseDouble(this.cutFloat(answerLeft, 3));
+        Double base =Double.parseDouble(this.cutFloat(answerRight, 10));// se da formato al numero en caso de que se  de punto flotante con 3 digitos luego del 0
+        Double exponent =Double.parseDouble(this.cutFloat(answerLeft, 10));
         Double answer=Math.pow(base, exponent);
         
-        String answerFinal=this.cutFloat(answer.toString(), 3);// se le da formato al numeor 
+        String answerFinal=this.cutFloat(answer.toString(), 10);// se le da formato al numeor 
         return answerFinal;
     }
     

@@ -71,6 +71,7 @@ public class Pantalla{
     private CalculationCore calculationCore;
     private String textoDecimal="";
     private String textoAprox="";
+    private String textoTres;
     
 
     private VBox hexColum1=new VBox();
@@ -1067,26 +1068,21 @@ public class Pantalla{
     private void obtenerResultado() throws ScriptException{
 
         dibujaOtrasBases(true,false);
+        textoTres="";
         Label textoACalcular;
         //Aquí obtienes el texto de la Pizarra Decimal, sin importar en cual se esté escribiendo.
         if(this.pizarraActual.equals(this.pizarraBasica))
         {
             String texto=this.pizarraBasica.getStringTexto();
             texto=this.calculationCore.calculate(texto,false);
+            textoTres=this.calculationCore.cutFloat(texto, 3);
             System.out.println("resultado = "+texto);
             popup(texto);
         }
         else{
             String texto=this.pizarraCientifica.getStringTexto();
-            if (baseCalculadora==0)
-                texto=this.calculationCore.calculate(texto,false);
-            else {
-                textoDecimal=this.calculationCore.calculate(texto,false);
-                texto=this.calculationCore.calculate(texto,true);
-                textoAprox=texto;
-                System.out.println(texto);
-                System.out.println("HELLO");
-            }
+            texto=this.calculationCore.calculate(texto,false);
+            textoTres=this.calculationCore.cutFloat(texto, 3);
 
             int x=0;
             boolean negativo=false;
@@ -1106,10 +1102,10 @@ public class Pantalla{
                     x++;
                 }
                 //Se transforma el resultado desde la base decimal a la correspondiente.
-                if (baseCalculadora==1)
+                /*if (baseCalculadora==1)
                     texto=conversor.toBinaryString(enteroLista);
                 if (baseCalculadora==2)
-                    texto=conversor.decToHexString(enteroLista);
+                    texto=conversor.decToHexString(enteroLista);*/
             }
             
             //Wevo de paskua
@@ -1119,21 +1115,21 @@ public class Pantalla{
                 if (negativo)
                     texto="-"+texto;
             }
-            popup(texto);
+            popup(textoTres);
             System.out.println("resultado = "+texto);
         }
         
        // System.out.println(textoACalcular);
         
     }
-    private void popup(String text){
+    private void popup(String texto){
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Resultado");
             alert.setHeaderText(null);
-            alert.setContentText("El resultado es:"+"\n"+text);
-             if ((baseCalculadora==1 || baseCalculadora==2) && (!"Infinity".equals(textoDecimal)) && (!"-Infinity".equals(textoDecimal))){
-                 alert.setContentText("El resultado es:"+"\n"+text+" ("+textoAprox+")"+"\n"+"El resultado decimal es:"+"\n"+textoDecimal);
-             }
+            alert.setContentText("El resultado es:"+"\n"+texto);
+             /*if ((baseCalculadora==1 || baseCalculadora==2) && (!"Infinity".equals(textoTres)) && (!"-Infinity".equals(textoTres))){
+                 alert.setContentText("El resultado es:"+"\n"+texto+" ("+textoAprox+")"+"\n"+"El resultado decimal es:"+"\n"+textoTres);
+             }*/
             alert.setGraphic(null);
             alert.showAndWait();
         }
