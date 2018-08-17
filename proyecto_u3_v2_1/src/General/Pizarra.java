@@ -559,7 +559,7 @@ public class Pizarra {
         double miY=this.miMap.getLevel(levelToPaint).getyLevel();
        
         NumerosYSimbolos symbol= new NumerosYSimbolos(0,miX,miY,puntos,getLevelActual()+aModificarDivision(), 0);
-        this.centro.getChildren().add(symbol.division(89));
+        this.centro.getChildren().add(symbol.division(85));
         
         this.miMap.getLevel(levelToPaint).setDrawBefore(false);
         this.enPantalla.add(symbol);

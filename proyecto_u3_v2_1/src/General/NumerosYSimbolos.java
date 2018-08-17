@@ -1047,7 +1047,7 @@ public class NumerosYSimbolos extends PuntosDeControl2{
         yPoint = (superior);
         
         //Si la división es más larga de lo original, es decir, ya fue alargada, divisionTerminada se transforma en true para indicar que no crezca más.
-        if(finalDiv>89)
+        if(finalDiv>85)
             divisionTerminada=true;
 
         MoveTo startDivide = new MoveTo(xPoint, yPoint+150);
