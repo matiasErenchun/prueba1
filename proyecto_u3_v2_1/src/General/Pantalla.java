@@ -479,12 +479,12 @@ public class Pantalla{
                 btnUp.setDisable(false);
                 btnClose.setDisable(false);
            }
-           if(currentlevel<=0){
+           if(currentlevel<=0 && tipoCalculadora==0){
                 btnUp.fire();
                 btnUp.fire();
                 
             }
-            else{
+            if(currentlevel>0 && tipoCalculadora==0){
                 btnDawn.fire();
                 btnDawn.fire();
             }
