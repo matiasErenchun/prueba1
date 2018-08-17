@@ -1074,6 +1074,7 @@ public class Pantalla{
             String texto=this.pizarraBasica.getStringTexto();
             texto=this.calculationCore.calculate(texto,false);
             System.out.println("resultado = "+texto);
+            this.pizarraBasica.correr();
             popup(texto);
         }
         else{

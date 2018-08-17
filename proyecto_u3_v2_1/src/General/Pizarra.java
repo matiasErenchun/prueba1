@@ -75,7 +75,10 @@ public class Pizarra {
     
 
     
-
+    public void correr()
+    {
+        this.miMap.correr();
+    }
 
     public Group getGrupoPantalla() {
         return grupoPantalla;

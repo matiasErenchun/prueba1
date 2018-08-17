@@ -20,9 +20,11 @@ public class Level
     private String stringLevel;
     private String stringBeforeDivide;
     private boolean drawBefore;
+    private boolean agrop;
 
     public Level(int levelNumber, double xLevel, double yLevel)
     {
+        this.agrop=false;
         this.drawBefore=false;
         if(levelNumber%2==0)
         {
@@ -37,6 +39,14 @@ public class Level
         this.stringLevel="";
     }
 
+    public boolean isAgrop() {
+        return agrop;
+    }
+
+    public void setAgrop(boolean agrop) {
+        this.agrop = agrop;
+    }
+
     public String getStringBeforeDivide() 
     {
         return stringBeforeDivide;
@@ -49,6 +59,7 @@ public class Level
     
     public void AddStringToStringBefore(String string)
     {
+        this.agrop=true;
         String stringAuxiliar = this.stringBeforeDivide+string;
         this.setStringBeforeDivide(stringAuxiliar);
     }
