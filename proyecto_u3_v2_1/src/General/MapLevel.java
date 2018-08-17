@@ -208,7 +208,7 @@ public class MapLevel
         System.out.println("minimun "+minimun);
         
         //String finalString="("+this.TopOfString(maximun)+"/"+this.bottomOfString(minimun)+")";
-        String finalString="("+this.TopOfString(maximun)+"/"+this.advancedBootomString(minimun)+")";
+        String finalString="("+this.advancedTopOfString(maximun)+"/"+this.advancedBootomString(minimun)+")";
         
         return finalString;
         
@@ -219,7 +219,7 @@ public class MapLevel
         String dividendo=this.getLevel(index-1).getStringLevel();
         String beforeDivide=this.getLevel(index).getStringBeforeDivide();
         String afterDivide=this.getLevel(index).getStringLevel();
-        String container="("+beforeDivide+"("+dividendo+"/"+divisor+")"+afterDivide+")";
+        String container="("+beforeDivide+"(("+dividendo+")/("+divisor+"))"+afterDivide+")";
         return container;
     }
     /*
@@ -253,23 +253,121 @@ public class MapLevel
     /*
     metodo que resive el nivel minimo y genera un string con la exprecion de la parte inferior de la division
     */
-    
-    public void correr()
+    private String advancedTopOfString(int maximun)
     {
-        int i=0;
-        while(true)
+        String bottomPart;
+        if(maximun+1==0)// si solo existe un nivel se retorna el nivel 
         {
-            String hola=this.getLevel(i).getStringBeforeDivide();
-            System.out.println("hola ="+hola);
-            i++;
+            return bottomPart="("+this.getLevel(maximun).getStringLevel()+")";
         }
+        else//  si existen ma sniveles y por ende diviciones se captura la expresion
+        {
+            String container="";
+            int index=maximun+1;
+            while(index<0)
+            {
+                String auxContainer;
+                if(this.getLevel(index).isAgrop())// si el nivel actuala grupa 
+                {
+                    if(index-1==maximun)//si estoy en el primer nivel y agrupo
+                    {
+                        container=this.getComplitEvenLevel(index);//capturo el nivel
+                        index+=2;
+                    }
+                    else//si el nivel agrupa pero no es el primero 
+                    {
+                        auxContainer=this.getComplitEvenLevel(index);
+                        container="("+container+"/"+auxContainer+")";
+                        index+=2;
+                    }
+                }
+                else// si el nivel no agrupa 
+                {
+                    if(index-1==maximun)// si es el primero
+                    {
+                        int indexAux=index+2;
+                        if(index<0)// si dos niveles mas adelante no es el nivel central
+                        {
+                            if(this.getLevel(indexAux).isAgrop())//si el nivel agrupa
+                            {
+                                container=this.getLevel(index-1).getStringLevel();
+                                auxContainer=this.getComplitEvenLevel(indexAux);
+                                String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                String afterDivide=this.getLevel(index).getStringLevel();
+                                
+                                container="("+beforeDivide+"("+container+"/"+auxContainer+")"+afterDivide+")";
+                                index+=4;
+                                System.out.println("hola ++++++");
+                            }
+                            else//no agrupo , soy el primero, dos niveles bajo de mi no agrupan 
+                            {
+                                container=this.getLevel(index-1).getStringLevel();
+                                String dividendo=this.getLevel(index+1).getStringLevel();
+                                String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                String afterDivide=this.getLevel(index).getStringLevel();
+                                container="("+beforeDivide+"(("+container+")/"+dividendo+")"+afterDivide+")";
+                                index+=2;
+                            }
+                        }
+                        else//no agrupo , soy el primero y dos niveles bajo mi se encuentra el nivel central.
+                        {
+                            container=this.getComplitEvenLevel(index);// se regresa la divivion.
+                            index+=2;
+                        }
+                        
+                    }
+                    else// no agrupo , no soy el primero
+                    {
+                        int indexAux=index+2;
+                        if(indexAux>0)// existe otra divicion bajo la mia
+                        {
+                            System.out.println("hola ++");
+                            if(this.getLevel(indexAux).isAgrop())//la dibicion bajo la mia agrupa
+                            {
+                                 auxContainer=this.getComplitEvenLevel(indexAux);
+                                 String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                 String afterDivide=this.getLevel(index).getStringLevel();
+                                
+                                container="("+beforeDivide+"("+container+"/"+auxContainer+")"+afterDivide+")";
+                                index+=4;
+                            }
+                            else// la division bajo la mia no agrupa 
+                            {
+                                System.out.println("hola ?++");
+                                String dividendo=this.getLevel(index+1).getStringLevel();
+                                String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                String afterDivide=this.getLevel(index).getStringLevel();
+                                container="("+beforeDivide+"(("+container+")/"+dividendo+")"+afterDivide+")";
+                                index+=2;
+                            }
+                            
+                        }
+                        else
+                        {
+                            String dividendo=this.getLevel(index+1).getStringLevel();
+                            String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                            String afterDivide=this.getLevel(index).getStringLevel();
+                            container="("+beforeDivide+"(("+container+")/"+dividendo+")"+afterDivide+")";
+                            index+=2;
+                        }
+                    }
+                }
+            
+            }
+            bottomPart=container;
+        }
+        
+        return bottomPart;
+        
+        
     }
+
     private String advancedBootomString(int minimun)
     {
         String bottomPart;
         if(minimun-1==0)
         {
-            return bottomPart=this.getLevel(minimun).getStringLevel();
+            return bottomPart="("+this.getLevel(minimun).getStringLevel()+")";
         }
         else
         {
@@ -278,32 +376,60 @@ public class MapLevel
             while(index>0)
             {
                 String auxContainer;
-                if(this.getLevel(index).isAgrop())
+                if(this.getLevel(index).isAgrop())//el nivel agrupa
                 {
-                    if(index+1==minimun)
+                    if(index+1==minimun)// el nivel es el primero
                     {
                         container=this.getComplitEvenLevel(index);
                         index-=2;
                     }
-                    else
+                    else// no es el primero
                     {
                         auxContainer=this.getComplitEvenLevel(index);
                         container="("+auxContainer+"/"+container+")";
                         index-=2;
                     }
                 }
-                else
+                else//no agrupa
                 {
-                    if(index+1==minimun)
+                    if(index+1==minimun)// es el primero
                     {
-                        container=this.getComplitEvenLevel(index);
-                        index-=2;
+                        int indexAux=index-2;
+                        if(index>0)
+                        {
+                            if(this.getLevel(indexAux).isAgrop())
+                            {
+                                container=this.getLevel(index+1).getStringLevel();
+                                auxContainer=this.getComplitEvenLevel(indexAux);
+                                String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                String afterDivide=this.getLevel(index).getStringLevel();
+                                
+                                container="("+beforeDivide+"("+auxContainer+"/"+container+")"+afterDivide+")";
+                                index-=4;
+                            }
+                            else
+                            {
+                                container=this.getLevel(index+1).getStringLevel();
+                                String dividendo=this.getLevel(index-1).getStringLevel();
+                                String beforeDivide=this.getLevel(index).getStringBeforeDivide();
+                                String afterDivide=this.getLevel(index).getStringLevel();
+                                container="("+beforeDivide+"(("+dividendo+")/"+container+")"+afterDivide+")";
+                                index-=2;
+                            }
+                        }
+                        else
+                        {
+                            container=this.getComplitEvenLevel(index);
+                            index-=2;
+                        }
+                        
                     }
                     else
                     {
                         int indexAux=index-2;
                         if(indexAux>0)
                         {
+                            System.out.println("hola ++");
                             if(this.getLevel(indexAux).isAgrop())
                             {
                                 auxContainer=this.getComplitEvenLevel(indexAux);
@@ -315,6 +441,7 @@ public class MapLevel
                             }
                             else
                             {
+                                System.out.println("hola ?++");
                                 String dividendo=this.getLevel(index-1).getStringLevel();
                                 String beforeDivide=this.getLevel(index).getStringBeforeDivide();
                                 String afterDivide=this.getLevel(index).getStringLevel();
